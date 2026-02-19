@@ -1,23 +1,21 @@
 import Navbar from "@/components/layout/Navbar";
-import BottomAccessBar from "@/components/layout/BottomAccessBar";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
+import TrustBar from "@/components/sections/TrustBar";
 import Services from "@/components/sections/Services";
 import ChapAI from "@/components/sections/ChapAI";
-import VideoPreview from "@/components/sections/VideoPreview";
 import WhyPSE from "@/components/sections/WhyPSE";
 import DemoRequestForm from "@/components/forms/DemoRequestForm";
 
 export default function Home() {
   return (
-    <div className="pb-[72px]">
+    <div>
       <Navbar />
-      <BottomAccessBar />
       <main>
         <Hero />
+        <TrustBar />
         <Services />
         <ChapAI />
-        <VideoPreview />
         <WhyPSE />
         <DemoRequestForm />
       </main>

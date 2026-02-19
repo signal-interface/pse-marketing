@@ -1,93 +1,73 @@
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import DashboardPreview from "./DashboardPreview";
 
 export default function Hero() {
   return (
-    <section className="min-h-screen flex items-center px-6 sm:px-10 pt-[130px] pb-24 bg-gradient-to-br from-[#fdfdfd] via-sand to-[#eef3f9] relative overflow-hidden">
-      {/* Decorative orbs */}
+    <section className="pt-[140px] pb-20 px-8 bg-gradient-to-b from-ice to-white relative overflow-hidden">
+      {/* Subtle background gradients */}
       <div
-        className="absolute -top-20 -right-[60px] w-[400px] h-[400px] rounded-full pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle, rgba(26,95,180,0.05) 0%, transparent 70%)",
-          animation: "float 8s ease-in-out infinite",
-        }}
-      />
-      <div
-        className="absolute -bottom-10 left-[20%] w-[300px] h-[300px] rounded-full pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(46,196,182,0.04) 0%, transparent 70%)",
-          animation: "float 10s ease-in-out infinite 3s",
+            "radial-gradient(ellipse 800px 600px at 20% 20%, rgba(90,122,148,0.06) 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 80% 60%, rgba(37,53,84,0.04) 0%, transparent 60%)",
         }}
       />
 
-      <div className="max-w-[1200px] mx-auto w-full flex flex-col lg:flex-row items-center gap-16 relative">
-        <div className="flex-1">
-          {/* Badge */}
-          <div className="reveal visible mb-5">
-            <span className="inline-block px-4 py-[7px] bg-blue/[0.08] text-blue rounded-full text-xs font-semibold tracking-[0.05em] uppercase">
-              Payroll Compliance &amp; Controls
-            </span>
-          </div>
-
-          {/* Title */}
-          <h1 className="reveal visible reveal-d1 font-serif text-[clamp(2.375rem,5vw,3.625rem)] font-bold leading-[1.08] tracking-[-0.03em] text-navy mb-6">
-            Catch payroll risk{" "}
-            <em className="italic text-blue">before</em> it hits your people.
-          </h1>
-
-          {/* Subtitle */}
-          <p className="reveal visible reveal-d2 text-[19px] leading-[1.65] text-muted max-w-[520px] mb-9">
-            Deterministic payroll controls with AI-powered validation. Detect
-            compliance issues early, generate audit-ready evidence, and keep
-            every run clean.
-          </p>
-
-          {/* Buttons */}
-          <div className="reveal visible reveal-d3 flex flex-wrap gap-3.5 mb-10">
-            <a
-              href="#demo"
-              className="inline-flex items-center gap-2 px-[30px] py-[15px] rounded-[10px] text-[15px] font-semibold bg-navy text-white hover:bg-navy-light hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(11,29,58,0.25)] transition-all"
-            >
-              Request a Demo
-              <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
-            </a>
-            <a
-              href="#preview"
-              className="inline-flex items-center gap-2 px-[30px] py-[15px] rounded-[10px] text-[15px] font-semibold bg-transparent text-navy border-2 border-[#d4d8e0] hover:border-navy hover:bg-navy/[0.03] transition-all"
-              aria-label="Watch platform preview"
-            >
-              <Play size={15} strokeWidth={2} aria-hidden="true" />
-              Watch Preview
-            </a>
-          </div>
-
-          {/* Trust indicators */}
-          <div className="reveal visible reveal-d4 flex flex-wrap gap-6 items-center">
-            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-mint/[0.06] rounded-full border border-mint/[0.12]">
-              <span className="text-[13px] font-bold text-mint">
-                Powered by CHAP AI&trade;
-              </span>
-            </div>
-            {[
-              { value: "Audit-Ready", label: "Documentation" },
-              { value: "Multi-State", label: "Coverage" },
-              { value: "Daily", label: "Regulatory Monitoring" },
-            ].map((item) => (
-              <div key={item.label} className="flex items-baseline gap-1.5">
-                <span className="text-lg font-extrabold text-navy">
-                  {item.value}
-                </span>
-                <span className="text-[13px] text-muted">{item.label}</span>
-              </div>
-            ))}
-          </div>
+      <div className="max-w-[1200px] mx-auto relative">
+        {/* Badge */}
+        <div
+          className="inline-flex items-center gap-2 bg-white border border-border px-3.5 py-1.5 rounded-full text-[13px] font-medium text-text-secondary mb-7 shadow-sm"
+          style={{ animation: "fadeInUp 0.6s ease-out" }}
+        >
+          <span
+            className="w-2 h-2 rounded-full bg-green"
+            style={{ animation: "pulse-green 2s infinite" }}
+          />
+          Powered by CHAP AI&trade;
         </div>
 
-        {/* Dashboard card */}
-        <div className="reveal visible reveal-d4 hidden lg:block">
-          <DashboardPreview />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Content */}
+          <div style={{ animation: "fadeInUp 0.6s ease-out" }}>
+            <h1 className="text-[clamp(2.2rem,4vw,3.2rem)] font-bold leading-[1.15] tracking-[-0.03em] text-text mb-5">
+              Catch payroll risk{" "}
+              <em className="not-italic relative inline-block">
+                before
+                <span className="absolute left-0 right-0 bottom-1 h-[3px] bg-steel-light rounded-sm opacity-50" />
+              </em>{" "}
+              it hits your people.
+            </h1>
+
+            <p className="text-[17px] leading-[1.7] text-text-secondary max-w-[480px] mb-8">
+              AI-powered payroll controls that catch compliance issues before
+              they cost you. Every run validated, every decision documented.
+            </p>
+
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="#demo"
+                className="inline-flex items-center gap-2 bg-navy text-white px-6 py-3 rounded-md text-sm font-semibold hover:bg-navy-dark hover:-translate-y-px hover:shadow-md transition-all"
+              >
+                Request a Demo
+                <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
+              </a>
+              <a
+                href="#chap"
+                className="inline-flex items-center gap-2 bg-white text-text px-6 py-3 rounded-md text-sm font-semibold border border-border hover:border-steel-light hover:bg-ice transition-all"
+              >
+                How CHAP AI works
+                <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
+              </a>
+            </div>
+          </div>
+
+          {/* Dashboard */}
+          <div
+            className="hidden lg:block"
+            style={{ animation: "fadeInUp 0.8s ease-out 0.1s both" }}
+          >
+            <DashboardPreview />
+          </div>
         </div>
       </div>
     </section>

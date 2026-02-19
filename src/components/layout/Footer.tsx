@@ -1,82 +1,87 @@
 import { SITE, SOCIAL } from "@/lib/constants";
-import SocialIcons from "@/components/ui/SocialIcons";
 
 export default function Footer() {
   return (
-    <footer className="px-6 sm:px-10 pt-14 pb-8 bg-navy text-white/45">
+    <footer className="px-8 pt-14 pb-8 bg-navy text-steel-muted">
       <div className="max-w-[1200px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-12 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-12 mb-10">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2.5 mb-3.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue to-mint flex items-center justify-center text-white font-extrabold text-[11px]">
-                PSE
+            <div className="flex items-center gap-2.5 mb-3">
+              <div className="w-9 h-9 rounded-lg bg-navy-light flex items-center justify-center text-steel-light font-bold text-base">
+                S
               </div>
-              <span className="font-bold text-[15px] text-white">
+              <span className="font-semibold text-[15px] text-steel-muted">
                 {SITE.name}
               </span>
             </div>
-            <p className="text-[13px] leading-[1.7] max-w-[280px]">
-              Modern payroll operations and compliance controls for growing
-              businesses.
+            <p className="text-sm leading-relaxed text-steel max-w-[280px] mt-3">
+              Audit-first payroll intelligence for multi-state employers.
             </p>
-            <div className="mt-4">
-              <SocialIcons />
-            </div>
           </div>
 
           {/* Services */}
           <div>
-            <h4 className="text-white/70 text-xs font-bold mb-3.5 tracking-[0.06em] uppercase">
+            <h4 className="text-xs font-semibold text-steel uppercase tracking-[0.08em] mb-4">
               Services
             </h4>
-            <div className="flex flex-col gap-2">
-              {["Payroll Processing", "Tax & Compliance", "CHAP AI", "Advisory"].map(
-                (s) => (
-                  <a
-                    key={s}
-                    href="#services"
-                    className="text-[13px] text-white/40 no-underline hover:text-white/70 transition-colors"
-                  >
-                    {s}
-                  </a>
-                )
-              )}
+            <div className="flex flex-col gap-1">
+              {[
+                "Payroll Processing",
+                "Tax & Compliance",
+                "Workforce Analytics",
+                "Advisory",
+              ].map((s) => (
+                <a
+                  key={s}
+                  href="#services"
+                  className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
+                >
+                  {s}
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Platform + Follow */}
+          {/* Platform */}
           <div>
-            <h4 className="text-white/70 text-xs font-bold mb-3.5 tracking-[0.06em] uppercase">
+            <h4 className="text-xs font-semibold text-steel uppercase tracking-[0.08em] mb-4">
               Platform
             </h4>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               <a
-                href="#preview"
-                className="text-[13px] text-white/40 no-underline hover:text-white/70 transition-colors"
+                href="#chap"
+                className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
               >
-                Preview
+                CHAP AI
+              </a>
+              <a
+                href="#chap"
+                className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
+              >
+                CHAP Guard
               </a>
               <a
                 href="#demo"
-                className="text-[13px] text-white/40 no-underline hover:text-white/70 transition-colors"
+                className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
               >
                 Request Access
               </a>
             </div>
-            <div className="mt-3 text-[11px] text-white/25">
-              Platform access is by invitation only.
-            </div>
+          </div>
 
-            <h4 className="text-white/70 text-xs font-bold mb-2.5 mt-5 tracking-[0.06em] uppercase">
+          {/* Follow */}
+          <div>
+            <h4 className="text-xs font-semibold text-steel uppercase tracking-[0.08em] mb-4">
               Follow
             </h4>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               <a
                 href={SOCIAL.x.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[13px] text-white/40 no-underline hover:text-white/70 transition-colors"
+                aria-label="Follow us on X"
+                className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
               >
                 X {SOCIAL.x.handle}
               </a>
@@ -84,7 +89,8 @@ export default function Footer() {
                 href={SOCIAL.instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[13px] text-white/40 no-underline hover:text-white/70 transition-colors"
+                aria-label="Follow us on Instagram"
+                className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
               >
                 IG {SOCIAL.instagram.handle}
               </a>
@@ -93,10 +99,24 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-white/[0.06] pt-5 flex flex-wrap justify-between gap-3">
-          <span className="text-xs">
-            &copy; {new Date().getFullYear()} {SITE.name}. All rights reserved.
+        <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <span className="text-[13px] text-steel">
+            &copy; 2026 {SITE.name}. All rights reserved.
           </span>
+          <div className="flex gap-4">
+            <a
+              href="#"
+              className="text-[13px] text-steel-muted no-underline hover:text-white transition-colors"
+            >
+              Privacy Policy
+            </a>
+            <a
+              href="#"
+              className="text-[13px] text-steel-muted no-underline hover:text-white transition-colors"
+            >
+              Terms
+            </a>
+          </div>
         </div>
       </div>
     </footer>

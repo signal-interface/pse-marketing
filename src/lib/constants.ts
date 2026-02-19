@@ -1,16 +1,17 @@
 export const SITE = {
   name: "Payroll Synergy Experts",
-  title: "Payroll Synergy Experts | Payroll Compliance & Controls",
+  title:
+    "AI-Powered Payroll Compliance & Controls | Payroll Synergy Experts",
   description:
-    "Deterministic payroll controls and AI-powered compliance validation. Catch issues before they hit employees, auditors, or lawsuits. Request a demo today.",
+    "AI-powered payroll controls that catch compliance issues before they cost you. Every run validated, every decision documented. Request a demo today.",
   url: "https://payrollsynergyexperts.com",
   ogImage: "https://payrollsynergyexperts.com/og-banner.png",
 } as const;
 
 export const NAV_LINKS = [
   { label: "Services", href: "#services" },
-  { label: "CHAP AI", href: "#chap-ai" },
-  { label: "Preview", href: "#preview" },
+  { label: "CHAP AI", href: "#chap" },
+  { label: "Why PSE", href: "#proof" },
 ] as const;
 
 export const SERVICES = [
@@ -22,22 +23,22 @@ export const SERVICES = [
   {
     icon: "ShieldCheck" as const,
     title: "Tax & Compliance",
-    desc: "Federal, state, and local tax filing with automated regulatory updates. Stay compliant without the overhead.",
+    desc: "Federal, state, and local filings handled automatically. When regulations change, your rules update the same day.",
   },
   {
     icon: "BarChart3" as const,
     title: "Workforce Analytics",
-    desc: "Labor cost modeling, overtime forecasting, and headcount planning with live data — not quarterly reports.",
+    desc: "Labor costs, overtime exposure, and headcount trends \u2014 updated live, not buried in a quarterly deck.",
   },
   {
     icon: "RefreshCw" as const,
-    title: "Benefits Administration",
-    desc: "Seamless benefits enrollment, tracking, and reconciliation integrated directly into your payroll workflow.",
+    title: "Benefits Integration",
+    desc: "Connect benefits data directly to your payroll workflow for seamless deduction reconciliation and enrollment sync.",
   },
   {
     icon: "Plug" as const,
     title: "System Integration",
-    desc: "Connect payroll to your HRIS, accounting, and ERP systems with pre-built integrations and custom APIs.",
+    desc: "Connect payroll to your HRIS and workforce management platforms with pre-built integrations and custom APIs.",
   },
   {
     icon: "Target" as const,
@@ -50,34 +51,34 @@ export const CHAP_STEPS = [
   {
     step: "Detect",
     desc: "Scans timecard and payroll data for statutory violations, policy exceptions, and anomalies.",
-    color: "#1a5fb4",
+    color: "blue-accent",
   },
   {
     step: "Flag",
     desc: "Surfaces issues with severity levels and the specific regulation or policy that triggered the flag.",
-    color: "#f59e0b",
+    color: "amber",
   },
   {
     step: "Explain",
-    desc: "Plain-language rationale for every flag — what's wrong, why it matters, and what clears it.",
-    color: "#2ec4b6",
+    desc: "Plain-language rationale for every flag \u2014 what\u2019s wrong, why it matters, and what clears it.",
+    color: "purple",
   },
   {
     step: "Document",
-    desc: "Generates a timestamped evidence record of what was checked, what passed, and what was flagged.",
-    color: "#0b1d3a",
+    desc: "Timestamped evidence of what was checked, what passed, and what was flagged. Audit-ready by default.",
+    color: "green",
   },
 ] as const;
 
 export const STATS = [
   {
-    metric: "Audit-Ready",
-    label: "Accuracy by design",
-    desc: "Every transaction validated against compliance rules before execution.",
+    metric: "100%",
+    label: "Traceable decisions",
+    desc: "Every payroll decision documented with the logic and data that produced it.",
   },
   {
     metric: "50%",
-    label: "Faster processing*",
+    label: "Faster processing",
     desc: "Automation eliminates manual data entry, reconciliation, and approval bottlenecks.",
   },
   {
@@ -86,9 +87,9 @@ export const STATS = [
     desc: "Federal, state, and local changes reflected in your compliance rules within one business day.",
   },
   {
-    metric: "100%",
-    label: "Traceable decisions",
-    desc: "Every payroll decision documented with the logic and data that produced it.",
+    metric: "0",
+    label: "Untracked changes",
+    desc: "Every transaction validated against compliance rules before execution.",
   },
 ] as const;
 

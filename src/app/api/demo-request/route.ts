@@ -10,10 +10,10 @@ const NOTIFICATION_EMAIL =
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, company, employees, website } = body;
+    const { name, email, company, employees, ref_120 } = body;
 
     // Honeypot check
-    if (website) {
+    if (ref_120) {
       return NextResponse.json({ success: true });
     }
 

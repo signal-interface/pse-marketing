@@ -1,31 +1,62 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy: #0b1d3a;
-  --color-navy-light: #0f2a52;
-  --color-blue: #1a5fb4;
-  --color-sky: #3584e4;
-  --color-mint: #2ec4b6;
-  --color-mint-dark: #25a99d;
-  --color-sand: #f5f0eb;
-  --color-warm: #faf8f5;
-  --color-text: #1c1c2e;
-  --color-muted: #6b7280;
-  --color-border: #eceef2;
-  --color-input-border: #e5e7eb;
+  /* Navy palette */
+  --color-navy: #0f1a2e;
+  --color-navy-light: #1a2740;
+  --color-navy-dark: #253554;
+  --color-navy-mid: #334a6e;
 
-  --font-sans: "Outfit", "Helvetica Neue", sans-serif;
-  --font-serif: "Fraunces", Georgia, serif;
+  /* Steel palette */
+  --color-steel: #5a7a94;
+  --color-steel-light: #7a9ab4;
+  --color-steel-muted: #a3bdd1;
+  --color-steel-200: #c8dae8;
+  --color-steel-100: #e4edf4;
+
+  /* Ice palette */
+  --color-ice: #f3f7fa;
+  --color-ice-light: #f8fafb;
+
+  /* Functional colors */
+  --color-text: #0f1a2e;
+  --color-text-secondary: #4a5e78;
+  --color-text-tertiary: #7a8da3;
+  --color-muted: #4a5e78;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-input-border: #e2e8f0;
+
+  /* Status indicators */
+  --color-green: #16a34a;
+  --color-green-bg: #f0fdf4;
+  --color-amber: #d97706;
+  --color-amber-bg: #fffbeb;
+  --color-red: #dc2626;
+  --color-red-bg: #fef2f2;
+  --color-blue-accent: #2563eb;
+  --color-blue-bg: #eff6ff;
+
+  /* Fonts */
+  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(15, 26, 46, 0.05);
+  --shadow-md: 0 4px 12px rgba(15, 26, 46, 0.08);
+  --shadow-lg: 0 8px 32px rgba(15, 26, 46, 0.1);
+  --shadow-xl: 0 16px 48px rgba(15, 26, 46, 0.12);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+/* Reveal animations */
 @keyframes reveal-up {
   from {
     opacity: 0;
-    transform: translateY(32px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -33,20 +64,31 @@ html {
   }
 }
 
-@keyframes float {
+@keyframes pulse-green {
   0%,
   100% {
-    transform: translateY(0);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
   }
   50% {
-    transform: translateY(-8px);
+    box-shadow: 0 0 0 6px rgba(22, 163, 74, 0.08);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 .reveal {
   opacity: 0;
-  transform: translateY(32px);
-  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(20px);
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reveal.visible {
