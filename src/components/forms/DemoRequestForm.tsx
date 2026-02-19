@@ -15,35 +15,16 @@ export default function DemoRequestForm() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.website) return; // honeypot
 
-    if (!formspreeId) {
-      alert(
-        "Demo form is not configured yet. Please email info@payrollsynergyexperts.com."
-      );
-      return;
-    }
-
     setSubmitting(true);
     try {
-      const res = await fetch(`https://formspree.io/f/${formspreeId}`, {
+      const res = await fetch("/api/demo-request", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          company: formData.company,
-          employees: formData.employees,
-          source: "pse-marketing",
-          _subject: `Demo Request: ${formData.company || formData.name}`,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
       if (res.ok) {
         setSubmitted(true);
