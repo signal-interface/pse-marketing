@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0b1d3a;
+  --color-navy-light: #0f2a52;
+  --color-blue: #1a5fb4;
+  --color-sky: #3584e4;
+  --color-mint: #2ec4b6;
+  --color-mint-dark: #25a99d;
+  --color-sand: #f5f0eb;
+  --color-warm: #faf8f5;
+  --color-text: #1c1c2e;
+  --color-muted: #6b7280;
+  --color-border: #eceef2;
+  --color-input-border: #e5e7eb;
+
+  --font-sans: "Outfit", "Helvetica Neue", sans-serif;
+  --font-serif: "Fraunces", Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-d1 {
+  transition-delay: 0.1s;
+}
+.reveal-d2 {
+  transition-delay: 0.2s;
+}
+.reveal-d3 {
+  transition-delay: 0.35s;
+}
+.reveal-d4 {
+  transition-delay: 0.5s;
+}
