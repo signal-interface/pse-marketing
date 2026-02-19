@@ -5,7 +5,7 @@ export const SITE = {
   description:
     "AI-powered payroll controls that catch compliance issues before they cost you. Every run validated, every decision documented. Request a demo today.",
   url: "https://payrollsynergyexperts.com",
-  ogImage: "https://payrollsynergyexperts.com/og-banner.png",
+  ogImage: "https://payrollsynergyexperts.com/opengraph-image",
 } as const;
 
 export const NAV_LINKS = [
@@ -98,5 +98,9 @@ export const SOCIAL = {
   instagram: {
     url: "https://www.instagram.com/pse_intelligence/",
     handle: "@pse_intelligence",
+  },
+  linkedin: {
+    url: "https://www.linkedin.com/company/payroll-synergy-experts/",
+    handle: "Payroll Synergy Experts",
   },
 } as const;

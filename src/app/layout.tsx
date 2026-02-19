@@ -55,6 +55,7 @@ const jsonLdOrganization = {
   sameAs: [
     "https://x.com/psecompliance",
     "https://www.instagram.com/pse_intelligence/",
+    "https://www.linkedin.com/company/payroll-synergy-experts/",
   ],
   contactPoint: {
     "@type": "ContactPoint",

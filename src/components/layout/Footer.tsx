@@ -94,6 +94,15 @@ export default function Footer() {
               >
                 IG {SOCIAL.instagram.handle}
               </a>
+              <a
+                href={SOCIAL.linkedin.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow us on LinkedIn"
+                className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
+              >
+                LinkedIn
+              </a>
             </div>
           </div>
         </div>
