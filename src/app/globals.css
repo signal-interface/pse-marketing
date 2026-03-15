@@ -411,3 +411,61 @@ section[id] {
 .svc-sub-related-card--all { color: var(--color-steel, #4a6580); border-color: rgba(15,28,46,0.12); }
 .svc-sub-related-card--all:hover { color: var(--color-navy, #0f1c2e); background: rgba(15,28,46,0.04); border-color: rgba(15,28,46,0.20); }
 .svc-sub-related-name { font-size: 0.85rem; }
+
+/* ================================================================
+   PSE Fix — ChapaInterface component
+   Replaces fictional ChapaTerminal
+================================================================ */
+.chap-interface { background: var(--chap-bg-mid, #0a1628); border: 1px solid var(--chap-border, rgba(46,127,216,0.15)); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 540px; }
+.chap-interface__header { background: var(--chap-bg-card, #0d1e35); padding: 0.85rem 1.1rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--chap-border, rgba(46,127,216,0.15)); flex-shrink: 0; }
+.chap-interface__header-left { display: flex; align-items: center; gap: 0.65rem; }
+.chap-interface__icon { width: 28px; height: 28px; background: rgba(46,127,216,0.15); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--chap-accent, #2e7fd8); flex-shrink: 0; }
+.chap-interface__name { font-size: 0.82rem; font-weight: 600; color: #ffffff; }
+.chap-interface__sub { font-size: 0.65rem; color: var(--chap-text-muted, #4a6580); }
+.chap-interface__header-right { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.chap-interface__badge { font-family: var(--font-mono, monospace); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 4px; }
+.chap-interface__badge--live { background: rgba(13,122,85,0.2); color: #5ecba1; border: 1px solid rgba(13,122,85,0.3); }
+.chap-interface__badge--kb { background: rgba(46,127,216,0.12); color: #2e7fd8; border: 1px solid rgba(46,127,216,0.2); }
+.chap-interface__statusbar { background: var(--chap-bg, #060e18); padding: 0.4rem 1.1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; border-bottom: 1px solid var(--chap-border, rgba(46,127,216,0.15)); flex-shrink: 0; }
+.chap-interface__status-pill { font-family: var(--font-mono, monospace); font-size: 0.6rem; color: var(--chap-text-muted, #4a6580); }
+.chap-interface__status-pill--warn { color: var(--chap-warn-light, #fbbf60); }
+.chap-interface__tabs { display: flex; border-bottom: 1px solid var(--chap-border, rgba(46,127,216,0.15)); flex-shrink: 0; }
+.chap-interface__tab { flex: 1; padding: 0.6rem 1rem; font-size: 0.72rem; font-weight: 500; color: var(--chap-text-muted, #4a6580); background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; transition: color 0.2s; font-family: var(--font-mono, monospace); letter-spacing: 0.04em; text-transform: uppercase; }
+.chap-interface__tab.active { color: var(--chap-accent, #2e7fd8); border-bottom: 2px solid var(--chap-accent, #2e7fd8); }
+.chap-interface__tab:hover:not(.active) { color: var(--chap-text, #c8daf0); }
+.chap-interface__tab-count { background: rgba(239,68,68,0.2); color: #ef4444; border-radius: 10px; font-size: 0.6rem; padding: 1px 5px; font-weight: 700; }
+.chap-interface__chat { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.chap-interface__messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+.chap-interface__msg { display: flex; flex-direction: column; gap: 0.35rem; }
+.chap-interface__msg--user { align-items: flex-end; }
+.chap-interface__msg-label { font-family: var(--font-mono, monospace); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--chap-accent, #2e7fd8); }
+.chap-interface__msg-bubble { font-size: 0.78rem; line-height: 1.65; padding: 0.65rem 0.85rem; border-radius: 8px; max-width: 90%; }
+.chap-interface__msg--chap .chap-interface__msg-bubble { background: var(--chap-bg-card, #0d1e35); color: var(--chap-text, #c8daf0); border: 1px solid var(--chap-border, rgba(46,127,216,0.15)); border-radius: 0 8px 8px 8px; }
+.chap-interface__msg--user .chap-interface__msg-bubble { background: var(--chap-accent, #2e7fd8); color: #ffffff; border-radius: 8px 8px 0 8px; }
+.chap-interface__typing { display: flex; gap: 4px; align-items: center; padding: 0.75rem 0.85rem; }
+.chap-interface__typing span { width: 6px; height: 6px; background: var(--chap-text-muted, #4a6580); border-radius: 50%; animation: chap-typing 1.2s ease-in-out infinite; }
+.chap-interface__typing span:nth-child(2) { animation-delay: 0.2s; }
+.chap-interface__typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes chap-typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+.chap-interface__suggestions { margin-top: 0.5rem; }
+.chap-interface__suggestions-label { font-size: 0.62rem; font-family: var(--font-mono, monospace); letter-spacing: 0.06em; text-transform: uppercase; color: var(--chap-text-muted, #4a6580); margin-bottom: 0.5rem; }
+.chap-interface__suggestions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+.chap-interface__suggestion { font-size: 0.72rem; color: var(--chap-text, #c8daf0); background: rgba(46,127,216,0.06); border: 1px solid var(--chap-border, rgba(46,127,216,0.15)); border-radius: 6px; padding: 0.5rem 0.65rem; text-align: left; cursor: pointer; line-height: 1.4; transition: all 0.15s; }
+.chap-interface__suggestion:hover { background: rgba(46,127,216,0.12); border-color: var(--chap-border-hi, rgba(46,127,216,0.30)); }
+.chap-interface__input-row { display: flex; gap: 0.5rem; padding: 0.75rem; border-top: 1px solid var(--chap-border, rgba(46,127,216,0.15)); flex-shrink: 0; }
+.chap-interface__input { flex: 1; background: var(--chap-bg, #060e18); border: 1px solid var(--chap-border, rgba(46,127,216,0.15)); border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 0.75rem; color: var(--chap-text, #c8daf0); font-family: var(--font-sans, sans-serif); outline: none; }
+.chap-interface__input:focus { border-color: var(--chap-accent, #2e7fd8); }
+.chap-interface__input::placeholder { color: var(--chap-text-muted, #4a6580); }
+.chap-interface__send { background: var(--chap-accent, #2e7fd8); color: #ffffff; border: none; border-radius: 6px; padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
+.chap-interface__send:hover { background: var(--chap-accent-hi, #5ba3f5); }
+.chap-interface__footer-note { font-size: 0.6rem; color: var(--chap-text-muted, #4a6580); text-align: center; padding: 0.4rem; flex-shrink: 0; }
+.chap-interface__exceptions { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; flex: 1; }
+.chap-interface__exception { background: var(--chap-bg-card, #0d1e35); border: 1px solid var(--chap-border, rgba(46,127,216,0.15)); border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.chap-interface__exception--blocksPayroll { border-left: 3px solid #ef4444; border-radius: 0 8px 8px 0; }
+.chap-interface__exception--advisory { border-left: 3px solid var(--chap-warn-light, #fbbf60); border-radius: 0 8px 8px 0; }
+.chap-interface__exception-badge { font-family: var(--font-mono, monospace); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; background: rgba(255,255,255,0.06); color: var(--chap-text-muted, #4a6580); margin-bottom: 0.35rem; display: inline-block; }
+.chap-interface__exception-badge.error { background: rgba(239,68,68,0.15); color: #ef4444; }
+.chap-interface__exception-label { font-size: 0.78rem; font-weight: 600; color: var(--chap-text, #c8daf0); margin-bottom: 0.2rem; }
+.chap-interface__exception-detail { font-size: 0.7rem; color: var(--chap-text-muted, #4a6580); }
+.chap-interface__exception-statute { font-family: var(--font-mono, monospace); font-size: 0.65rem; color: var(--chap-accent, #2e7fd8); flex-shrink: 0; }
+.chap-interface__exceptions-note { font-size: 0.7rem; color: var(--chap-text-muted, #4a6580); text-align: center; padding: 0.5rem; font-style: italic; }

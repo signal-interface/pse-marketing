@@ -1,26 +1,26 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { ChapaTerminal } from '@/components/sections/ChapaTerminal';
+import { ChapaInterface } from '@/components/sections/ChapaInterface';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'CHAP AI — Pre-Run Compliance Engine | Payroll Synergy Experts',
-  description: 'CHAP AI scans every payroll run against federal and state statutory requirements before commit. Catch violations, cite regulations, generate audit-ready records automatically.',
+  title: 'CHAP AI — Compliance Intelligence Layer | Payroll Synergy Experts',
+  description: 'CHAP AI analyzes payroll scenarios against federal and state regulations, surfaces exceptions with statute citations, and produces audit-ready determinations.',
 };
 
 const steps = [
   {
     letter: 'D',
     name: 'Detect',
-    headline: 'Scans every payroll input before commit',
-    body: 'CHAP AI ingests timecard data, wage rates, deduction schedules, and benefit elections — then runs each record against the applicable federal and state statutory ruleset for your employee population.',
+    headline: 'Monitors payroll data against statutory requirements',
+    body: 'CHAP AI continuously monitors payroll data against the applicable federal and state statutory ruleset for your employee population — surfacing exceptions as they emerge, not after payroll commits.',
   },
   {
     letter: 'F',
     name: 'Flag',
-    headline: 'Surfaces violations with severity and statute',
-    body: 'Every violation is classified by severity (block, warn, info), assigned the specific regulation that triggered it (FLSA §207, CA Lab §512, IWC Order 4), and queued for resolution before the payroll run proceeds.',
+    headline: 'Surfaces exceptions with severity and statute',
+    body: 'Every exception is classified by severity (blocks payroll vs advisory), assigned the specific regulation that triggered it (FLSA §207, CA Lab §512, IWC Order 4), and queued for human review before the payroll run closes.',
   },
   {
     letter: 'E',
@@ -32,7 +32,7 @@ const steps = [
     letter: 'D',
     name: 'Document',
     headline: 'Audit-ready evidence generated automatically',
-    body: 'Every scan produces a timestamped compliance record: what was checked, what passed, what was flagged, what was corrected, and by whom. Three years of records, searchable on demand.',
+    body: 'Every review cycle produces a timestamped compliance record: what was checked, what passed, what was flagged, what was corrected, and by whom. Three years of records, searchable on demand.',
   },
 ];
 
@@ -83,13 +83,13 @@ export default function ChapAIPage() {
             <div className="chap-hero__content">
               <p className="chap-eyebrow">CHAP AI™</p>
               <h1 className="chap-hero__headline">
-                Catch payroll violations<br />
-                <em>before they become penalties.</em>
+                Your compliance intelligence layer.<br />
+                <em>Every exception explained. Every determination documented.</em>
               </h1>
               <p className="chap-hero__sub">
-                CHAP AI runs a full statutory compliance scan before every payroll commit —
-                flagging violations, citing the exact regulation, and generating an audit-ready
-                record. Automatically.
+                CHAP AI analyzes payroll scenarios against federal and state regulations,
+                surfaces exceptions with statute citations, and produces audit-ready
+                determinations — with a human approver on every decision before payroll closes.
               </p>
               <div className="chap-hero__actions">
                 <Link href="/#demo" className="chap-btn-primary">Request a Demo</Link>
@@ -97,7 +97,7 @@ export default function ChapAIPage() {
               </div>
             </div>
             <div className="chap-hero__terminal">
-              <ChapaTerminal />
+              <ChapaInterface />
             </div>
           </div>
         </section>
@@ -106,8 +106,8 @@ export default function ChapAIPage() {
         <section id="how-it-works" className="chap-section" style={{ background: 'var(--chap-bg, #060e18)' }}>
           <div className="chap-section__inner">
             <p className="chap-eyebrow">How it works</p>
-            <h2 className="chap-section-headline">Four steps. Every payroll run.</h2>
-            <p className="chap-section-sub">CHAP AI runs the full Detect → Flag → Explain → Document cycle before each payroll commits — not after.</p>
+            <h2 className="chap-section-headline">Four steps. Every payroll cycle.</h2>
+            <p className="chap-section-sub">CHAP AI runs the full Detect → Flag → Explain → Document cycle continuously — surfacing exceptions before payroll closes.</p>
             <div className="chap-steps-grid">
               {steps.map((step, i) => (
                 <div key={i} className="chap-step-card">
@@ -121,22 +121,12 @@ export default function ChapAIPage() {
           </div>
         </section>
 
-        {/* Section 3 — Scan Output (standalone terminal) */}
+        {/* Section 3 — Coverage Matrix */}
         <section className="chap-section" style={{ background: 'var(--chap-bg-mid, #0a1628)' }}>
-          <div className="chap-section__inner">
-            <p className="chap-eyebrow">Live scan output</p>
-            <h2 className="chap-section-headline">What a pre-run compliance scan looks like.</h2>
-            <p className="chap-section-sub">Real statute codes. Real employee records. Real violation detection — before payroll commits.</p>
-            <ChapaTerminal />
-          </div>
-        </section>
-
-        {/* Section 4 — Coverage Matrix */}
-        <section className="chap-section" style={{ background: 'var(--chap-bg, #060e18)' }}>
           <div className="chap-section__inner">
             <p className="chap-eyebrow">Coverage</p>
             <h2 className="chap-section-headline">What CHAP AI checks.</h2>
-            <p className="chap-section-sub">Federal statutory checks on every run. State-specific rules applied per employee jurisdiction.</p>
+            <p className="chap-section-sub">Federal statutory checks applied continuously. State-specific rules applied per employee jurisdiction.</p>
             <div className="chap-coverage-grid">
               <div>
                 <div className="chap-coverage-col-label">Federal</div>
@@ -164,17 +154,18 @@ export default function ChapAIPage() {
           </div>
         </section>
 
-        {/* Section 5 — CHAP Guard */}
+        {/* Section 4 — CHAP Guard */}
         <section className="chap-guard-section">
           <div className="chap-guard__inner">
             <div className="chap-guard__badge">
-              <span className="chap-badge-label">Live Today</span>
+              <span className="chap-badge-label">Early Access</span>
             </div>
             <h2>CHAP Guard — Compliance in your payroll system</h2>
             <p>
-              CHAP Guard is a Chrome extension that brings CHAP AI directly into UKG, ADP,
-              and other payroll platforms. Real-time compliance badges, inline violation alerts,
-              and contextual statute explanations — without leaving your existing workflow.
+              CHAP Guard is a Chrome extension that brings CHAP AI compliance intelligence
+              directly into UKG, ADP, and other payroll platforms — surfacing inline violation
+              indicators and statute context without leaving your existing workflow.
+              Early access available for qualifying PSE clients.
             </p>
             <div className="chap-guard__platforms">
               <span className="chap-platform-badge">UKG</span>
@@ -182,11 +173,11 @@ export default function ChapAIPage() {
               <span className="chap-platform-badge">Dayforce</span>
               <span className="chap-platform-badge">More coming</span>
             </div>
-            <Link href="/#demo" className="chap-btn-primary">Request Early Access</Link>
+            <Link href="/#demo" className="chap-btn-primary">Request Access</Link>
           </div>
         </section>
 
-        {/* Section 6 — Proof */}
+        {/* Section 5 — Proof */}
         <section className="chap-proof-section">
           <div className="chap-section__inner">
             <p className="chap-eyebrow">Industry data</p>
@@ -205,9 +196,9 @@ export default function ChapAIPage() {
           </div>
         </section>
 
-        {/* Section 7 — CTA */}
+        {/* Section 6 — CTA */}
         <section className="chap-cta-section">
-          <h2>See CHAP AI run a compliance scan on your payroll data.</h2>
+          <h2>See CHAP AI analyze your payroll compliance posture.</h2>
           <p>30-minute personalized walkthrough. Bring your last payroll file.</p>
           <Link href="/#demo" className="chap-btn-primary chap-btn-lg">Request a Demo</Link>
         </section>

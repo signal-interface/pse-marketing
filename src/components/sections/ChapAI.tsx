@@ -141,7 +141,7 @@ export default function ChapAI() {
             <div className="flex-1">
               <div className="flex items-center gap-2.5 mb-2">
                 <span className="text-xs font-bold text-green bg-green/10 px-2.5 py-1 rounded-full uppercase tracking-wider">
-                  Live Today
+                  Early Access
                 </span>
               </div>
               <div className="text-lg font-bold text-white mb-1">
