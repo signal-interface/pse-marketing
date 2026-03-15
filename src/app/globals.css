@@ -469,3 +469,53 @@ section[id] {
 .chap-interface__exception-detail { font-size: 0.7rem; color: var(--chap-text-muted, #4a6580); }
 .chap-interface__exception-statute { font-family: var(--font-mono, monospace); font-size: 0.65rem; color: var(--chap-accent, #2e7fd8); flex-shrink: 0; }
 .chap-interface__exceptions-note { font-size: 0.7rem; color: var(--chap-text-muted, #4a6580); text-align: center; padding: 0.5rem; font-style: italic; }
+
+/* ── Copy Refresh: Pull Quote ── */
+.pse-pull-quote {
+  margin: 1rem 0 0;
+  padding: 0.75rem 0 0.75rem 1.25rem;
+  border-left: 3px solid var(--color-steel-light, #7a95ad);
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--color-text-secondary, #4a5568);
+  max-width: 640px;
+}
+
+/* ── Copy Refresh: CHAP Definition Block ── */
+.chap-definition-block {
+  margin: 1.25rem auto 0;
+  max-width: 640px;
+  text-align: left;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+.chap-definition-block__term {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-steel-light, #7a95ad);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
+}
+.chap-definition-block__body {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ── Copy Refresh: Industry Wedge Line ── */
+.pse-industry-wedge-line {
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary, #4a5568);
+  max-width: 640px;
+  margin: 0 auto 1rem;
+  padding: 0 1rem;
+}
+.pse-industry-wedge-line strong {
+  color: var(--color-text, #1e293b);
+  font-weight: 700;
+}

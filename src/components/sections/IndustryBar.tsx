@@ -27,6 +27,7 @@ const allItems = [...industries, ...industries];
 export function IndustryBar() {
   return (
     <section className="pse-logo-bar" aria-label="Industries with highest payroll compliance exposure">
+      <p className="pse-industry-wedge-line">ADP processes your payroll. UKG tracks your time. Dayforce manages your workforce. <strong>None of them govern the output.</strong></p>
       <p className="pse-logo-bar__label">Built for payroll teams in compliance-intensive industries</p>
       <div className="pse-logo-bar__wrapper">
         <div className="pse-logo-bar__track">

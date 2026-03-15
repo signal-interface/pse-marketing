@@ -30,6 +30,14 @@ export default function ChapAI() {
           <h2 className="text-[clamp(2rem,4vw,2.75rem)] mt-4 text-white tracking-[-0.02em] leading-[1.12] font-bold">
             The compliance brain behind every payroll run.
           </h2>
+          <div className="chap-definition-block">
+            <div className="chap-definition-block__term">
+              CHAP = <strong>Compliance, Heuristics, Audit &amp; Policy</strong>
+            </div>
+            <div className="chap-definition-block__body">
+              CHAP AI is the intelligence layer that sits between your payroll system and the regulatory landscape it operates in. It does not replace your vendor &mdash; it governs the output.
+            </div>
+          </div>
         </RevealOnScroll>
 
         {/* Two-column: Steps + Terminal */}

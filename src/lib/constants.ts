@@ -18,17 +18,17 @@ export const SERVICES = [
   {
     icon: "Zap" as const,
     title: "Payroll Processing",
-    desc: "Automated multi-state payroll with real-time compliance validation. No more spreadsheet gymnastics.",
+    desc: "Multi-state payroll execution with pre-run compliance validation. Every cycle governed, every decision documented.",
   },
   {
     icon: "ShieldCheck" as const,
     title: "Tax & Compliance",
-    desc: "Federal, state, and local filings handled automatically. When regulations change, your rules update the same day.",
+    desc: "Federal, state, and local statutory checks applied continuously. When regulations change, CHAP AI updates the same day.",
   },
   {
     icon: "BarChart3" as const,
     title: "Workforce Analytics",
-    desc: "Labor costs, overtime exposure, and headcount trends \u2014 updated live, not buried in a quarterly deck.",
+    desc: "Labor cost exposure, overtime liability, and compliance posture \u2014 visible in real time, not buried in a quarterly deck.",
   },
   {
     icon: "RefreshCw" as const,
@@ -43,7 +43,7 @@ export const SERVICES = [
   {
     icon: "Target" as const,
     title: "Strategic Advisory",
-    desc: "Payroll structure optimization, entity setup guidance, and compensation strategy for growing teams.",
+    desc: "Payroll structure optimization, entity setup guidance, and compliance posture strategy for growing organizations.",
   },
 ] as const;
 

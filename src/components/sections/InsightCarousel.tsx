@@ -73,6 +73,9 @@ export function InsightCarousel() {
           <div>
             <p className="pse-insights-eyebrow">Compliance intelligence</p>
             <h2 className="pse-insights-headline">What the enforcement data tells payroll teams</h2>
+            <blockquote className="pse-pull-quote">
+              &ldquo;Your payroll vendor processes transactions. It does not tell you whether those transactions are legally correct. That is the gap PSE closes.&rdquo;
+            </blockquote>
           </div>
           <div className="pse-carousel-controls" role="group" aria-label="Carousel navigation">
             <div className="pse-carousel-dots">

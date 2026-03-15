@@ -30,17 +30,18 @@ export default function Hero() {
           {/* Content */}
           <div style={{ animation: "fadeInUp 0.6s ease-out" }}>
             <h1 className="text-[clamp(2.2rem,4vw,3.2rem)] font-bold leading-[1.15] tracking-[-0.03em] text-text mb-5">
-              Catch payroll risk{" "}
+              Payroll has no governance layer.{" "}
               <em className="not-italic relative inline-block">
-                before
+                That
                 <span className="absolute left-0 right-0 bottom-1 h-[3px] bg-steel-light rounded-sm opacity-50" />
               </em>{" "}
-              it hits your people.
+              is the problem PSE solves.
             </h1>
 
             <p className="text-[17px] leading-[1.7] text-text-secondary max-w-[480px] mb-8">
-              AI-powered payroll controls that catch compliance issues before
-              they cost you. Every run validated, every decision documented.
+              PSE is the governance, audit, and compliance intelligence layer
+              between your payroll vendor and the regulations it has to follow.
+              We don&apos;t replace your system &mdash; we make sure it&apos;s right.
             </p>
 
             <div className="flex flex-wrap gap-3">

@@ -39,8 +39,7 @@ export default function Services() {
           Services
         </span>
         <h2 className="text-[clamp(2rem,4vw,2.75rem)] font-bold tracking-[-0.02em] text-text mb-3.5">
-          Payroll operations built for multi-state employers who need it right
-          the first time.
+          The governance and audit intelligence layer for enterprise payroll.
         </h2>
       </RevealOnScroll>
 
