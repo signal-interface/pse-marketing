@@ -6,6 +6,7 @@ import {
   Plug,
   Target,
 } from "lucide-react";
+import Link from "next/link";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import { SERVICES } from "@/lib/constants";
 
@@ -17,6 +18,15 @@ const ICON_MAP = {
   Plug,
   Target,
 } as const;
+
+const SERVICE_SLUGS = [
+  'payroll-processing',
+  'tax-compliance',
+  'workforce-analytics',
+  'benefits-integration',
+  'system-integration',
+  'strategic-advisory',
+];
 
 export default function Services() {
   return (
@@ -53,6 +63,10 @@ export default function Services() {
                 <p className="text-sm leading-[1.7] text-text-secondary">
                   {s.desc}
                 </p>
+                <Link href={`/services/${SERVICE_SLUGS[i]}`} className="svc-card__link mt-3 inline-flex">
+                  Learn more
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </Link>
               </div>
             </RevealOnScroll>
           );

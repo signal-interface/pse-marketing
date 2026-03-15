@@ -1,4 +1,5 @@
 import { Check, AlertTriangle, X as XIcon } from "lucide-react";
+import Link from "next/link";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import { CHAP_STEPS } from "@/lib/constants";
 
@@ -125,6 +126,14 @@ export default function ChapAI() {
             </div>
           </RevealOnScroll>
         </div>
+
+        {/* Learn more link */}
+        <RevealOnScroll delay="reveal-d2" className="mt-6 text-center">
+          <Link href="/chap-ai" className="chap-learn-more">
+            Full CHAP AI documentation
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </Link>
+        </RevealOnScroll>
 
         {/* CHAP Guard banner */}
         <RevealOnScroll delay="reveal-d3" className="mt-8">
