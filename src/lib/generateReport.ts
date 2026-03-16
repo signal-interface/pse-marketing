@@ -167,7 +167,7 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
       name: 'Compliance Staff Time Cost',
       value: results.complianceTimeCost,
       source: 'EY 2024',
-      desc: '120 hrs/yr average time lost to compliance resolution, scaled by headcount and states.',
+      desc: '120 hrs/yr average time lost to compliance resolution, scaled by headcount and states. Staff time valued at $26/hr blended rate (BLS OES May 2024, Financial Clerks median $48,650, SOC 43-3000).',
     },
     {
       name: 'Error Correction Cost',
@@ -282,7 +282,7 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
         'EY research: average employer spends 120 hours/year resolving compliance issues ' +
         '(29 hrs litigation + 91 hrs compliance management). Scaled logarithmically by ' +
         'employee count and linearly by state count at 8% per additional state.',
-      source: 'Ernst & Young Global Payroll Operations Survey, 2024 (via Lano)',
+      source: 'Ernst & Young Global Payroll Operations Survey, 2024; BLS OES May 2024 (SOC 43-3000, Financial Clerks median annual wage $48,650)',
     },
     {
       label: 'Error Correction Cost',

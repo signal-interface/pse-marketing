@@ -11,7 +11,7 @@ export const SITE = {
 export const NAV_LINKS = [
   { label: "Services", href: "/services" },
   { label: "CHAP AI", href: "/chap-ai" },
-  { label: "Why PSE", href: "#proof" },
+  { label: "Why PSE", href: "/#proof" },
   { label: "Risk Estimator", href: "/compliance-risk" },
 ] as const;
 

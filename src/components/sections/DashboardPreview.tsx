@@ -1,3 +1,5 @@
+'use client';
+
 import { Check, AlertTriangle } from "lucide-react";
 
 export default function DashboardPreview() {
@@ -13,7 +15,7 @@ export default function DashboardPreview() {
           <span className="text-sm font-semibold text-text">
             CHAP AI &mdash; Pre-Run Compliance
           </span>
-          <span className="ml-auto text-xs text-text-tertiary">Feb 28, 2026</span>
+          <span className="ml-auto text-xs text-text-tertiary">{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
         </div>
 
         {/* Metric cards */}

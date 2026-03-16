@@ -39,9 +39,10 @@ export default function Hero() {
             </h1>
 
             <p className="text-[17px] leading-[1.7] text-text-secondary max-w-[480px] mb-8">
-              PSE is the governance, audit, and compliance intelligence layer
-              between your payroll vendor and the regulations it has to follow.
-              We don&apos;t replace your system &mdash; we make sure it&apos;s right.
+              ADP runs payroll. UKG runs payroll. Nobody validates compliance
+              before it finalizes. PSE is the control plane that closes that
+              gap &mdash; ensuring every payroll outcome is compliant, explainable,
+              and provable before payroll closes.
             </p>
 
             <div className="flex flex-wrap gap-3">

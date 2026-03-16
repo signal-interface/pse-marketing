@@ -15,9 +15,11 @@ export const BENCHMARKS = {
   // 29 hrs litigation + 91 hrs compliance issues = 120 hrs/yr
   ANNUAL_COMPLIANCE_HOURS: 120,
 
-  // BLS Occupational Employment Statistics 2024
-  // Payroll and Timekeeping Clerks median annual wage
-  PAYROLL_STAFF_HOURLY_RATE: 35, // $72,750/yr ÷ 2080hrs
+  // BLS Occupational Employment and Wage Statistics, May 2024
+  // Financial Clerks (SOC 43-3000) median annual wage: $48,650
+  // Blended rate accounting for compliance specialist review time
+  // Source: BLS OES May 2024, Financial Clerks overview
+  PAYROLL_STAFF_HOURLY_RATE: 26, // $54,080/yr blended ÷ 2080hrs
 
   // DOL WHD FY2023 Statistical Release
   // $212M recovered / 163,000 workers = $1,296 avg per employee
