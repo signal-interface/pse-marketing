@@ -34,7 +34,7 @@ export const SERVICES = [
   {
     icon: "RefreshCw" as const,
     title: "Benefits Integration",
-    desc: "Connect benefits data directly to your payroll workflow for seamless deduction reconciliation and enrollment sync.",
+    desc: "Benefits deduction reconciliation \u2014 PSE audits payroll deduction reports against benefit elections to identify discrepancies.",
   },
   {
     icon: "Plug" as const,
