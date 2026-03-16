@@ -5,49 +5,33 @@ const DEMO_URL = 'https://demo.payrollsynergyexperts.com';
 const OUT_DIR = path.join(__dirname, '..', 'public', 'screenshots');
 
 const screenshots = [
-  {
-    name: 'dashboard-overview',
-    path: '/',
-    waitFor: 3000,
-    viewport: { width: 1280, height: 800 },
-  },
-  {
-    name: 'compliance-scan',
-    path: '/compliance',
-    waitFor: 3000,
-    viewport: { width: 1280, height: 800 },
-  },
-  {
-    name: 'payroll-run',
-    path: '/payroll',
-    waitFor: 3000,
-    viewport: { width: 1280, height: 800 },
-  },
-  {
-    name: 'audit-trail',
-    path: '/audit',
-    waitFor: 3000,
-    viewport: { width: 1280, height: 800 },
-  },
+  { name: 'dashboard-overview', navText: 'Dashboard', wait: 2000 },
+  { name: 'compliance-scan', navText: 'Exceptions', wait: 2000 },
+  { name: 'payroll-run', navText: 'Payroll Detail', wait: 2000 },
+  { name: 'audit-trail', navText: 'Audit Ledger', wait: 2000 },
 ];
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({
+    viewport: { width: 1280, height: 800 },
+    deviceScaleFactor: 2,
+  });
+  const page = await context.newPage();
+
+  // Load the SPA once
+  console.log('Loading demo site...');
+  await page.goto(DEMO_URL, { waitUntil: 'networkidle', timeout: 20000 });
+  await page.waitForTimeout(3000);
 
   for (const shot of screenshots) {
-    console.log(`Capturing ${shot.name}...`);
-    const context = await browser.newContext({
-      viewport: shot.viewport,
-      deviceScaleFactor: 2,
-    });
-    const page = await context.newPage();
-
+    console.log(`Capturing ${shot.name} (clicking "${shot.navText}")...`);
     try {
-      await page.goto(`${DEMO_URL}${shot.path}`, {
-        waitUntil: 'networkidle',
-        timeout: 15000,
-      });
-      await page.waitForTimeout(shot.waitFor);
+      // Click the sidebar nav button by text
+      const btn = page.locator(`nav button:has-text("${shot.navText}")`).first();
+      await btn.click();
+      await page.waitForTimeout(shot.wait);
+
       await page.screenshot({
         path: path.join(OUT_DIR, `${shot.name}.png`),
         fullPage: false,
@@ -56,10 +40,9 @@ const screenshots = [
     } catch (err) {
       console.error(`  ✗ ${shot.name} failed: ${err.message}`);
     }
-
-    await context.close();
   }
 
+  await context.close();
   await browser.close();
   console.log('\nDone.');
 })();
