@@ -7,8 +7,8 @@ export function CredibilityStrip() {
         </p>
         <div className="cred-strip__metrics">
           <div className="cred-strip__metric">
-            <span className="cred-strip__number">15+</span>
-            <span className="cred-strip__label">Years of multi-state payroll operations experience</span>
+            <span className="cred-strip__number">1,200+</span>
+            <span className="cred-strip__label">Employee records validated per payroll cycle</span>
           </div>
           <div className="cred-strip__divider" />
           <div className="cred-strip__metric">
