@@ -18,8 +18,8 @@ export const NAV_LINKS = [
 export const SERVICES = [
   {
     icon: "Zap" as const,
-    title: "Payroll Processing",
-    desc: "Multi-state payroll execution with pre-run compliance validation. Every cycle governed, every decision documented.",
+    title: "Governed Payroll Runs",
+    desc: "Multi-state payroll validation with pre-run compliance validation. Every cycle governed, every decision documented.",
   },
   {
     icon: "ShieldCheck" as const,

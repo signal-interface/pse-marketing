@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ENFORCEMENT_STATS } from '@/lib/stats';
 
 export const metadata: Metadata = {
   title: 'Services | Payroll Synergy Experts',
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 const services = [
   {
     slug: 'payroll-processing',
-    name: 'Payroll Processing',
+    name: 'Governed Payroll Runs',
     headline: 'Automated multi-state payroll with real-time compliance validation.',
     body: 'Every payroll run validated against federal and state statutory requirements before commit. CHAP AI catches violations — wrong overtime calculations, missed meal break premiums, deposit timing errors — before they become penalties.',
     features: [
@@ -21,7 +22,7 @@ const services = [
       'Same-day correction workflow',
       'Audit-ready run documentation',
     ],
-    stat: { value: '15%', label: 'Max IRS deposit penalty — eliminated by pre-run validation' },
+    stat: { value: ENFORCEMENT_STATS.irsMaxDepositPenalty.value, label: 'Max IRS deposit penalty — eliminated by pre-run validation' },
   },
   {
     slug: 'tax-compliance',
@@ -35,7 +36,7 @@ const services = [
       'Deposit timing validation (IRC §6656)',
       'Withholding reconciliation',
     ],
-    stat: { value: '63%', label: 'Of payroll teams cite compliance as their #1 challenge (PayrollOrg 2024)' },
+    stat: { value: ENFORCEMENT_STATS.payrollComplianceTopChallenge.value, label: 'Of payroll teams cite compliance as their #1 challenge (PayrollOrg 2024)' },
   },
   {
     slug: 'workforce-analytics',
@@ -49,7 +50,7 @@ const services = [
       'Exception trend reporting',
       'Custom reporting exports',
     ],
-    stat: { value: '35%', label: 'Of HR time spent on payroll administration (OnePoint Research)' },
+    stat: { value: ENFORCEMENT_STATS.hrTimeOnPayroll.value, label: 'Of HR time spent on payroll administration (OnePoint Research)' },
   },
   {
     slug: 'benefits-integration',
@@ -63,7 +64,7 @@ const services = [
       'Action plan delivery',
       'In development',
     ],
-    stat: { value: '33%', label: 'Of employers have an active payroll error in any given period (IRS + EY 2024)' },
+    stat: { value: ENFORCEMENT_STATS.irsEmployerErrors.value, label: 'Of employers have an active payroll error in any given period (IRS + EY 2024)' },
   },
   {
     slug: 'system-integration',
@@ -77,7 +78,7 @@ const services = [
       'Real-time validation on inbound data',
       'Integration audit logging',
     ],
-    stat: { value: '85%', label: 'Of companies encounter challenges with payroll technologies (Ceridian/APA/GPMI)' },
+    stat: { value: ENFORCEMENT_STATS.payrollTechChallenges.value, label: 'Of companies encounter challenges with payroll technologies (Ceridian/APA/GPMI)' },
   },
   {
     slug: 'strategic-advisory',
@@ -91,7 +92,7 @@ const services = [
       'Compliance gap assessments',
       'Audit preparation support',
     ],
-    stat: { value: '$212M', label: 'In DOL back wages recovered from employers in FY2023 (DOL WHD)' },
+    stat: { value: `${ENFORCEMENT_STATS.dolBackWages.fiscalYear}: ${ENFORCEMENT_STATS.dolBackWages.value}`, label: 'In DOL back wages recovered from employers (DOL WHD)' },
   },
 ];
 
@@ -177,7 +178,7 @@ export default function ServicesPage() {
                   <span className="svc-terminal-label">chap-ai — every service</span>
                 </div>
                 <div className="svc-terminal-body">
-                  <div className="svc-t-ok">✓  Payroll Processing    CHAP AI pre-run scan</div>
+                  <div className="svc-t-ok">✓  Governed Payroll Runs  CHAP AI pre-run scan</div>
                   <div className="svc-t-ok">✓  Tax &amp; Compliance      Daily rule updates</div>
                   <div className="svc-t-ok">✓  Workforce Analytics   Live exposure data</div>
                   <div className="svc-t-ok">✓  Benefits Integration  Deduction validation</div>

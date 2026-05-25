@@ -1,3 +1,5 @@
+import { ENFORCEMENT_STATS } from '@/lib/stats';
+
 export interface ServiceFeature {
   title: string;
   body: string;
@@ -32,7 +34,7 @@ export const serviceData: Record<string, ServiceData> = {
 
   'payroll-processing': {
     slug: 'payroll-processing',
-    name: 'Payroll Processing',
+    name: 'Governed Payroll Runs',
     headline: 'Automated multi-state payroll with real-time compliance validation.',
     subheadline: 'Every run validated before commit. Every decision documented. Every violation caught before it costs you.',
     metaDescription: 'Multi-state payroll processing with CHAP AI pre-run compliance validation. Catch deposit timing errors, overtime violations, and statutory issues before they become IRS penalties.',
@@ -45,8 +47,8 @@ export const serviceData: Record<string, ServiceData> = {
       { title: 'Audit-ready run documentation', body: 'Every payroll run produces a timestamped compliance record: what was checked, what passed, what was flagged, what was corrected, and by whom. Available on demand for three years.' },
     ],
     stats: [
-      { value: '15%', label: 'Maximum IRC §6656 deposit penalty — triggered by deposit timing errors CHAP AI catches pre-run', source: 'IRS Notice 746 (Rev. 12-2024)' },
-      { value: '33%', label: 'Of employers make payroll errors in any given period', source: 'IRS employer compliance study; EY Payroll Operations Survey 2024' },
+      { value: ENFORCEMENT_STATS.irsMaxDepositPenalty.value, label: 'Maximum IRC §6656 deposit penalty — triggered by deposit timing errors CHAP AI catches pre-run', source: ENFORCEMENT_STATS.irsMaxDepositPenalty.source },
+      { value: ENFORCEMENT_STATS.irsEmployerErrors.value, label: 'Of employers make payroll errors in any given period', source: ENFORCEMENT_STATS.irsEmployerErrors.source },
     ],
     chapAiConnection: 'Payroll Processing is the primary integration point for CHAP AI. Every run triggers a full pre-run scan. Violations block the run until resolved. Documentation is generated automatically.',
     screenshot: { src: '/screenshots/payroll-run.png', alt: 'Payroll run validation showing per-employee compliance checks', caption: 'CHAP AI pre-run validation — every employee checked before payroll commits' },
@@ -71,13 +73,13 @@ export const serviceData: Record<string, ServiceData> = {
       { title: 'Withholding reconciliation', body: 'Withholding positions are reconciled against employee elections, state requirements, and payroll data each cycle. Discrepancies are flagged with the applicable statute and recommended correction.' },
     ],
     stats: [
-      { value: '63%', label: 'Of payroll professionals name compliance as their #1 challenge', source: 'PayrollOrg "Getting the World Paid" Survey, 2024' },
-      { value: '$150M', label: 'Recovered by DOL WHD in FLSA back wages in FY2024 — indicating the scale of ongoing enforcement', source: 'DOL WHD FY2024 Statistical Release' },
+      { value: ENFORCEMENT_STATS.payrollComplianceTopChallenge.value, label: 'Of payroll professionals name compliance as their #1 challenge', source: ENFORCEMENT_STATS.payrollComplianceTopChallenge.source },
+      { value: `${ENFORCEMENT_STATS.dolBackWages.fiscalYear}: ${ENFORCEMENT_STATS.dolBackWages.value}`, label: 'Recovered by DOL WHD in FLSA back wages — indicating the scale of ongoing enforcement', source: ENFORCEMENT_STATS.dolBackWages.source },
     ],
     chapAiConnection: 'CHAP AI validates deposit timing and withholding positions on every payroll run — flagging exposure before submission. When a tax notice arrives, CHAP AI\'s audit trail provides the documentation foundation for the PSE response plan.',
     screenshot: { src: '/screenshots/compliance-scan.png', alt: 'CHAP AI compliance scan with statute citations for tax compliance checks', caption: 'Compliance scan — deposit timing and withholding validation with statute citations' },
     related: [
-      { slug: 'payroll-processing', name: 'Payroll Processing' },
+      { slug: 'payroll-processing', name: 'Governed Payroll Runs' },
       { slug: 'strategic-advisory', name: 'Strategic Advisory' },
     ],
   },
@@ -97,12 +99,12 @@ export const serviceData: Record<string, ServiceData> = {
       { title: 'Custom reporting exports', body: 'Scheduled and on-demand exports in CSV, Excel, and PDF formats. Custom field selection for CFO, HR, and board reporting.' },
     ],
     stats: [
-      { value: '35%', label: 'Of HR department time dedicated to payroll responsibilities', source: 'OnePoint Research' },
-      { value: '120 hrs', label: 'Lost per employer annually to compliance issue resolution', source: 'Ernst & Young Global Payroll Operations Survey, 2024' },
+      { value: ENFORCEMENT_STATS.hrTimeOnPayroll.value, label: 'Of HR department time dedicated to payroll responsibilities', source: ENFORCEMENT_STATS.hrTimeOnPayroll.source },
+      { value: ENFORCEMENT_STATS.hoursLostToCompliance.value, label: 'Lost per employer annually to compliance issue resolution', source: ENFORCEMENT_STATS.hoursLostToCompliance.source },
     ],
     chapAiConnection: 'Workforce Analytics draws directly from CHAP AI\'s scan history. Overtime exposure data, violation frequency, and compliance trends are surfaced in the analytics layer in real time.',
     related: [
-      { slug: 'payroll-processing', name: 'Payroll Processing' },
+      { slug: 'payroll-processing', name: 'Governed Payroll Runs' },
       { slug: 'benefits-integration', name: 'Benefits Integration' },
     ],
   },
@@ -122,12 +124,12 @@ export const serviceData: Record<string, ServiceData> = {
       { title: 'In development', body: 'This service is currently in development. Speak with PSE to discuss your deduction reconciliation requirements and timeline.' },
     ],
     stats: [
-      { value: '33%', label: 'Of employers have an active payroll error in any given period — benefit deduction errors are among the most common', source: 'IRS employer compliance study; EY Payroll Operations Survey, 2024' },
-      { value: '$291', label: 'Average cost per payroll error — deduction discrepancies compound across every pay cycle they go undetected', source: 'Ernst & Young Global Payroll Operations Survey, 2022' },
+      { value: ENFORCEMENT_STATS.irsEmployerErrors.value, label: 'Of employers have an active payroll error in any given period — benefit deduction errors are among the most common', source: ENFORCEMENT_STATS.irsEmployerErrors.source },
+      { value: ENFORCEMENT_STATS.perErrorCost.value, label: 'Average cost per payroll error — deduction discrepancies compound across every pay cycle they go undetected', source: ENFORCEMENT_STATS.perErrorCost.source },
     ],
     chapAiConnection: 'CHAP AI\'s audit trail provides the baseline for benefits deduction reconciliation — surfacing the payroll-side data that is compared against benefit elections to identify discrepancies.',
     related: [
-      { slug: 'payroll-processing', name: 'Payroll Processing' },
+      { slug: 'payroll-processing', name: 'Governed Payroll Runs' },
       { slug: 'system-integration', name: 'System Integration' },
     ],
   },
@@ -147,12 +149,12 @@ export const serviceData: Record<string, ServiceData> = {
       { title: 'Integration audit logging', body: 'Every data exchange is logged with timestamp, source system, record count, and validation result. Accessible for compliance audits and integration troubleshooting.' },
     ],
     stats: [
-      { value: '85%', label: 'Of companies encounter challenges with their payroll technologies', source: 'Ceridian/APA/GPMI Payroll Technology Survey' },
-      { value: '22%', label: 'Of payroll teams spend 30+ hours weekly reconciling payroll and HR data', source: 'ADP, 2023' },
+      { value: ENFORCEMENT_STATS.payrollTechChallenges.value, label: 'Of companies encounter challenges with their payroll technologies', source: ENFORCEMENT_STATS.payrollTechChallenges.source },
+      { value: ENFORCEMENT_STATS.reconciliationOverhead.value, label: 'Of payroll teams spend 30+ hours weekly reconciling payroll and HR data', source: ENFORCEMENT_STATS.reconciliationOverhead.source },
     ],
     chapAiConnection: 'CHAP AI validation runs at the integration boundary — data arriving from connected systems is checked before entering the payroll workflow. This catches source-system errors at the earliest possible point.',
     related: [
-      { slug: 'payroll-processing', name: 'Payroll Processing' },
+      { slug: 'payroll-processing', name: 'Governed Payroll Runs' },
       { slug: 'benefits-integration', name: 'Benefits Integration' },
     ],
   },
@@ -172,13 +174,13 @@ export const serviceData: Record<string, ServiceData> = {
       { title: 'Audit preparation support', body: 'Pre-audit documentation review, record organization, and response preparation for IRS, DOL, and state agency inquiries.' },
     ],
     stats: [
-      { value: '$212M', label: 'In DOL WHD back wages recovered from employers in FY2023 — the exposure PSE advisory helps prevent', source: 'DOL WHD FY2023 Statistical Release' },
-      { value: '14%', label: 'Of businesses faced compliance litigation related to payroll errors in a 12-month period', source: 'Ernst & Young Global Payroll Operations Survey, 2024' },
+      { value: `${ENFORCEMENT_STATS.dolBackWages.fiscalYear}: ${ENFORCEMENT_STATS.dolBackWages.value}`, label: 'In DOL WHD back wages recovered from employers — the exposure PSE advisory helps prevent', source: ENFORCEMENT_STATS.dolBackWages.source },
+      { value: ENFORCEMENT_STATS.payrollLitigationRate.value, label: 'Of businesses faced compliance litigation related to payroll errors in a 12-month period', source: ENFORCEMENT_STATS.payrollLitigationRate.source },
     ],
     chapAiConnection: 'Advisory engagements use CHAP AI scan history as the baseline for compliance gap assessments. Findings reference the same statutory framework — FLSA, IRC, state labor codes — that powers the CHAP AI ruleset.',
     related: [
       { slug: 'tax-compliance', name: 'Tax & Compliance' },
-      { slug: 'payroll-processing', name: 'Payroll Processing' },
+      { slug: 'payroll-processing', name: 'Governed Payroll Runs' },
     ],
   },
 
