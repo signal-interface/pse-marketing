@@ -32,7 +32,7 @@ export default function Footer() {
                 { name: "Governed Payroll Runs", slug: "payroll-processing" },
                 { name: "Tax & Compliance", slug: "tax-compliance" },
                 { name: "Workforce Analytics", slug: "workforce-analytics" },
-                { name: "Benefits Integration", slug: "benefits-integration" },
+                { name: "Benefits Reconciliation", slug: "benefits-integration" },
                 { name: "System Integration", slug: "system-integration" },
                 { name: "Advisory", slug: "strategic-advisory" },
               ].map((s) => (

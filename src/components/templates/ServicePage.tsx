@@ -2,6 +2,8 @@ import Link from 'next/link';
 import type { ServiceData } from '@/data/services';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import DemoRequestForm from '@/components/forms/DemoRequestForm';
+import { Badge } from '@/components/ui/Badge';
 import ProductScreenshot from '@/components/ui/ProductScreenshot';
 
 interface Props {
@@ -26,10 +28,17 @@ export function ServicePage({ service }: Props) {
         {/* Hero */}
         <section className="svc-sub-hero">
           <div className="svc-sub-hero__inner">
-            <p className="svc-eyebrow">PSE — {service.name}</p>
+            <p className="svc-eyebrow">
+              PSE — {service.name}
+              {service.ctaSource && <> <Badge>Coming Soon</Badge></>}
+            </p>
             <h1 className="svc-sub-hero__headline">{service.headline}</h1>
             <p className="svc-sub-hero__sub">{service.subheadline}</p>
-            <Link href="/#demo" className="svc-btn-primary">Request a Demo</Link>
+            {service.ctaSource ? (
+              <a href="#demo" className="svc-btn-primary">{service.ctaLabel || 'Request a Demo'}</a>
+            ) : (
+              <Link href="/#demo" className="svc-btn-primary">Request a Demo</Link>
+            )}
           </div>
         </section>
 
@@ -112,13 +121,23 @@ export function ServicePage({ service }: Props) {
         </section>
 
         {/* CTA */}
-        <section className="svc-cta">
-          <div className="svc-cta__inner">
-            <h2>See {service.name} in action.</h2>
-            <p>30-minute personalized walkthrough tailored to your payroll structure.</p>
-            <Link href="/#demo" className="svc-btn-primary">Request a Demo</Link>
-          </div>
-        </section>
+        {service.ctaSource ? (
+          <DemoRequestForm
+            source={service.ctaSource}
+            anchorId="demo"
+            heading="Notify Me When Available"
+            submitLabel="Notify Me"
+            confirmationMessage="We'll let you know as soon as Benefits Reconciliation is available."
+          />
+        ) : (
+          <section className="svc-cta">
+            <div className="svc-cta__inner">
+              <h2>See {service.name} in action.</h2>
+              <p>30-minute personalized walkthrough tailored to your payroll structure.</p>
+              <Link href="/#demo" className="svc-btn-primary">Request a Demo</Link>
+            </div>
+          </section>
+        )}
 
       </main>
       <Footer />

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { Badge } from '@/components/ui/Badge';
 import { ENFORCEMENT_STATS } from '@/lib/stats';
 
 export const metadata: Metadata = {
@@ -54,7 +55,7 @@ const services = [
   },
   {
     slug: 'benefits-integration',
-    name: 'Benefits Integration',
+    name: 'Benefits Reconciliation',
     headline: 'Benefits deduction reconciliation — audited against payroll records.',
     body: 'Benefits deduction reconciliation — PSE audits payroll deduction reports against benefit elections to identify discrepancies. Service currently in development.',
     features: [
@@ -130,7 +131,12 @@ export default function ServicesPage() {
             <div className="svc-grid">
               {services.map((s) => (
                 <div key={s.slug} className="svc-card">
-                  <div className="svc-card__name">{s.name}</div>
+                  <div className="svc-card__name">
+                    {s.name}
+                    {s.slug === 'benefits-integration' && (
+                      <> <Badge>Coming Soon</Badge></>
+                    )}
+                  </div>
                   <div className="svc-card__headline">{s.headline}</div>
                   <p className="svc-card__body">{s.body}</p>
                   <ul className="svc-card__features">
@@ -181,7 +187,7 @@ export default function ServicesPage() {
                   <div className="svc-t-ok">✓  Governed Payroll Runs  CHAP AI pre-run scan</div>
                   <div className="svc-t-ok">✓  Tax &amp; Compliance      Daily rule updates</div>
                   <div className="svc-t-ok">✓  Workforce Analytics   Live exposure data</div>
-                  <div className="svc-t-ok">✓  Benefits Integration  Deduction validation</div>
+                  <div className="svc-t-ok">✓  Benefits Reconciliation  Deduction validation</div>
                   <div className="svc-t-ok">✓  System Integration    Inbound data check</div>
                   <div className="svc-t-ok">✓  Strategic Advisory    Statute-backed guidance</div>
                 </div>

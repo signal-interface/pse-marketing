@@ -33,7 +33,7 @@ export const SERVICES = [
   },
   {
     icon: "RefreshCw" as const,
-    title: "Benefits Integration",
+    title: "Benefits Reconciliation",
     desc: "Benefits deduction reconciliation \u2014 PSE audits payroll deduction reports against benefit elections to identify discrepancies.",
   },
   {

@@ -10,7 +10,7 @@ const NOTIFICATION_EMAIL =
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, company, employees, website } = body;
+    const { name, email, company, employees, website, source } = body;
 
     // Honeypot check
     if (website) {
@@ -25,11 +25,14 @@ export async function POST(request: Request) {
       );
     }
 
+    const ALLOWED_SOURCES = ['pse-marketing', 'benefits-interest'] as const;
+    const safeSource = ALLOWED_SOURCES.includes(source) ? source : 'pse-marketing';
+
     // Ensure table exists, then insert
     await ensureDemoRequestsTable();
     await sql`
       INSERT INTO demo_requests (name, email, company, employees, source)
-      VALUES (${name}, ${email}, ${company || null}, ${employees || null}, 'pse-marketing')
+      VALUES (${name}, ${email}, ${company || null}, ${employees || null}, ${safeSource})
     `;
 
     // Send emails

@@ -4,7 +4,21 @@ import { useState } from "react";
 import { ArrowRight, Check, Calendar, Clock, Lock } from "lucide-react";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
-export default function DemoRequestForm() {
+interface DemoRequestFormProps {
+  source?: string;
+  heading?: string;
+  submitLabel?: string;
+  confirmationMessage?: string;
+  anchorId?: string;
+}
+
+export default function DemoRequestForm({
+  source = 'pse-marketing',
+  heading = 'Request a Demo',
+  submitLabel = 'Request a Demo',
+  confirmationMessage = "We'll reach out within one business day to schedule your walkthrough.",
+  anchorId = 'demo',
+}: DemoRequestFormProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,7 +38,7 @@ export default function DemoRequestForm() {
       const res = await fetch("/api/demo-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, source }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -43,7 +57,7 @@ export default function DemoRequestForm() {
   };
 
   return (
-    <section id="demo" className="py-28 px-8 bg-ice">
+    <section id={anchorId} className="py-28 px-8 bg-ice">
       <div className="max-w-[1100px] mx-auto">
         {submitted ? (
           <RevealOnScroll>
@@ -57,11 +71,10 @@ export default function DemoRequestForm() {
                 />
               </div>
               <div className="text-xl font-bold text-text mb-1.5">
-                Demo request received
+                {source === 'benefits-interest' ? 'You\u2019re on the list' : 'Demo request received'}
               </div>
               <div className="text-[15px] text-text-secondary">
-                We&apos;ll reach out within one business day to schedule your
-                walkthrough.
+                {confirmationMessage}
               </div>
             </div>
           </RevealOnScroll>
@@ -73,7 +86,7 @@ export default function DemoRequestForm() {
                 Get Started
               </span>
               <h2 className="text-[clamp(2rem,4vw,2.75rem)] font-bold tracking-[-0.02em] text-text mb-4">
-                Request a Demo
+                {heading}
               </h2>
               <p className="text-[17px] text-text-secondary leading-[1.7] mb-8 max-w-[440px]">
                 See how CHAP AI catches compliance issues before they cost you —
@@ -145,7 +158,7 @@ export default function DemoRequestForm() {
                 className="bg-white rounded-2xl p-8 sm:p-9 shadow-lg border border-border"
               >
                 <h3 className="text-xl font-bold text-text mb-6">
-                  Request a Demo
+                  {heading}
                 </h3>
 
                 {/* Honeypot */}
@@ -254,7 +267,7 @@ export default function DemoRequestForm() {
                   disabled={submitting}
                   className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-[15px] font-semibold bg-navy text-white hover:bg-navy-dark hover:-translate-y-px hover:shadow-md transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
-                  {submitting ? "Submitting..." : "Request a Demo"}
+                  {submitting ? "Submitting..." : submitLabel}
                   {!submitting && (
                     <ArrowRight
                       size={15}

@@ -175,14 +175,15 @@ export default function TermsPage() {
                   <ul className="list-disc list-inside space-y-1.5 ml-1">
                     <li>
                       <strong className="text-text">
-                        Payroll Processing:
+                        Governed Payroll Runs:
                       </strong>{" "}
-                      End-to-end payroll execution with real-time compliance
-                      validation across federal, state, and local jurisdictions
+                      Pre-run compliance validation and governance of payroll
+                      executed by your existing processor, across federal, state,
+                      and local jurisdictions
                     </li>
                     <li>
                       <strong className="text-text">
-                        Benefits Integration:
+                        Benefits Reconciliation:
                       </strong>{" "}
                       Seamless connections between benefit providers and
                       HRIS/payroll platforms

@@ -28,6 +28,8 @@ export interface ServiceData {
   chapAiConnection: string;
   screenshot?: { src: string; alt: string; caption: string };
   related: RelatedService[];
+  ctaLabel?: string;
+  ctaSource?: string;
 }
 
 export const serviceData: Record<string, ServiceData> = {
@@ -38,7 +40,7 @@ export const serviceData: Record<string, ServiceData> = {
     headline: 'Automated multi-state payroll with real-time compliance validation.',
     subheadline: 'Every run validated before commit. Every decision documented. Every violation caught before it costs you.',
     metaDescription: 'Multi-state payroll processing with CHAP AI pre-run compliance validation. Catch deposit timing errors, overtime violations, and statutory issues before they become IRS penalties.',
-    body: 'PSE\'s payroll processing runs on top of CHAP AI — the pre-run compliance engine that validates every employee record against the applicable federal and state statutory ruleset before the payroll commits. This is not a post-processing audit layer. It is a blocking gate: violations are surfaced, explained in plain language, and resolved before payroll closes. PSE validates and governs — your existing payroll processor executes. The result is payroll that passes its own compliance audit on every run.',
+    body: 'PSE\'s governed payroll runs sit on top of CHAP AI — the pre-run compliance engine that validates every employee record against the applicable federal and state statutory ruleset before the payroll commits. This is not a post-processing audit layer. It is a blocking gate: violations are surfaced, explained in plain language, and resolved before payroll closes. PSE validates and governs — your existing payroll processor executes. The result is payroll that passes its own compliance audit on every run.',
     features: [
       { title: 'Multi-state payroll in a single run', body: 'A single payroll run covers all active states, with per-state rule application handled automatically. No separate state runs, no manual rule lookups.' },
       { title: 'CHAP AI pre-run compliance scan', body: 'Every payroll run passes through a full statutory scan before commit — checking overtime, deposit timing, meal break premiums, minimum wage, and benefit deductions across all jurisdictions.' },
@@ -50,7 +52,7 @@ export const serviceData: Record<string, ServiceData> = {
       { value: ENFORCEMENT_STATS.irsMaxDepositPenalty.value, label: 'Maximum IRC §6656 deposit penalty — triggered by deposit timing errors CHAP AI catches pre-run', source: ENFORCEMENT_STATS.irsMaxDepositPenalty.source },
       { value: ENFORCEMENT_STATS.irsEmployerErrors.value, label: 'Of employers make payroll errors in any given period', source: ENFORCEMENT_STATS.irsEmployerErrors.source },
     ],
-    chapAiConnection: 'Payroll Processing is the primary integration point for CHAP AI. Every run triggers a full pre-run scan. Violations block the run until resolved. Documentation is generated automatically.',
+    chapAiConnection: 'Governed Payroll Runs is the primary integration point for CHAP AI. Every run triggers a full pre-run scan. Violations block the run until resolved. Documentation is generated automatically.',
     screenshot: { src: '/screenshots/payroll-run.png', alt: 'Payroll run validation showing per-employee compliance checks', caption: 'CHAP AI pre-run validation — every employee checked before payroll commits' },
     related: [
       { slug: 'tax-compliance', name: 'Tax & Compliance' },
@@ -105,29 +107,30 @@ export const serviceData: Record<string, ServiceData> = {
     chapAiConnection: 'Workforce Analytics draws directly from CHAP AI\'s scan history. Overtime exposure data, violation frequency, and compliance trends are surfaced in the analytics layer in real time.',
     related: [
       { slug: 'payroll-processing', name: 'Governed Payroll Runs' },
-      { slug: 'benefits-integration', name: 'Benefits Integration' },
+      { slug: 'benefits-integration', name: 'Benefits Reconciliation' },
     ],
   },
 
   'benefits-integration': {
     slug: 'benefits-integration',
-    name: 'Benefits Integration',
+    name: 'Benefits Reconciliation',
     headline: 'Benefits deduction reconciliation — audited against payroll records.',
     subheadline: 'PSE audits payroll deduction reports against benefit elections to identify discrepancies before they become compliance or employee relations issues.',
     metaDescription: 'Benefits deduction reconciliation for payroll. PSE audits payroll deduction reports against benefit elections to identify over-deductions, missed elections, and plan code mismatches.',
-    body: 'Benefits data lives in your HRIS or HCM system — PSE does not replace or drive that workflow. What PSE does is audit your payroll deduction reports against benefit elections to identify discrepancies: over-deductions, missed elections, and plan code mismatches that create compliance exposure and employee trust issues. This service is currently in development. Contact us to discuss your reconciliation requirements.',
+    body: 'This service is currently in development — sign up below to be notified when it launches. Benefits data lives in your HRIS or HCM system — PSE does not replace or drive that workflow. What PSE does is audit your payroll deduction reports against benefit elections to identify discrepancies: over-deductions, missed elections, and plan code mismatches that create compliance exposure and employee trust issues.',
     features: [
       { title: 'Deduction reconciliation audit', body: 'PSE audits payroll deduction reports against benefit elections — identifying over-deductions, under-deductions, missed enrollment updates, and plan code mismatches that create compliance or payroll exposure.' },
       { title: 'Discrepancy documentation', body: 'Every identified discrepancy is documented with the affected employee, deduction category, variance amount, and recommended correction — in an audit-ready format.' },
       { title: 'Payroll-benefits gap analysis', body: 'Structured review of the gap between what your benefits platform shows and what payroll is deducting — surfacing systemic issues that recur across pay cycles.' },
       { title: 'Action plan delivery', body: 'Reconciliation findings are delivered as a structured action plan with prioritized corrections, documentation for employee communication, and guidance on preventing recurrence.' },
-      { title: 'In development', body: 'This service is currently in development. Speak with PSE to discuss your deduction reconciliation requirements and timeline.' },
     ],
     stats: [
       { value: ENFORCEMENT_STATS.irsEmployerErrors.value, label: 'Of employers have an active payroll error in any given period — benefit deduction errors are among the most common', source: ENFORCEMENT_STATS.irsEmployerErrors.source },
       { value: ENFORCEMENT_STATS.perErrorCost.value, label: 'Average cost per payroll error — deduction discrepancies compound across every pay cycle they go undetected', source: ENFORCEMENT_STATS.perErrorCost.source },
     ],
     chapAiConnection: 'CHAP AI\'s audit trail provides the baseline for benefits deduction reconciliation — surfacing the payroll-side data that is compared against benefit elections to identify discrepancies.',
+    ctaLabel: 'Notify Me When Available',
+    ctaSource: 'benefits-interest',
     related: [
       { slug: 'payroll-processing', name: 'Governed Payroll Runs' },
       { slug: 'system-integration', name: 'System Integration' },
@@ -155,7 +158,7 @@ export const serviceData: Record<string, ServiceData> = {
     chapAiConnection: 'CHAP AI validation runs at the integration boundary — data arriving from connected systems is checked before entering the payroll workflow. This catches source-system errors at the earliest possible point.',
     related: [
       { slug: 'payroll-processing', name: 'Governed Payroll Runs' },
-      { slug: 'benefits-integration', name: 'Benefits Integration' },
+      { slug: 'benefits-integration', name: 'Benefits Reconciliation' },
     ],
   },
 
