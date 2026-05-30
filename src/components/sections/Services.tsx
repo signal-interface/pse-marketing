@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
+import { Badge } from "@/components/ui/Badge";
 import { SERVICES } from "@/lib/constants";
 
 const ICON_MAP = {
@@ -58,6 +59,9 @@ export default function Services() {
                 </div>
                 <h3 className="text-[19px] font-bold tracking-tight text-text mb-2.5">
                   {s.title}
+                  {SERVICE_SLUGS[i] === 'benefits-integration' && (
+                    <> <Badge>Coming Soon</Badge></>
+                  )}
                 </h3>
                 <p className="text-sm leading-[1.7] text-text-secondary">
                   {s.desc}

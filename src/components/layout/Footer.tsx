@@ -29,10 +29,10 @@ export default function Footer() {
             </h4>
             <div className="flex flex-col gap-1">
               {[
-                { name: "Payroll Processing", slug: "payroll-processing" },
+                { name: "Governed Payroll Runs", slug: "payroll-processing" },
                 { name: "Tax & Compliance", slug: "tax-compliance" },
                 { name: "Workforce Analytics", slug: "workforce-analytics" },
-                { name: "Benefits Integration", slug: "benefits-integration" },
+                { name: "Benefits Reconciliation", slug: "benefits-integration" },
                 { name: "System Integration", slug: "system-integration" },
                 { name: "Advisory", slug: "strategic-advisory" },
               ].map((s) => (

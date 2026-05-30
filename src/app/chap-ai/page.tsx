@@ -4,6 +4,7 @@ import Footer from '@/components/layout/Footer';
 import { ChapaInterface } from '@/components/sections/ChapaInterface';
 import ProductScreenshot from '@/components/ui/ProductScreenshot';
 import Link from 'next/link';
+import { ENFORCEMENT_STATS } from '@/lib/stats';
 
 export const metadata: Metadata = {
   title: 'CHAP AI — Compliance Intelligence Layer | Payroll Synergy Experts',
@@ -12,25 +13,21 @@ export const metadata: Metadata = {
 
 const steps = [
   {
-    letter: 'D',
     name: 'Detect',
     headline: 'Monitors payroll data against statutory requirements',
     body: 'CHAP AI continuously monitors payroll data against the applicable federal and state statutory ruleset for your employee population — surfacing exceptions as they emerge, not after payroll commits.',
   },
   {
-    letter: 'F',
     name: 'Flag',
     headline: 'Surfaces exceptions with severity and statute',
     body: 'Every exception is classified by severity (blocks payroll vs advisory), assigned the specific regulation that triggered it (FLSA §207, CA Lab §512, IWC Order 4), and queued for human review before the payroll run closes.',
   },
   {
-    letter: 'E',
     name: 'Explain',
     headline: 'Plain-language rationale, not just error codes',
     body: "CHAP AI generates a human-readable explanation for every flag: what rule was violated, why the specific employee's record triggered it, what correction clears it, and what the exposure would have been if it ran.",
   },
   {
-    letter: 'D',
     name: 'Document',
     headline: 'Audit-ready evidence generated automatically',
     body: 'Every review cycle produces a timestamped compliance record: what was checked, what passed, what was flagged, what was corrected, and by whom. Three years of records, searchable on demand.',
@@ -58,17 +55,17 @@ const proofStats = [
   {
     number: '1 in 3',
     label: 'employers has an active payroll error in any given period',
-    source: 'IRS employer compliance study + EY Payroll Operations Survey, 2024',
+    source: ENFORCEMENT_STATS.irsEmployerErrors.source,
   },
   {
-    number: '$150M',
-    label: 'recovered by DOL WHD in FY2024 — $127M from overtime violations alone',
-    source: 'DOL WHD FY2024 Statistical Release',
+    number: `${ENFORCEMENT_STATS.dolBackWages.fiscalYear}: ${ENFORCEMENT_STATS.dolBackWages.value}`,
+    label: `recovered by DOL WHD in ${ENFORCEMENT_STATS.dolBackWages.fiscalYear} — $127M from overtime violations alone`,
+    source: ENFORCEMENT_STATS.dolBackWages.source,
   },
   {
-    number: '120 hrs',
+    number: ENFORCEMENT_STATS.hoursLostToCompliance.value,
     label: 'lost per employer annually to compliance issue resolution',
-    source: 'Ernst & Young Global Payroll Operations Survey, 2024',
+    source: ENFORCEMENT_STATS.hoursLostToCompliance.source,
   },
 ];
 
@@ -111,8 +108,8 @@ export default function ChapAIPage() {
             <p className="chap-section-sub">CHAP AI runs the full Detect → Flag → Explain → Document cycle continuously — surfacing exceptions before payroll closes.</p>
             <div className="chap-steps-grid">
               {steps.map((step, i) => (
-                <div key={i} className="chap-step-card">
-                  <div className="chap-step-letter">{step.letter}</div>
+                <div key={step.name} className="chap-step-card">
+                  <div className="chap-step-letter" aria-hidden="true">{i + 1}</div>
                   <div className="chap-step-name">{step.name}</div>
                   <div className="chap-step-headline">{step.headline}</div>
                   <p className="chap-step-body">{step.body}</p>

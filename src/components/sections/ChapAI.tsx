@@ -31,15 +31,11 @@ export default function ChapAI() {
             The compliance brain behind every payroll run.
           </h2>
           <div className="chap-definition-block">
-            <div className="chap-definition-block__term">
-              CHAP = <strong>Compliance and Human Approval Processor</strong>
-            </div>
             <div className="chap-definition-block__body">
-              It is a Compliance and Human Approval Processor &mdash; an AI intelligence
-              layer that analyzes payroll scenarios against federal and state
-              regulations, surfaces findings for human review, and produces
-              audit-ready determinations. Every determination requires a named
-              human approver before any action is taken.
+              An AI intelligence layer that analyzes payroll scenarios against
+              federal and state regulations, surfaces findings for human review,
+              and produces audit-ready determinations. Every determination
+              requires a named human approver before any action is taken.
             </div>
           </div>
         </RevealOnScroll>
@@ -50,7 +46,7 @@ export default function ChapAI() {
           <RevealOnScroll delay="reveal-d1" className="flex-1 min-w-[280px]">
             <div className="bg-navy-light border border-white/[0.06] rounded-2xl p-7 h-full">
               <div className="text-xs font-bold text-steel-light tracking-[0.06em] uppercase mb-4">
-                How CHAP AI Works
+                Four-stage pipeline
               </div>
               {CHAP_STEPS.map((x, i) => (
                 <div
@@ -60,8 +56,9 @@ export default function ChapAI() {
                   <div className="flex items-start gap-3.5">
                     <div
                       className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-white text-xs font-extrabold mt-0.5 ${STEP_COLORS[x.color] || "bg-steel"}`}
+                      aria-hidden="true"
                     >
-                      {x.step.charAt(0)}
+                      {i + 1}
                     </div>
                     <div>
                       <div className="font-bold text-white text-base">
