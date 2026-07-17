@@ -100,14 +100,6 @@ async function logInteraction(params: {
 }
 
 export async function POST(request: NextRequest): Promise<Response> {
-  // 0. Widget gate — live questions stay offline until the compliance
-  // corpus carries verified primary-source text (DEPLOY_CHECKLIST.md #2).
-  // The /chap-ai page hides the widget behind the same flag; this guard
-  // covers direct POSTs.
-  if (process.env.CHAP_WIDGET_ENABLED !== "true") {
-    return jsonResponse({ error: "chap_unavailable" }, 503);
-  }
-
   // 1. Parse + validate body
   let body: unknown;
   try {

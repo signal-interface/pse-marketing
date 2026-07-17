@@ -49,29 +49,6 @@ vi.mock("@anthropic-ai/sdk", () => ({
 
 import { POST } from "../route";
 
-// The widget gate (CHAP_WIDGET_ENABLED) must be open for the suite —
-// every existing test exercises behavior behind the gate.
-process.env.CHAP_WIDGET_ENABLED = "true";
-
-describe("widget gate", () => {
-  it("returns 503 without touching any dependency when the flag is off", async () => {
-    const prev = process.env.CHAP_WIDGET_ENABLED;
-    delete process.env.CHAP_WIDGET_ENABLED;
-    try {
-      const res = await POST(
-        makeRequest({ question: "What is the IRC 6656 penalty structure?", sessionId: "s1" })
-      );
-      const json = await res.json();
-      expect(res.status).toBe(503);
-      expect(json.error).toBe("chap_unavailable");
-      expect(mockStreamDetermination).not.toHaveBeenCalled();
-      expect(mockCheckAndIncrement).not.toHaveBeenCalled();
-    } finally {
-      process.env.CHAP_WIDGET_ENABLED = prev;
-    }
-  });
-});
-
 function makeRequest(body: Record<string, unknown> | string): NextRequest {
   const req = new Request("http://localhost/api/chap/ask", {
     method: "POST",
