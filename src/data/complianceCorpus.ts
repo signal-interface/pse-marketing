@@ -150,7 +150,7 @@ The Secretary may abate the penalty imposed by subsection (a) with respect to th
     ],
   },
   {
-    id: "irc-6656-e-de-minimis",
+    id: "irc-6656-e",
     title: "IRC §6656(e) — Designation of periods to which deposits apply",
     citation: "26 U.S.C. §6656(e)",
     sourceType: "usc",
