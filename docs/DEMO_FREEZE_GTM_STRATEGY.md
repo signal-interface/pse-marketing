@@ -566,3 +566,87 @@ PSE will not wait until the demo is frozen to begin thinking about marketing. It
 Once the demo is frozen, PSE will execute a focused finalization sprint that converts the prepared foundation into a measurable GTM pipeline. Every campaign, CTA, content asset, qualification step, and sales promise will map to the demonstrated professional product platform and its approved commercial offer.
 
 The objective is speed without improvisation, breadth without confusion, and professional market readiness without marketing beyond product truth.
+
+# Appendix A — Reconciliation with shipped systems
+
+## A.1 Event taxonomy: two layers, one system of record
+
+The taxonomy in Workstream 6 is split into two declared layers:
+
+**Layer 1 — Web analytics (anonymous traffic).** Events that occur before
+any lead exists: `traffic_arrived`, `content_viewed`, `resource_downloaded`,
+`chap_question_asked`, and session/source/medium/campaign attribution.
+These live in the analytics tool, not the database.
+
+**Layer 2 — Lead evidence trail (system of record).** From the moment a
+lead exists, the append-only `lead_events` table is authoritative. The
+strategy's post-identification events map onto the shipped vocabulary and
+no parallel names are introduced:
+
+| Strategy event | Shipped `lead_events` type |
+| --- | --- |
+| email_captured / lead identified | `LEAD_CREATED` |
+| lead_asset_started (video) | `VIDEO_LINK_CLICKED` |
+| qualification_started | `QUESTIONNAIRE_OPENED` / `QUESTIONNAIRE_STARTED` transition |
+| qualification_submitted | `QUESTIONNAIRE_SUBMITTED` |
+| meeting_scheduled | `MEETING_BOOKED` |
+| meeting rescheduled / cancelled | `MEETING_RESCHEDULED` / `MEETING_CANCELLED` |
+| pilot_proposed / accepted / declined | `QUALIFICATION_RECORDED` with outcome metadata |
+
+New commercial milestones are added to `LEAD_EVENT_TYPES` in
+`src/lib/commercial/lifecycle.ts` (app-enforced; no migration required),
+never as a second tracking system. Attribution joins Layer 1 to Layer 2 at
+`LEAD_CREATED` via source/campaign fields already captured on the lead.
+
+## A.2 Pipeline stages: reporting labels, not statuses
+
+The lifecycle in Workstream 5 (visitor → MQL → SQL → …) is a **reporting
+view derived from** the ratified `lead_status` state machine — it is not a
+second status field, and no route may write it. `transitionLead()` remains
+the sole status writer.
+
+| Reporting label | Derived from `lead_status` |
+| --- | --- |
+| Identified lead | `NEW` … `VIDEO_ENGAGED` |
+| Marketing-qualified lead | `QUESTIONNAIRE_COMPLETED` |
+| Meeting scheduled / completed | `MEETING_SCHEDULED` / `DISCOVERY_COMPLETE` |
+| Sales-qualified / pilot path | `QUALIFIED` |
+| Nurture / disqualified | `NURTURE` / `DISQUALIFIED` |
+
+If pilot-stage tracking later needs states beyond `QUALIFIED`
+(e.g. `PILOT_PROPOSED`, `PILOT_ACTIVE`), they are added to the transition
+map by ratified amendment — not tracked in a side spreadsheet.
+
+## A.3 Qualification questionnaire: shipped, adjustable at freeze
+
+The qualification questionnaire is not a provisional template. It is live:
+a versioned 13-field server-side allowlist
+(`src/lib/commercial/questionnaire.ts`) with token-gated access,
+save/resume sessions, and lifecycle integration. At freeze, the GTM sprint
+may adjust fields (one-line allowlist changes plus form updates — no
+migration), but the mechanism, security model, and event trail are fixed
+infrastructure and outside the sprint's scope.
+
+## A.4 Freeze gates already encoded elsewhere
+
+Sections 5 and 10 of this strategy are implemented in part by existing
+artifacts, which remain authoritative for their domains:
+
+- **Product truth for the demo video:** `docs/video/demo-v1/demo-contract.yaml`
+  (validated by Playwright at the freeze tag; contract failure = no recording).
+- **Claim/statistic sourcing:** `src/lib/stats.ts` (single source of truth)
+  and the boundary lint.
+- **Recording preconditions:** `docs/video/demo-v1/recording-plan.md`.
+
+The demo-freeze handoff checklist is generated from §5 + §10 + the demo
+contract at freeze time, as a completed instance (checked boxes, named
+owners, dates) — not maintained as a fourth standing document that can
+drift.
+
+## A.5 Precedence among strategy documents
+
+Where this document overlaps `POSITIONING_STRATEGY.md`,
+`CONTENT_STRATEGY.md`, `SEO_STRATEGY.md`, or `MARKETING_SITE_PLAN.md`:
+this document governs **sequence, gates, and activation**; the domain
+documents govern **content of their domain**. Conflicts are resolved by
+amending the domain document, not by forking guidance here.
