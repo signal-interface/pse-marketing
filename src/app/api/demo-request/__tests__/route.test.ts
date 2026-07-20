@@ -1,12 +1,29 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { NextRequest } from "next/server";
 
-// Mocks must use inline factories (no top-level variable references)
-vi.mock("@vercel/postgres", () => ({
-  sql: vi.fn().mockResolvedValue({}),
+// ---------------------------------------------------------------------------
+// Mocks — the route is tested in isolation; lifecycle behavior has its own
+// suite in src/lib/commercial/__tests__/lifecycle.test.ts.
+// ---------------------------------------------------------------------------
+
+const mockCreateLead = vi.fn();
+const mockTransition = vi.fn();
+const mockRecordEvent = vi.fn();
+vi.mock("@/lib/commercial/lifecycle", () => ({
+  createLeadWithEvent: (...args: unknown[]) => mockCreateLead(...args),
+  transitionLead: (...args: unknown[]) => mockTransition(...args),
+  recordLeadEvent: (...args: unknown[]) => mockRecordEvent(...args),
+  classifyEmailDomain: (email: string) =>
+    email.endsWith("@gmail.com") ? "FREE" : "WORK",
 }));
 
-vi.mock("@/lib/db", () => ({
-  ensureDemoRequestsTable: vi.fn().mockResolvedValue(undefined),
+const mockLimit = vi.fn();
+vi.mock("@/lib/rateLimiter", () => ({
+  checkAndIncrementScopedLimit: (...args: unknown[]) => mockLimit(...args),
+}));
+
+vi.mock("@/lib/commercial/links", () => ({
+  signLeadRef: vi.fn(() => "42.abc"),
 }));
 
 const mockSend = vi.fn();
@@ -16,122 +33,203 @@ vi.mock("resend", () => ({
   },
 }));
 
-// Import after mocks are set up
 import { POST } from "../route";
-import { sql } from "@vercel/postgres";
 
-function makeRequest(body: Record<string, unknown>): Request {
-  return new Request("http://localhost/api/demo-request", {
+const VALID_BODY = {
+  firstName: "Jane",
+  lastName: "Smith",
+  email: "Jane@Acme.com",
+  company: "Acme",
+  jobTitle: "Payroll Director",
+  employees: "51-200",
+  source: "pse-marketing",
+};
+
+function makeRequest(body: Record<string, unknown>): NextRequest {
+  return new NextRequest("http://localhost/api/demo-request", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-forwarded-for": "203.0.113.9",
+    },
     body: JSON.stringify(body),
   });
 }
 
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockLimit.mockResolvedValue({ allowed: true, count: 1 });
+  mockCreateLead.mockResolvedValue({ id: 42 });
+  mockTransition.mockResolvedValue({
+    ok: true,
+    leadId: 42,
+    from: "NEW",
+    to: "VIDEO_SENT",
+    noop: false,
+  });
+  mockRecordEvent.mockResolvedValue({ ok: true, eventId: 1 });
+  mockSend.mockResolvedValue({ data: { id: "resend-id" }, error: null });
+});
+
 describe("POST /api/demo-request", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    mockSend.mockResolvedValue({ data: { id: "test-id" }, error: null });
-  });
-
-  it("returns success for valid submission", async () => {
-    const res = await POST(makeRequest({ name: "Jane", email: "jane@test.com", company: "Acme", employees: "1-50" }));
-    const json = await res.json();
-
+  it("happy path: creates lead, transitions, sends two emails, records outcomes", async () => {
+    const res = await POST(makeRequest(VALID_BODY));
     expect(res.status).toBe(200);
-    expect(json.success).toBe(true);
-  });
+    expect(await res.json()).toEqual({ success: true });
 
-  it("inserts into database", async () => {
-    await POST(makeRequest({ name: "Jane", email: "jane@test.com", company: "Acme", employees: "1-50" }));
+    // Lead created with normalized email and classification
+    expect(mockCreateLead).toHaveBeenCalledTimes(1);
+    expect(mockCreateLead.mock.calls[0][0]).toMatchObject({
+      firstName: "Jane",
+      email: "jane@acme.com",
+      emailDomainType: "WORK",
+    });
 
-    expect(sql).toHaveBeenCalled();
-  });
-
-  it("sends two emails", async () => {
-    await POST(makeRequest({ name: "Jane", email: "jane@test.com", company: "Acme" }));
+    // VIDEO_SENT only via transitionLead
+    expect(mockTransition).toHaveBeenCalledWith(
+      42,
+      "VIDEO_SENT",
+      expect.objectContaining({ actorType: "SYSTEM" })
+    );
 
     expect(mockSend).toHaveBeenCalledTimes(2);
-
-    // Internal notification
-    expect(mockSend).toHaveBeenCalledWith(
-      expect.objectContaining({
-        to: "info@payrollsynergyexperts.com",
-        subject: "New Demo Request: Acme",
-      })
+    expect(mockRecordEvent).toHaveBeenCalledTimes(2);
+    expect(mockRecordEvent).toHaveBeenNthCalledWith(
+      1,
+      42,
+      "EMAIL_SENT",
+      expect.objectContaining({ metadata: expect.objectContaining({ kind: "internal" }) })
     );
-
-    // Auto-response
-    expect(mockSend).toHaveBeenCalledWith(
-      expect.objectContaining({
-        to: "jane@test.com",
-        subject: "We received your demo request — Payroll Synergy Experts",
-      })
+    expect(mockRecordEvent).toHaveBeenNthCalledWith(
+      2,
+      42,
+      "EMAIL_SENT",
+      expect.objectContaining({ metadata: expect.objectContaining({ kind: "journey" }) })
     );
   });
 
-  it("uses name in subject when company is empty", async () => {
-    await POST(makeRequest({ name: "Jane", email: "jane@test.com" }));
-
-    expect(mockSend).toHaveBeenCalledWith(
-      expect.objectContaining({ subject: "New Demo Request: Jane" })
-    );
-  });
-
-  it("returns 400 when name is missing", async () => {
-    const res = await POST(makeRequest({ email: "jane@test.com" }));
+  it("response contains only success — no internal identifiers", async () => {
+    const res = await POST(makeRequest(VALID_BODY));
     const json = await res.json();
+    expect(Object.keys(json)).toEqual(["success"]);
+  });
 
+  it.each([
+    ["firstName", { ...VALID_BODY, firstName: "" }, "invalid_first_name"],
+    ["email", { ...VALID_BODY, email: "not-an-email" }, "invalid_email"],
+    ["company", { ...VALID_BODY, company: "" }, "invalid_company"],
+    ["jobTitle", { ...VALID_BODY, jobTitle: "" }, "invalid_job_title"],
+    ["employees", { ...VALID_BODY, employees: "9999" }, "invalid_employees"],
+  ])("rejects invalid %s with 400 and no side effects", async (_f, body, error) => {
+    const res = await POST(makeRequest(body));
     expect(res.status).toBe(400);
-    expect(json.error).toBe("Name and email are required");
-    expect(sql).not.toHaveBeenCalled();
-  });
-
-  it("returns 400 when email is missing", async () => {
-    const res = await POST(makeRequest({ name: "Jane" }));
-    const json = await res.json();
-
-    expect(res.status).toBe(400);
-    expect(json.error).toBe("Name and email are required");
-  });
-
-  it("silently accepts honeypot submissions without DB insert or email", async () => {
-    const res = await POST(
-      makeRequest({ name: "Bot", email: "bot@spam.com", website: "http://spam.com" })
-    );
-    const json = await res.json();
-
-    expect(res.status).toBe(200);
-    expect(json.success).toBe(true);
-    expect(sql).not.toHaveBeenCalled();
+    expect((await res.json()).error).toBe(error);
+    expect(mockCreateLead).not.toHaveBeenCalled();
     expect(mockSend).not.toHaveBeenCalled();
   });
 
-  it("returns 500 when database throws", async () => {
-    vi.mocked(sql).mockRejectedValueOnce(new Error("DB connection failed"));
-
-    const res = await POST(makeRequest({ name: "Jane", email: "jane@test.com" }));
-    const json = await res.json();
-
-    expect(res.status).toBe(500);
-    expect(json.error).toBe("Something went wrong");
+  it("oversized firstName is rejected", async () => {
+    const res = await POST(
+      makeRequest({ ...VALID_BODY, firstName: "x".repeat(101) })
+    );
+    expect(res.status).toBe(400);
   });
 
-  it("still returns success when emails fail", async () => {
-    mockSend.mockRejectedValue(new Error("Resend API error"));
-
-    const res = await POST(makeRequest({ name: "Jane", email: "jane@test.com" }));
-    const json = await res.json();
-
-    expect(res.status).toBe(200);
-    expect(json.success).toBe(true);
+  it("unknown source falls back to allowlist default", async () => {
+    await POST(makeRequest({ ...VALID_BODY, source: "evil-source" }));
+    expect(mockCreateLead.mock.calls[0][0]).toMatchObject({
+      source: "pse-marketing",
+    });
   });
 
-  it("sends from verified domain", async () => {
-    await POST(makeRequest({ name: "Jane", email: "jane@test.com" }));
-
-    for (const call of mockSend.mock.calls) {
-      expect(call[0].from).toContain("@payrollsynergyexperts.com");
+  it.each(["website", "ref_120"])(
+    "honeypot field %s returns generic success with zero side effects",
+    async (key) => {
+      const res = await POST(makeRequest({ ...VALID_BODY, [key]: "bot" }));
+      expect(res.status).toBe(200);
+      expect(await res.json()).toEqual({ success: true });
+      expect(mockCreateLead).not.toHaveBeenCalled();
+      expect(mockTransition).not.toHaveBeenCalled();
+      expect(mockSend).not.toHaveBeenCalled();
+      expect(mockLimit).not.toHaveBeenCalled();
     }
+  );
+
+  it("IP rate limit returns 429 without creating a lead", async () => {
+    mockLimit.mockResolvedValueOnce({ allowed: false, count: 10 });
+    const res = await POST(makeRequest(VALID_BODY));
+    expect(res.status).toBe(429);
+    expect(mockCreateLead).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it("duplicate email returns generic success without duplicate journey email", async () => {
+    mockLimit
+      .mockResolvedValueOnce({ allowed: true, count: 1 }) // ip
+      .mockResolvedValueOnce({ allowed: false, count: 1 }); // email
+    const res = await POST(makeRequest(VALID_BODY));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ success: true });
+    expect(mockCreateLead).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it("uses dedicated rate limit scopes and normalized email identifier", async () => {
+    await POST(makeRequest(VALID_BODY));
+    expect(mockLimit).toHaveBeenNthCalledWith(
+      1,
+      "demo-request-ip",
+      expect.any(String),
+      expect.any(Number)
+    );
+    expect(mockLimit).toHaveBeenNthCalledWith(
+      2,
+      "demo-request-email",
+      "jane@acme.com",
+      expect.any(Number)
+    );
+    // IP identifier must be hashed, never the raw IP
+    expect(mockLimit.mock.calls[0][1]).not.toBe("203.0.113.9");
+    expect(mockLimit.mock.calls[0][1]).toMatch(/^[0-9a-f]{64}$/);
+  });
+
+  it("Resend failure records EMAIL_FAILED but the request still succeeds", async () => {
+    mockSend
+      .mockRejectedValueOnce(new Error("resend down"))
+      .mockResolvedValueOnce({ data: null, error: { message: "bounced" } });
+
+    const res = await POST(makeRequest(VALID_BODY));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ success: true });
+
+    expect(mockCreateLead).toHaveBeenCalledTimes(1);
+    expect(mockTransition).toHaveBeenCalledTimes(1);
+    expect(mockRecordEvent).toHaveBeenNthCalledWith(
+      1,
+      42,
+      "EMAIL_FAILED",
+      expect.objectContaining({
+        metadata: expect.objectContaining({ error: expect.stringContaining("resend down") }),
+      })
+    );
+    // Resolved-with-error also counts as failure
+    expect(mockRecordEvent).toHaveBeenNthCalledWith(
+      2,
+      42,
+      "EMAIL_FAILED",
+      expect.objectContaining({
+        metadata: expect.objectContaining({ error: expect.stringContaining("bounced") }),
+      })
+    );
+  });
+
+  it("returns 400 on invalid JSON", async () => {
+    const req = new NextRequest("http://localhost/api/demo-request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{not json",
+    });
+    const res = await POST(req);
+    expect(res.status).toBe(400);
   });
 });
