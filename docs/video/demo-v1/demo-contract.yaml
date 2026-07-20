@@ -1,0 +1,50 @@
+# Demo Contract — demo-v1
+#
+# The interface between pse-marketing (content authority) and
+# PSE--Projects (recording authority). Marketing writes against this
+# contract, not the application. Playwright validates this contract, not
+# the narration. If validation fails at the freeze tag, there is no
+# recording.
+#
+# Placeholder values below marked TBD are completed by PSE--Projects at
+# demo-v1.0-frozen. Script placeholders reference keys here as
+# [[DEMO_CONTRACT:key.path]].
+
+version: demo-v1
+release_tag: demo-v1.0-frozen
+
+fixture:
+  payroll_fixture: TBD            # e.g. value-mart-approved-v1.xlsx
+  fixture_hash: TBD               # sha256, completed at freeze
+
+expected:
+  findings:
+    minimum: TBD                  # exact count expected from the fixture
+    maximum: TBD
+  designated_finding: TBD         # the finding opened on camera (s4)
+  score:
+    visible: true
+  chap:
+    approved_question: TBD        # the question asked on camera (s5)
+    citations: true
+    statute_reference: true
+    explanation: true
+  upload:
+    required: true
+  replay:
+    available: TBD                # confirm evidence/replay view in frozen build
+
+required_screens:
+  - Upload
+  - Command Center
+  - Findings
+  - CHAP
+  - Executive Summary
+
+prohibited:
+  - Experimental routes
+  - Debug pages
+  - Feature flags visible
+  - Developer console
+  - Placeholder or lorem content
+  - Unreleased terminology

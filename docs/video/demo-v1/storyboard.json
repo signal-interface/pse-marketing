@@ -1,0 +1,104 @@
+{
+  "storyboardVersion": "1.0",
+  "videoId": "pse-demo-v1.0",
+  "targetRuntimeSeconds": 380,
+  "resolution": "1920x1080",
+  "captureFps": 30,
+  "scenes": [
+    {
+      "id": "s1-why",
+      "chapter": 1,
+      "start": "0:00",
+      "end": "0:40",
+      "source": "motion-card",
+      "visual": "Brand opening card, fade to blurred non-identifiable dashboard composite",
+      "lowerThird": "Payroll Synergy Experts — Payroll Governance & Compliance Intelligence",
+      "callouts": [],
+      "freezeDependent": false
+    },
+    {
+      "id": "s2-boundary",
+      "chapter": 2,
+      "start": "0:40",
+      "end": "1:20",
+      "source": "motion-card",
+      "visual": "Two-column boundary diagram: 'Your System of Record — executes' | 'PSE — governs'; SOR logo row",
+      "callouts": ["Boundary statement stays on screen ≥8s"],
+      "freezeDependent": false
+    },
+    {
+      "id": "s3-intake",
+      "chapter": 3,
+      "start": "1:20",
+      "end": "2:00",
+      "source": "playwright",
+      "visual": "Upload approved fixture, analysis progress, completion state",
+      "callouts": ["Zoom on intake confirmation", "Caption: 'No integration required to begin'"],
+      "freezeDependent": true,
+      "freezeItems": ["fixture filename", "upload control labels", "completion copy"]
+    },
+    {
+      "id": "s4-findings",
+      "chapter": 4,
+      "start": "2:00",
+      "end": "3:30",
+      "source": "playwright",
+      "visual": "Command Center → compliance score → Exceptions list → open one finding",
+      "callouts": [
+        "Zoom on compliance score panel",
+        "Zoom on severity badge",
+        "Highlight statutory grounding line (IRC §6656 reference)"
+      ],
+      "freezeDependent": true,
+      "freezeItems": ["screen names", "selected finding", "expected findings count"]
+    },
+    {
+      "id": "s5-chap",
+      "chapter": 5,
+      "start": "3:30",
+      "end": "4:30",
+      "source": "playwright",
+      "visual": "CHAP panel: approved question → determination → citation → reasoning trail",
+      "callouts": ["Highlight citation block", "Caption: 'CHAP advises. Humans decide.'"],
+      "freezeDependent": true,
+      "freezeItems": ["approved CHAP question", "determination copy"]
+    },
+    {
+      "id": "s6-audit",
+      "chapter": 6,
+      "start": "4:30",
+      "end": "5:20",
+      "source": "playwright",
+      "visual": "Executive summary / reporting view → evidence or replay view",
+      "callouts": ["Zoom on evidence/version identifiers"],
+      "freezeDependent": true,
+      "freezeItems": ["exact screens available in frozen build"]
+    },
+    {
+      "id": "s7-discovery",
+      "chapter": 7,
+      "start": "5:20",
+      "end": "6:00",
+      "source": "motion-card",
+      "visual": "Three-step card: Questionnaire → Discovery session → Tailored governance review",
+      "callouts": ["Caption: 'No payroll data. No employee information.'"],
+      "freezeDependent": false
+    },
+    {
+      "id": "s8-cta",
+      "chapter": 8,
+      "start": "6:00",
+      "end": "6:20",
+      "source": "motion-card",
+      "visual": "CTA card 'Continue to Governance Discovery' + version watermark demo-v1.0-frozen",
+      "callouts": [],
+      "freezeDependent": false
+    }
+  ],
+  "composition": {
+    "captions": "auto-generated, human-reviewed",
+    "watermark": "demo-v1.0-frozen, bottom-right, 40% opacity, product scenes only",
+    "audio": "founder-cloned narration from narration.txt; -16 LUFS integrated",
+    "ctaDestination": "tracked signed redirect (PSE_OVERVIEW_VIDEO_URL swap only after approval)"
+  }
+}
