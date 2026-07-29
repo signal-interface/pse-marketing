@@ -54,10 +54,10 @@ export default function Hero() {
                 <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
               </a>
               <a
-                href="/product-tour"
+                href="/chap-ai"
                 className="inline-flex items-center gap-2 bg-white text-text px-6 py-3 rounded-md text-sm font-semibold border border-border hover:border-steel-light hover:bg-ice transition-all"
               >
-                Watch the PSE Product Tour
+                Explore CHAP AI
                 <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
               </a>
             </div>
