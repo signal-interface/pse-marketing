@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -30,11 +31,17 @@ jobs:
       - name: Unit + contract tests
         run: npx vitest run
 
-      - name: Boundary lint (grep backstop)
+      - name: Boundary lint
         run: bash scripts/boundary-lint.sh
 
       - name: Production build
         run: npm run build
         env:
+          # Inert nonproduction placeholders for module initialization only.
           CHAP_WIDGET_ENABLED: "false"
           PRODUCT_TOUR_ENABLED: "false"
+          ANTHROPIC_API_KEY: "sk-ant-ci-placeholder"
+          POSTGRES_URL: "postgres://ci:ci@localhost:5432/ci"
+          RESEND_API_KEY: "re_ci_placeholder"
+          INTERNAL_BASIC_AUTH_USER: "ci"
+          INTERNAL_BASIC_AUTH_PASSWORD: "ci"
