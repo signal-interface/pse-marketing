@@ -25,6 +25,14 @@ export const PUBLIC_ROUTES = [
 
 export const DEMO_ANCHOR = "/#demo" as const;
 
+// Enumerated in the sitemap and footer only while TRUST_LAYER_ENABLED is on.
+export const TRUST_ROUTES = [
+  "/trust",
+  "/trust/security",
+  "/trust/subprocessors",
+  "/trust/data-handling",
+] as const;
+
 export const SERVICES = [
   {
     icon: "Zap" as const,
