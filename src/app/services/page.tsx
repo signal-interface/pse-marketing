@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const services = [
   {
-    slug: 'payroll-governance',
+    slug: 'payroll-processing',
     name: 'Governed Payroll Runs',
     headline: 'Automated multi-state payroll with real-time compliance validation.',
     body: 'Every payroll run validated against federal and state statutory requirements before commit. CHAP AI catches violations — wrong overtime calculations, missed meal break premiums, deposit timing errors — before they become penalties.',

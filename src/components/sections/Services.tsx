@@ -21,7 +21,7 @@ const ICON_MAP = {
 } as const;
 
 const SERVICE_SLUGS = [
-  'payroll-governance',
+  'payroll-processing',
   'tax-compliance',
   'workforce-analytics',
   'benefits-integration',
