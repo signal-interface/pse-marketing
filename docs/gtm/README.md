@@ -21,10 +21,10 @@ This directory defines how the PSE marketing site acquires, educates, qualifies,
 | --- | --- |
 | `PSE_COMMERCIAL_ARCHITECTURE_AUDIT.md` | Current-state gaps and adoption decisions |
 | `PSE_GTM_FUNNEL_SPEC.md` | Journeys, CTAs, events, and acceptance criteria |
-| `PSE_INFORMATION_ARCHITECTURE.md` | Public site map and page ownership |
-| `CHAP_COMMERCIAL_PROGRESSION.md` | Tier-aware CHAP promise and boundaries |
-| `NEWSLETTER_CONTENT_SYSTEM.md` | Approved-intelligence-to-newsletter workflow |
-| `ASSESSMENT_CONVERSION_SPEC.md` | Organizational assessment acquisition path |
+| `PSE_INFORMATION_ARCHITECTURE.md` | Held on branch `docs/gtm-held` pending authorization of its workstream (public site map and page ownership) |
+| `CHAP_COMMERCIAL_PROGRESSION.md` | Held on branch `docs/gtm-held` pending authorization of its workstream (tier-aware CHAP promise and boundaries) |
+| `NEWSLETTER_CONTENT_SYSTEM.md` | Held on branch `docs/gtm-held` pending authorization of its workstream (approved-intelligence-to-newsletter workflow) |
+| `ASSESSMENT_CONVERSION_SPEC.md` | Held on branch `docs/gtm-held` pending authorization of its workstream (organizational assessment acquisition path) |
 | `MARKETING_PLATFORM_HANDOFFS.md` | Cross-runtime contracts and ownership |
 | `CONFIRMATION_GATES.md` | Decisions and external dependencies requiring approval |
 | `SENIOR_DEV_REVIEW_HANDOFF.md` | Review order, risk register, and implementation slices |

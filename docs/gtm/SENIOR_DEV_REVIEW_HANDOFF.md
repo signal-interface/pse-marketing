@@ -14,6 +14,11 @@ Confirm that the PSE Commercial Foundation can expand the public acquisition sys
 4. `docs/gtm/CONFIRMATION_GATES.md`
 5. Remaining documents in `docs/gtm`
 
+Note: `PSE_INFORMATION_ARCHITECTURE.md`, `CHAP_COMMERCIAL_PROGRESSION.md`,
+`NEWSLETTER_CONTENT_SYSTEM.md`, and `ASSESSMENT_CONVERSION_SPEC.md` are held
+on branch `docs/gtm-held` pending authorization of their workstreams and are
+not part of this review package.
+
 ## Repository baseline
 
 - Base: `main` at `1487055`
