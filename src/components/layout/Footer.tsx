@@ -29,7 +29,7 @@ export default function Footer() {
             </h4>
             <div className="flex flex-col gap-1">
               {[
-                { name: "Payroll Run Governance", slug: "payroll-governance" },
+                { name: "Payroll Run Governance", slug: "payroll-processing" },
                 { name: "Tax & Compliance", slug: "tax-compliance" },
                 { name: "Workforce Analytics", slug: "workforce-analytics" },
                 { name: "Benefits Reconciliation", slug: "benefits-integration" },
