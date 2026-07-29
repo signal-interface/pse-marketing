@@ -126,3 +126,20 @@ describe("subprocessor register release gates", () => {
     }
   });
 });
+
+describe("fix #2 — product-tour claims cannot publish", () => {
+  it("registers every product-tour claim as illustrative", () => {
+    const tourClaims = CLAIMS.filter((c) => c.surfaces.includes("/product-tour"));
+    expect(tourClaims.length).toBeGreaterThan(0);
+    for (const claim of tourClaims) {
+      expect(claim.status, claim.id).toBe("illustrative");
+    }
+  });
+
+  it("publishableClaims('/product-tour') returns an empty array", () => {
+    // Mechanical proof of fix #2: even if PRODUCT_TOUR_ENABLED were flipped
+    // on by mistake, the registry publishes nothing for the tour until Tom
+    // upgrades a claim's status deliberately.
+    expect(publishableClaims("/product-tour")).toEqual([]);
+  });
+});
