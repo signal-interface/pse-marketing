@@ -88,7 +88,7 @@ Blocked by receiving-repository confirmation:
 - The current lint script depends on deprecated `next lint`.
 - No deployed end-to-end test suite is configured.
 - No shared analytics adapter exists.
-- Several service descriptions can imply payroll processing.
+- Several service descriptions can imply an execution role reserved for the system of record.
 - CHAP publication and corpus gates are not the same as commercial tier gates.
 - Marketing and authenticated-product ownership can drift without versioned contracts.
 - `PSE--Projects` currently documents JWT authentication and audit trails as

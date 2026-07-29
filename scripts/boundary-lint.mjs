@@ -1,35 +1,33 @@
-import { readdir, readFile } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 
-const SCOPES = ["docs/gtm", "src/app/product-tour"];
-const EXTENSIONS = new Set([".md", ".ts", ".tsx"]);
+import { evaluate, parseCode, parseMarkdown, RULES } from "./boundary-lint/rules.mjs";
 
-const NEGATED_BOUNDARY =
-  /\b(?:does not|do not|doesn't|don't|must not|will not|won't|cannot|can't|never|may not|is not authorized to|are not authorized to|no authority to|prohibited from|instead of|rather than|without)\b/i;
+// BOUNDARY_LINT_ROOT is a test hook: it lets the suite point the control at a
+// fixture tree to prove the missing-scope failure path. Production runs never set it.
+const ROOT = process.env.BOUNDARY_LINT_ROOT
+  ? path.resolve(process.env.BOUNDARY_LINT_ROOT)
+  : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-const RULES = [
-  {
-    id: "payroll-processing-authority",
-    pattern:
-      /\b(?:PSE|CHAP|marketing site|product tour)\b[\s\S]{0,240}\b(?:(?:process(?:es|ed|ing)?|run(?:s|ning)?|execute(?:s|d|ing)?|submit(?:s|ted|ting)?|file(?:s|d|ing)?)\s+payroll|payroll[\s-]+(?:processing|execution))\b/i,
-  },
-  {
-    id: "autonomous-payroll-action",
-    pattern:
-      /\bautonom(?:ous|ously)[\s-]+(?:(?:payroll|payroll-system)[\s-]+)?(?:action|execution|change|changes|changing|execute|executes|executing)\b/i,
-  },
-  {
-    id: "payroll-system-write-authority",
-    pattern:
-      /\b(?:PSE|CHAP|marketing site|product tour)\b[\s\S]{0,240}\b(?:change|changes|changing|correct|corrects|correcting|update|updates|updating|write|writes|writing)\b[\s\S]{0,80}\bpayroll system\b/i,
-  },
+const SCOPES = [
+  "docs/gtm",
+  "docs/POSITIONING_STRATEGY.md",
+  "docs/DEMO_FREEZE_GTM_STRATEGY.md",
+  "src/app/product-tour",
+  "src/lib/constants.ts",
+  "src/data/services.ts",
 ];
 
+const EXTENSIONS = new Set([".md", ".ts", ".tsx"]);
+
 async function collectFiles(root) {
+  const info = await stat(root);
+  if (info.isFile()) return [root];
+
   const entries = await readdir(root, { withFileTypes: true });
   const files = [];
-
   for (const entry of entries) {
     const target = path.join(root, entry.name);
     if (entry.isDirectory()) {
@@ -38,101 +36,45 @@ async function collectFiles(root) {
       files.push(target);
     }
   }
-
   return files;
 }
 
-function splitSentences(text, startLine) {
-  const statements = [];
-  const sentencePattern = /[^.!?]+(?:[.!?]+|$)/gs;
-
-  for (const match of text.matchAll(sentencePattern)) {
-    const statement = match[0].trim();
-    if (!statement) continue;
-
-    const lineOffset = text.slice(0, match.index).split("\n").length - 1;
-    statements.push({ statement, line: startLine + lineOffset });
+const files = [];
+for (const scope of SCOPES) {
+  try {
+    files.push(...(await collectFiles(path.join(ROOT, scope))));
+  } catch {
+    console.error(
+      `Boundary lint control error: required scope path "${scope}" is missing. ` +
+        `Every path in SCOPES is part of the ratified commercial-boundary control surface; ` +
+        `if it was renamed, update SCOPES to the new location — do not drop it.`,
+    );
+    process.exit(2);
   }
-
-  return statements;
 }
 
-function markdownStatements(content) {
-  const statements = [];
-  const lines = content.split("\n");
-  let paragraph = [];
-  let paragraphStart = 1;
-
-  const flushParagraph = () => {
-    if (paragraph.length === 0) return;
-    statements.push(...splitSentences(paragraph.join("\n"), paragraphStart));
-    paragraph = [];
-  };
-
-  lines.forEach((line, index) => {
-    const lineNumber = index + 1;
-    const isStandalone =
-      /^\s*(?:[-*+]\s+|\d+\.\s+|\|)/.test(line) ||
-      /^\s*#{1,6}\s+/.test(line);
-
-    if (!line.trim()) {
-      flushParagraph();
-      return;
-    }
-
-    if (isStandalone) {
-      flushParagraph();
-      statements.push(...splitSentences(line, lineNumber));
-      return;
-    }
-
-    if (paragraph.length === 0) paragraphStart = lineNumber;
-    paragraph.push(line);
-  });
-
-  flushParagraph();
-  return statements;
-}
-
-function codeStatements(content) {
-  return splitSentences(content, 1);
-}
-
-const files = (
-  await Promise.all(SCOPES.map((scope) => collectFiles(scope)))
-).flat();
 const violations = [];
-
 for (const file of files) {
   const content = await readFile(file, "utf8");
-  const statements = file.endsWith(".md")
-    ? markdownStatements(content)
-    : codeStatements(content);
-
-  for (const { statement, line } of statements) {
-    for (const rule of RULES) {
-      if (rule.pattern.test(statement) && !NEGATED_BOUNDARY.test(statement)) {
-        violations.push({
-          file,
-          line,
-          rule: rule.id,
-          statement: statement.replace(/\s+/g, " ").trim(),
-        });
-      }
+  const units = file.endsWith(".md") ? parseMarkdown(content) : parseCode(content);
+  for (const unit of units) {
+    for (const hit of evaluate(unit)) {
+      violations.push({ file, ...hit });
     }
   }
 }
 
 if (violations.length > 0) {
   console.error("Boundary lint failed:");
-  for (const violation of violations) {
+  for (const v of violations) {
     console.error(
-      `${violation.file}:${violation.line} [${violation.rule}] ${violation.statement}`,
+      `${path.relative(ROOT, v.file)}:${v.line} [${v.rule}] ${v.statement}`,
     );
   }
   process.exit(1);
 }
 
 console.log(
-  `Boundary lint passed (${files.length} files across ${SCOPES.join(", ")}).`,
+  `Boundary lint passed: ${files.length} files, ${RULES.length} rules, ` +
+    `${SCOPES.length} scopes, 0 violations.`,
 );
