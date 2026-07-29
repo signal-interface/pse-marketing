@@ -9,7 +9,6 @@ import TrustContact from "../TrustContact";
 export const metadata: Metadata = {
   title: "Subprocessors | Payroll Synergy Experts",
   description: "Vendors that process data for the PSE public site.",
-  robots: { index: false, follow: false },
 };
 
 function fieldLabel(value: string): string {

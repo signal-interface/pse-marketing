@@ -9,7 +9,6 @@ import TrustContact from "../TrustContact";
 export const metadata: Metadata = {
   title: "Data Handling | Payroll Synergy Experts",
   description: "What the PSE public site collects, and why.",
-  robots: { index: false, follow: false },
 };
 
 export default function TrustDataHandlingPage() {

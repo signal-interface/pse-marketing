@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: "Trust | Payroll Synergy Experts",
   description:
     "How the PSE public site handles security, data, and vendor relationships.",
-  robots: { index: false, follow: false },
 };
 
 const SECTIONS = [

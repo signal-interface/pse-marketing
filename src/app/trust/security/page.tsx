@@ -9,7 +9,6 @@ import TrustContact from "../TrustContact";
 export const metadata: Metadata = {
   title: "Security | Payroll Synergy Experts",
   description: "Security practices in place on the PSE public site.",
-  robots: { index: false, follow: false },
 };
 
 export default function TrustSecurityPage() {
