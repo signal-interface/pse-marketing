@@ -36,7 +36,7 @@ The expansion must preserve the sales demo and must not move authenticated Conte
 ## Claims requiring correction or evidence
 
 - “Nobody validates compliance” is too absolute.
-- “Governed Payroll Runs” and some service copy can imply payroll processing.
+- “Governed Payroll Runs” and some service copy can imply an execution role that belongs to the system of record.
 - “By invitation only” conflicts with a public subscription ladder.
 - Same-day or one-business-day regulatory update claims require an operating SLA and evidence.
 - Connector, API, security, and automation claims must be labeled current, pilot, planned, or illustrative.

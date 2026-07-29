@@ -67,8 +67,9 @@ export default function ProductTourPage() {
             <p className="mx-auto mb-8 max-w-[680px] text-[18px] leading-[1.7] text-text-secondary">
               See how PSE helps payroll teams identify what needs attention,
               apply professional judgment, and preserve a defensible record.
-              PSE supports payroll governance; it does not process payroll or
-              autonomously change your payroll system.
+              PSE supports payroll governance; payroll itself is processed by
+              your system of record, and any change to your payroll system is
+              made by you — never autonomously by PSE.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Link

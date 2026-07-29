@@ -9,7 +9,7 @@ This directory defines how the PSE marketing site acquires, educates, qualifies,
 ## Binding principles
 
 1. **The sales demo is protected.** `Request a Demo` remains a first-class, personalized sales path.
-2. **PSE does not process payroll.** Copy must describe governance, intelligence, validation, evidence, assessment, and advisory.
+2. **The system of record — not PSE — processes payroll.** Copy must describe governance, intelligence, validation, evidence, assessment, and advisory.
 3. **Product truth precedes publication.** Current, pilot, planned, and illustrative capabilities must be distinguishable.
 4. **One identity, progressive entitlements.** Context Hub and CHAP fulfillment belong to the authenticated PSE product.
 5. **No high-impact intelligence is published from an unapproved draft.**
