@@ -59,8 +59,8 @@ The expansion must preserve the sales demo and must not move authenticated Conte
 
 ## Patterns PSE will not adopt
 
-- Payroll processing, funds movement, PEO, or employer-of-record positioning
-- Autonomous changes inside customer payroll systems
+- PSE does not claim payroll processing, funds movement, PEO, or employer-of-record positioning
+- PSE does not autonomously change customer payroll systems
 - Unsupported savings, coverage, customer, or security claims
 - Adversarial “replace ADP/UKG/Dayforce/Workday” positioning
 - High-impact AI publication without professional approval
