@@ -30,6 +30,9 @@ export interface Claim {
 const REVIEWED = "2026-07-28";
 const OWNER = "Tom Rivera";
 
+const PRODUCT_TOUR_PENDING =
+  "Product-tour screenshots and capability claims are pending product approval; the tour is labeled illustrative and ships behind PRODUCT_TOUR_ENABLED.";
+
 export const CLAIMS: readonly Claim[] = [
   // ── Current: verifiable from this repository as shipped ────────────────
   {
@@ -145,6 +148,101 @@ export const CLAIMS: readonly Claim[] = [
     lastReviewed: REVIEWED,
   },
 
+  // ── Illustrative: /product-tour statements, verbatim (fix #2) ──────────
+  // None of these may publish until Tom approves the tour and upgrades the
+  // status. publishableClaims("/product-tour") must return [] while these
+  // remain illustrative — asserted in the release-gate suite.
+  {
+    id: "pt-hero-help",
+    statement:
+      "See how PSE helps payroll teams identify what needs attention, apply professional judgment, and preserve a defensible record.",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/product-tour/page.tsx" },
+      { kind: "founder_attested", note: PRODUCT_TOUR_PENDING },
+    ],
+    surfaces: ["/product-tour"],
+    owner: OWNER,
+    lastReviewed: REVIEWED,
+  },
+  {
+    id: "pt-governance-boundary",
+    statement:
+      "PSE supports payroll governance; payroll itself is processed by your system of record, and any change to your payroll system is made by you — never autonomously by PSE.",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/product-tour/page.tsx" },
+      { kind: "internal_document", path: "docs/gtm/README.md" },
+      { kind: "founder_attested", note: PRODUCT_TOUR_PENDING },
+    ],
+    surfaces: ["/product-tour"],
+    owner: OWNER,
+    lastReviewed: REVIEWED,
+  },
+  {
+    id: "pt-step-assess",
+    statement:
+      "Begin with a structured view of risk, coverage, exceptions, and the evidence requiring attention.",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/product-tour/page.tsx" },
+      { kind: "founder_attested", note: PRODUCT_TOUR_PENDING },
+    ],
+    surfaces: ["/product-tour"],
+    owner: OWNER,
+    lastReviewed: REVIEWED,
+  },
+  {
+    id: "pt-step-review",
+    statement:
+      "PSE organizes potential issues for practitioner review instead of silently changing the payroll system.",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/product-tour/page.tsx" },
+      { kind: "founder_attested", note: PRODUCT_TOUR_PENDING },
+    ],
+    surfaces: ["/product-tour"],
+    owner: OWNER,
+    lastReviewed: REVIEWED,
+  },
+  {
+    id: "pt-step-govern",
+    statement:
+      "CHAP explains what needs attention, why it matters, and which evidence supports the determination.",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/product-tour/page.tsx" },
+      { kind: "founder_attested", note: PRODUCT_TOUR_PENDING },
+    ],
+    surfaces: ["/product-tour"],
+    owner: OWNER,
+    lastReviewed: REVIEWED,
+  },
+  {
+    id: "pt-step-prove",
+    statement:
+      "The outcome is not only a recommendation. PSE preserves what was reviewed, decided, and supported.",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/product-tour/page.tsx" },
+      { kind: "founder_attested", note: PRODUCT_TOUR_PENDING },
+    ],
+    surfaces: ["/product-tour"],
+    owner: OWNER,
+    lastReviewed: REVIEWED,
+  },
+  {
+    id: "pt-human-review",
+    statement: "Human review remains in control",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/product-tour/page.tsx" },
+      { kind: "founder_attested", note: PRODUCT_TOUR_PENDING },
+    ],
+    surfaces: ["/product-tour"],
+    owner: OWNER,
+    lastReviewed: REVIEWED,
+  },
 ];
 
 /** The ONLY sanctioned read path for rendering. */
