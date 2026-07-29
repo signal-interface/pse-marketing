@@ -4,10 +4,9 @@ on:
   pull_request:
   push:
     branches: [main]
-  workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.event.pull_request.number || github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -16,20 +15,26 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npx tsc --noEmit
-      - run: npx vitest run
-      - run: npm run build
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Unit + contract tests
+        run: npx vitest run
+
+      - name: Boundary lint (grep backstop)
+        run: bash scripts/boundary-lint.sh
+
+      - name: Production build
+        run: npm run build
         env:
           CHAP_WIDGET_ENABLED: "false"
           PRODUCT_TOUR_ENABLED: "false"
-          ANTHROPIC_API_KEY: "sk-ant-ci-placeholder"
-          POSTGRES_URL: "postgres://ci:ci@localhost:5432/ci"
-          RESEND_API_KEY: "re_ci_placeholder"
-          INTERNAL_BASIC_AUTH_USER: "ci"
-          INTERNAL_BASIC_AUTH_PASSWORD: "ci"
-          COMMERCIAL_IP_HASH_SALT: "ci-placeholder-salt"
