@@ -9,11 +9,23 @@ export const SITE = {
 } as const;
 
 export const NAV_LINKS = [
-  { label: "Services", href: "/services" },
+  { label: "Product Tour", href: "/product-tour" },
   { label: "CHAP AI", href: "/chap-ai" },
-  { label: "Why PSE", href: "/#proof" },
+  { label: "Services", href: "/services" },
   { label: "Risk Estimator", href: "/compliance-risk" },
 ] as const;
+
+export const PUBLIC_ROUTES = [
+  "/",
+  "/product-tour",
+  "/chap-ai",
+  "/services",
+  "/compliance-risk",
+  "/privacy",
+  "/terms",
+] as const;
+
+export const DEMO_ANCHOR = "/#demo" as const;
 
 export const SERVICES = [
   {

@@ -29,7 +29,7 @@ export default function Footer() {
             </h4>
             <div className="flex flex-col gap-1">
               {[
-                { name: "Governed Payroll Runs", slug: "payroll-processing" },
+                { name: "Payroll Run Governance", slug: "payroll-processing" },
                 { name: "Tax & Compliance", slug: "tax-compliance" },
                 { name: "Workforce Analytics", slug: "workforce-analytics" },
                 { name: "Benefits Reconciliation", slug: "benefits-integration" },
@@ -60,10 +60,16 @@ export default function Footer() {
                 CHAP AI
               </Link>
               <Link
+                href="/product-tour"
+                className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
+              >
+                PSE Product Tour
+              </Link>
+              <Link
                 href="/#demo"
                 className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
               >
-                Request Access
+                Request a Demo
               </Link>
             </div>
           </div>
