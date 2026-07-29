@@ -7,10 +7,14 @@ describe("commercial route contracts", () => {
   });
 
   it("exposes only public routes that have implementations", () => {
-    expect(PUBLIC_ROUTES).toContain("/product-tour");
     expect(PUBLIC_ROUTES).toContain("/chap-ai");
     expect(PUBLIC_ROUTES).toContain("/services");
     expect(PUBLIC_ROUTES).toContain("/compliance-risk");
+  });
+
+  it("does not publish the gated product tour", () => {
+    expect(PUBLIC_ROUTES).not.toContain("/product-tour");
+    expect(NAV_LINKS.map((link) => link.href)).not.toContain("/product-tour");
   });
 
   it("does not advertise unconfirmed paid-product routes", () => {

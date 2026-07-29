@@ -60,12 +60,6 @@ export default function Footer() {
                 CHAP AI
               </Link>
               <Link
-                href="/product-tour"
-                className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
-              >
-                PSE Product Tour
-              </Link>
-              <Link
                 href="/#demo"
                 className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
               >

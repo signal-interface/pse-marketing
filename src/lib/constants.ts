@@ -9,7 +9,6 @@ export const SITE = {
 } as const;
 
 export const NAV_LINKS = [
-  { label: "Product Tour", href: "/product-tour" },
   { label: "CHAP AI", href: "/chap-ai" },
   { label: "Services", href: "/services" },
   { label: "Risk Estimator", href: "/compliance-risk" },
@@ -17,7 +16,6 @@ export const NAV_LINKS = [
 
 export const PUBLIC_ROUTES = [
   "/",
-  "/product-tour",
   "/chap-ai",
   "/services",
   "/compliance-risk",

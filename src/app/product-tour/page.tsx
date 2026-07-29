@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { PRODUCT_TOUR_ENABLED } from "@/lib/flags";
 
 export const metadata: Metadata = {
   title: "PSE Product Tour | Payroll Synergy Experts",
   description:
     "Explore how PSE surfaces payroll risk, supports human review, and preserves audit-ready evidence before requesting a personalized demo.",
+  robots: { index: false, follow: false },
 };
 
 const TOUR_STEPS = [
@@ -47,6 +50,8 @@ const TOUR_STEPS = [
 ] as const;
 
 export default function ProductTourPage() {
+  if (!PRODUCT_TOUR_ENABLED) notFound();
+
   return (
     <div>
       <Navbar />
