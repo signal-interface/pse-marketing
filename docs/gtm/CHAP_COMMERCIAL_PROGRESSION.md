@@ -36,7 +36,7 @@ CHAP may not:
 - represent legal or tax advice;
 - ingest employer payroll data at the Context Hub tier;
 - produce organization-specific findings;
-- CHAP may not execute payroll or system changes;
+- execute payroll or system changes;
 - conceal uncertainty or source conflict.
 
 ## Governance requirement

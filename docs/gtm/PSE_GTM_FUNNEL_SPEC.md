@@ -97,4 +97,4 @@ Anonymous web events and identified lead events remain separate. Once a lead is 
 - Subscription entitlement assignment
 - Employer payroll-data upload
 - Organization-specific CHAP findings
-- PSE does not perform autonomous payroll-system execution
+- Autonomous payroll-system execution
