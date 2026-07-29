@@ -40,6 +40,7 @@ jobs:
           # Inert nonproduction placeholders for module initialization only.
           CHAP_WIDGET_ENABLED: "false"
           PRODUCT_TOUR_ENABLED: "false"
+          TRUST_LAYER_ENABLED: "false"
           ANTHROPIC_API_KEY: "sk-ant-ci-placeholder"
           POSTGRES_URL: "postgres://ci:ci@localhost:5432/ci"
           RESEND_API_KEY: "re_ci_placeholder"

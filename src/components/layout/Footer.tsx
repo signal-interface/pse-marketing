@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE, SOCIAL } from "@/lib/constants";
+import { TRUST_LAYER_ENABLED } from "@/lib/flags";
 import FooterLegalLinks from "./FooterLegalLinks";
 
 export default function Footer() {
@@ -65,6 +66,14 @@ export default function Footer() {
               >
                 Request a Demo
               </Link>
+              {TRUST_LAYER_ENABLED && (
+                <Link
+                  href="/trust"
+                  className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
+                >
+                  Trust
+                </Link>
+              )}
             </div>
           </div>
 

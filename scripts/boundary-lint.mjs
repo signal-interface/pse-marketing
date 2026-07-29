@@ -18,6 +18,8 @@ const SCOPES = [
   "src/app/product-tour",
   "src/lib/constants.ts",
   "src/data/services.ts",
+  "src/content/trust",
+  "src/app/trust",
 ];
 
 const EXTENSIONS = new Set([".md", ".ts", ".tsx"]);
