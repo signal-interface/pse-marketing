@@ -8,7 +8,10 @@ export const BENCHMARKS = {
   // Source: IRS Notice 746 (Rev. 12-2024)
   MAX_DEPOSIT_PENALTY_RATE: 0.15,
 
-  // IRS employer compliance study + EY Payroll Operations Survey 2024
+  // Internal modeling assumption — the once-cited "IRS employer
+  // compliance study" has no locatable primary publication (struck as a
+  // citation site-wide 2026-07-30). The rate is deliberate calibration;
+  // changing it changes every estimator output and PDF.
   EMPLOYER_ERROR_RATE: 0.33,
 
   // EY Global Payroll Operations Survey 2024 (via Lano)

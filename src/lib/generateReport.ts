@@ -166,14 +166,14 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
     {
       name: 'Compliance Staff Time Cost',
       value: results.complianceTimeCost,
-      source: 'EY 2024',
-      desc: '120 hrs/yr average time lost to compliance resolution, scaled by headcount and states. Staff time valued at $26/hr blended rate (BLS OES May 2024, Financial Clerks median $48,650, SOC 43-3000).',
+      source: 'Lano, citing EY',
+      desc: '120 hrs/yr average lost resolving payroll-related litigation and compliance issues, scaled by headcount and states. Staff time valued at $26/hr blended rate (BLS OES May 2024, Financial Clerks median $48,650, SOC 43-3000).',
     },
     {
       name: 'Error Correction Cost',
       value: results.errorCorrectionCost,
-      source: 'EY / IRS',
-      desc: '15 errors per payroll run at $291/error, scaled by employee count and error rate.',
+      source: 'EY 2022',
+      desc: '15 errors per payroll run at $291/error, scaled by employee count and a modeled error rate.',
     },
   ];
 
@@ -263,9 +263,10 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
     {
       label: 'Deposit Penalty Exposure',
       text:
-        'Based on IRC §6656 four-tier penalty structure. Assumes a 33% employer ' +
-        'error rate (IRS/EY) applied to estimated quarterly deposit obligations scaled by ' +
-        'employee count. Industry and state multipliers applied from DOL enforcement data.',
+        'Based on IRC §6656 four-tier penalty structure. Applies a 33% employer ' +
+        'error rate — an internal modeling assumption — to estimated quarterly deposit ' +
+        'obligations scaled by employee count. Industry and state multipliers applied ' +
+        'from DOL enforcement data.',
       source: 'IRC §6656(b)(1); IRS Notice 746 (Rev. 12-2024)',
     },
     {
@@ -279,17 +280,19 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
     {
       label: 'Compliance Staff Time Cost',
       text:
-        'EY research: average employer spends 120 hours/year resolving compliance issues ' +
-        '(29 hrs litigation + 91 hrs compliance management). Scaled logarithmically by ' +
-        'employee count and linearly by state count at 8% per additional state.',
-      source: 'Ernst & Young Global Payroll Operations Survey, 2024; BLS OES May 2024 (SOC 43-3000, Financial Clerks median annual wage $48,650)',
+        'Industry reporting: average employer spends 120 hours/year resolving ' +
+        'payroll-related litigation and compliance issues (29 hrs litigation + 91 hrs ' +
+        'compliance management). Scaled logarithmically by employee count and linearly ' +
+        'by state count at 8% per additional state.',
+      source: 'Reported by Lano, citing EY Global Payroll Operations Survey, 2024; BLS OES May 2024 (SOC 43-3000, Financial Clerks median annual wage $48,650)',
     },
     {
       label: 'Error Correction Cost',
       text:
         'EY: average 15 corrections per payroll run at $291 per error. Applied to 26 ' +
-        'biweekly runs/year × 33% employer error rate × headcount scaling factor.',
-      source: 'EY Payroll Operations Survey 2024; IRS employer compliance study',
+        'biweekly runs/year × a 33% employer error rate (internal modeling assumption) ' +
+        '× headcount scaling factor.',
+      source: 'Ernst & Young payroll errors survey, 2022',
     },
   ];
 

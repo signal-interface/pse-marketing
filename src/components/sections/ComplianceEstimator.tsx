@@ -169,7 +169,7 @@ export function ComplianceEstimator() {
             <div className="est-breakdown__row">
               <div className="est-breakdown__label">
                 <span className="est-breakdown__name">Compliance staff time cost</span>
-                <span className="est-breakdown__source">EY 2024</span>
+                <span className="est-breakdown__source">Lano, citing EY</span>
               </div>
               <span className="est-breakdown__value">
                 {formatCurrency(results.complianceTimeCost)}
@@ -178,7 +178,7 @@ export function ComplianceEstimator() {
             <div className="est-breakdown__row est-breakdown__row--last">
               <div className="est-breakdown__label">
                 <span className="est-breakdown__name">Error correction cost</span>
-                <span className="est-breakdown__source">EY / IRS</span>
+                <span className="est-breakdown__source">EY 2022</span>
               </div>
               <span className="est-breakdown__value">
                 {formatCurrency(results.errorCorrectionCost)}
