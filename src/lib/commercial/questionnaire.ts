@@ -21,6 +21,12 @@ import { transitionLead, recordLeadEvent, type EventContext } from "./lifecycle"
 import { consumeQuestionnaireToken, sha256Hex } from "./tokens";
 
 export const SESSION_TTL_DAYS = 14;
+
+// HTTP-only resume-cookie name. Lives here (not in a route module) because
+// Next.js route files should export only handlers and route config.
+// Path=/ — cookie path matching is prefix-based, so a /discovery-scoped
+// cookie would never reach the /api/discovery routes.
+export const SESSION_COOKIE = "pse_dq_session";
 const RESUME_EVENT_GAP_MS = 60 * 60 * 1000; // record RESUMED at most hourly
 
 // ---------------------------------------------------------------------------

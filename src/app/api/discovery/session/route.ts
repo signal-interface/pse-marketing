@@ -2,9 +2,11 @@
 // resume cookie holder. Returns only what the page needs to render.
 
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionByResumeToken } from "@/lib/commercial/questionnaire";
+import {
+  getSessionByResumeToken,
+  SESSION_COOKIE,
+} from "@/lib/commercial/questionnaire";
 import { buildSchedulingUrl } from "@/lib/commercial/scheduling";
-import { SESSION_COOKIE } from "./start/route";
 
 export async function GET(request: NextRequest) {
   const requestId = crypto.randomUUID();

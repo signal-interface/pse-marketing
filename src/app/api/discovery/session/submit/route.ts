@@ -11,11 +11,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { sql } from "@vercel/postgres";
-import { submitSession } from "@/lib/commercial/questionnaire";
+import { submitSession, SESSION_COOKIE } from "@/lib/commercial/questionnaire";
 import { recordLeadEvent } from "@/lib/commercial/lifecycle";
 import { buildSchedulingUrl } from "@/lib/commercial/scheduling";
 import { schedulingUnlockHtml } from "@/lib/emails";
-import { SESSION_COOKIE } from "../start/route";
 
 export async function POST(request: NextRequest) {
   const requestId = crypto.randomUUID();
