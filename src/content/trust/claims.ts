@@ -243,6 +243,261 @@ export const CLAIMS: readonly Claim[] = [
     owner: OWNER,
     lastReviewed: REVIEWED,
   },
+
+  // ── Live public surfaces (Stage F, 2026-07-30) ─────────────────────────
+  // Homepage and /services claims, registered with honest statuses. The
+  // pages are NOT yet wired to publishableClaims(); non-current entries
+  // here are the flagged inventory awaiting Tom's ruling, and rendering is
+  // unchanged until that ruling lands. Statuses follow the registry
+  // doctrine: current = evidenced by a shipped artifact; pilot = capability
+  // demonstrated below the asserted scale; planned = intended, not running;
+  // illustrative = design placeholder.
+  {
+    id: "cred-employee-records-per-cycle",
+    statement: "1,200+ employee records validated per payroll cycle",
+    status: "illustrative",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Design placeholder asserting operational throughput; PSE has no production customers. Requires production telemetry to evidence, or rewording.",
+      },
+    ],
+    surfaces: ["/"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "cred-chap-rule-count",
+    statement: "500+ compliance rules in the CHAP AI engine",
+    status: "illustrative",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Not countable from this repository: the shipped CHAP corpus is scoped to IRC §6656 and gated pending verification (PR #4). A countable rule-set artifact would be required.",
+      },
+    ],
+    surfaces: ["/"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "cred-jurisdictions-monitored",
+    statement: "50 state + federal jurisdictions monitored",
+    status: "illustrative",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "'Monitored' asserts a running operation; no jurisdiction dataset or monitoring pipeline exists in this repository.",
+      },
+    ],
+    surfaces: ["/"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "cred-regulatory-sources-tracked",
+    statement: "30+ regulatory and enforcement sources tracked daily",
+    status: "illustrative",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "No source list or daily tracking pipeline exists in this repository; 'tracked daily' asserts a running operation.",
+      },
+    ],
+    surfaces: ["/"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "trust-enterprise-grade-security",
+    statement: "Enterprise-Grade Security",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "vercel.json" },
+      {
+        kind: "founder_attested",
+        note: "Security headers and HTTPS are shipped, but 'enterprise-grade' implies a certification-class posture (SOC 2 / ISO 27001) PSE does not hold. Passes release-gate test #8 only because it names no specific certification.",
+      },
+    ],
+    surfaces: ["/", "/services"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "trust-audit-ready-documentation",
+    statement: "Audit-Ready Documentation",
+    status: "pilot",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "The frozen demo produces audit-ready run documentation at demo scale; product-repo audit trails are documented as planned, not shipped.",
+      },
+    ],
+    surfaces: ["/", "/services"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "trust-multi-state-coverage",
+    statement: "Multi-State Coverage",
+    status: "pilot",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Multi-state rule validation is demonstrated in the frozen demo at demo scale, not at production scale.",
+      },
+    ],
+    surfaces: ["/", "/services"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "trust-daily-regulatory-monitoring",
+    statement: "Daily Regulatory Monitoring",
+    status: "planned",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Intended operating practice; no daily monitoring pipeline is running today.",
+      },
+    ],
+    surfaces: ["/", "/services"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "chap-same-day-regulatory-updates",
+    statement: "When regulations change, CHAP AI updates the same day.",
+    status: "planned",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Asserts same-day operational turnaround; no regulatory-update pipeline exists yet.",
+      },
+    ],
+    surfaces: ["/"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "stats-traceable-decisions",
+    statement:
+      "100% traceable decisions — every payroll decision documented with the logic and data that produced it.",
+    status: "pilot",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Traceability is a design property of CHAP validation, demonstrated at demo scale; '100%' asserts production coverage that cannot be measured yet.",
+      },
+    ],
+    surfaces: ["/"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "stats-faster-processing",
+    statement: "50% faster processing",
+    status: "illustrative",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Internal test-harness comparison; the benchmark artifact is not in this repository and no production measurement exists. The homepage footnote discloses the internal-harness basis.",
+      },
+    ],
+    surfaces: ["/"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "stats-untracked-changes-zero",
+    statement:
+      "0 untracked changes — every transaction validated against compliance rules before execution.",
+    status: "pilot",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Validation-before-commit is a demonstrated design property at demo scale; '0' asserts production coverage.",
+      },
+    ],
+    surfaces: ["/"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "svc-governed-payroll-validation",
+    statement:
+      "Every payroll run validated against federal and state statutory requirements before commit.",
+    status: "pilot",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Demonstrated in the frozen demo; production validation depends on product-repo capabilities not yet shipped.",
+      },
+    ],
+    surfaces: ["/", "/services"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "svc-workforce-analytics",
+    statement:
+      "Labor cost, overtime exposure, and compliance posture visible in real time.",
+    status: "planned",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "No analytics dashboards are shipped; the described capability is planned.",
+      },
+    ],
+    surfaces: ["/", "/services"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "svc-benefits-reconciliation",
+    statement:
+      "Benefits deduction reconciliation audited against benefit elections.",
+    status: "planned",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "The live /services copy itself labels this service 'currently in development'.",
+      },
+    ],
+    surfaces: ["/", "/services"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "svc-prebuilt-integrations",
+    statement:
+      "Pre-built integrations with UKG, ADP, Dayforce, and major HRIS platforms.",
+    status: "planned",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "No shipped connectors exist in any PSE repository; the integration layer is planned.",
+      },
+    ],
+    surfaces: ["/", "/services"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "svc-strategic-advisory",
+    statement:
+      "Payroll structure optimization, entity setup guidance, and compliance strategy advisory.",
+    status: "current",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Human advisory service delivered directly by the founder; not dependent on unshipped product capabilities.",
+      },
+    ],
+    surfaces: ["/", "/services"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
 ];
 
 /** The ONLY sanctioned read path for rendering. */
