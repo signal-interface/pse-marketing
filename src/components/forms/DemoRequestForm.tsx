@@ -20,9 +20,11 @@ export default function DemoRequestForm({
   anchorId = 'demo',
 }: DemoRequestFormProps) {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     company: "",
+    jobTitle: "",
     employees: "",
     ref_120: "",
   });
@@ -38,7 +40,16 @@ export default function DemoRequestForm({
       const res = await fetch("/api/demo-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, source }),
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          company: formData.company,
+          jobTitle: formData.jobTitle,
+          employees: formData.employees,
+          website: formData.ref_120, // honeypot
+          source,
+        }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -178,20 +189,41 @@ export default function DemoRequestForm({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label
-                      htmlFor="name"
+                      htmlFor="firstName"
                       className="block text-[13px] font-semibold text-text mb-1.5"
                     >
-                      Full Name *
+                      First Name *
                     </label>
                     <input
-                      id="name"
-                      name="name"
+                      id="firstName"
+                      name="firstName"
                       type="text"
-                      placeholder="Jane Smith"
+                      placeholder="Jane"
                       required
-                      value={formData.name}
+                      autoComplete="given-name"
+                      value={formData.firstName}
                       onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
+                        setFormData({ ...formData, firstName: e.target.value })
+                      }
+                      className="w-full px-4 py-3 border border-border rounded-lg text-[15px] font-sans outline-none focus:border-steel-light focus:ring-1 focus:ring-steel-light transition-colors bg-white placeholder:text-text-tertiary"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="lastName"
+                      className="block text-[13px] font-semibold text-text mb-1.5"
+                    >
+                      Last Name
+                    </label>
+                    <input
+                      id="lastName"
+                      name="lastName"
+                      type="text"
+                      placeholder="Smith"
+                      autoComplete="family-name"
+                      value={formData.lastName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, lastName: e.target.value })
                       }
                       className="w-full px-4 py-3 border border-border rounded-lg text-[15px] font-sans outline-none focus:border-steel-light focus:ring-1 focus:ring-steel-light transition-colors bg-white placeholder:text-text-tertiary"
                     />
@@ -228,9 +260,30 @@ export default function DemoRequestForm({
                       name="company"
                       type="text"
                       placeholder="Acme Corp"
+                      autoComplete="organization"
                       value={formData.company}
                       onChange={(e) =>
                         setFormData({ ...formData, company: e.target.value })
+                      }
+                      className="w-full px-4 py-3 border border-border rounded-lg text-[15px] font-sans outline-none focus:border-steel-light focus:ring-1 focus:ring-steel-light transition-colors bg-white placeholder:text-text-tertiary"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="jobTitle"
+                      className="block text-[13px] font-semibold text-text mb-1.5"
+                    >
+                      Job Title
+                    </label>
+                    <input
+                      id="jobTitle"
+                      name="jobTitle"
+                      type="text"
+                      placeholder="Payroll Director"
+                      autoComplete="organization-title"
+                      value={formData.jobTitle}
+                      onChange={(e) =>
+                        setFormData({ ...formData, jobTitle: e.target.value })
                       }
                       className="w-full px-4 py-3 border border-border rounded-lg text-[15px] font-sans outline-none focus:border-steel-light focus:ring-1 focus:ring-steel-light transition-colors bg-white placeholder:text-text-tertiary"
                     />

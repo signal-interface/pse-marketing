@@ -32,3 +32,4 @@ jobs:
           RESEND_API_KEY: "re_ci_placeholder"
           INTERNAL_BASIC_AUTH_USER: "ci"
           INTERNAL_BASIC_AUTH_PASSWORD: "ci"
+          COMMERCIAL_IP_HASH_SALT: "ci-placeholder-salt"
