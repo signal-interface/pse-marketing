@@ -85,10 +85,23 @@ export type LeadEventType = (typeof LEAD_EVENT_TYPES)[number];
 // and champions leave, and a qualified lead that can never move to
 // NURTURE or DISQUALIFIED freezes and permanently overstates the
 // funnel. DISQUALIFIED is the only terminal state.
+//
+// NEW is wide (C9 ruling): the video ladder is the DEFAULT path —
+// /api/demo-request still hard-wires NEW -> VIDEO_SENT — not the only
+// one. The funnel spec's sales journey has no mandatory video step, and
+// warm referrals (the likely case pre-launch) may book or receive the
+// questionnaire directly. The guard that matters is untouched:
+// QUALIFIED is reachable only through DISCOVERY_COMPLETE.
 // ---------------------------------------------------------------------------
 
 export const TRANSITIONS: Record<LeadStatus, readonly LeadStatus[]> = {
-  NEW: ["VIDEO_SENT", "DISQUALIFIED"],
+  NEW: [
+    "VIDEO_SENT",
+    "QUESTIONNAIRE_SENT",
+    "MEETING_SCHEDULED",
+    "NURTURE",
+    "DISQUALIFIED",
+  ],
   VIDEO_SENT: [
     "VIDEO_ENGAGED",
     "QUESTIONNAIRE_SENT",

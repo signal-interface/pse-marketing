@@ -162,9 +162,37 @@ describe("transition map", () => {
     expect(canTransition("NURTURE", "QUESTIONNAIRE_COMPLETED")).toBe(true);
   });
 
+  it("NEW permits skipping ahead (C9 ruling) — video ladder is default, not mandatory", () => {
+    expect(canTransition("NEW", "VIDEO_SENT")).toBe(true);
+    expect(canTransition("NEW", "QUESTIONNAIRE_SENT")).toBe(true);
+    expect(canTransition("NEW", "MEETING_SCHEDULED")).toBe(true);
+    expect(canTransition("NEW", "NURTURE")).toBe(true);
+    expect(canTransition("NEW", "DISQUALIFIED")).toBe(true);
+    // Not everything: mid-questionnaire and outcome states stay unreachable.
+    expect(canTransition("NEW", "VIDEO_ENGAGED")).toBe(false);
+    expect(canTransition("NEW", "QUESTIONNAIRE_STARTED")).toBe(false);
+    expect(canTransition("NEW", "QUESTIONNAIRE_COMPLETED")).toBe(false);
+    expect(canTransition("NEW", "DISCOVERY_COMPLETE")).toBe(false);
+    expect(canTransition("NEW", "QUALIFIED")).toBe(false);
+  });
+
+  it("QUALIFIED is reachable only through DISCOVERY_COMPLETE", () => {
+    for (const from of LEAD_STATUSES) {
+      expect(canTransition(from, "QUALIFIED")).toBe(
+        from === "DISCOVERY_COMPLETE"
+      );
+    }
+  });
+
   it("full-map regression guard", () => {
     expect(TRANSITIONS).toEqual({
-      NEW: ["VIDEO_SENT", "DISQUALIFIED"],
+      NEW: [
+        "VIDEO_SENT",
+        "QUESTIONNAIRE_SENT",
+        "MEETING_SCHEDULED",
+        "NURTURE",
+        "DISQUALIFIED",
+      ],
       VIDEO_SENT: [
         "VIDEO_ENGAGED",
         "QUESTIONNAIRE_SENT",
