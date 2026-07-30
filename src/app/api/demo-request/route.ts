@@ -24,7 +24,7 @@ import {
 } from "@/lib/commercial/lifecycle";
 import { signLeadRef } from "@/lib/commercial/links";
 import { checkAndIncrementScopedLimit } from "@/lib/rateLimiter";
-import { hashIp, extractIp } from "@/lib/ipHash";
+import { hashIp, extractIp, ipHashingConfigured } from "@/lib/ipHash";
 import { internalNotificationHtml, journeyEmailHtml } from "@/lib/emails";
 
 const NOTIFICATION_EMAIL =
@@ -123,6 +123,14 @@ function journeyVideoUrl(leadId: number): string | undefined {
 
 export async function POST(request: NextRequest) {
   const requestId = crypto.randomUUID();
+
+  // Fail closed: the IP rate limit depends on salted hashing. Without the
+  // salt the route would either skip the limit or store reversible hashes —
+  // both worse than a visible 503 (same posture as the CHAP widget gate).
+  if (!ipHashingConfigured()) {
+    console.error(`[demo-request:${requestId}] COMMERCIAL_IP_HASH_SALT unset`);
+    return NextResponse.json({ error: "not_configured" }, { status: 503 });
+  }
 
   try {
     let body: unknown;

@@ -58,6 +58,7 @@ function makeRequest(body: Record<string, unknown>): NextRequest {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "test-salt");
   mockLimit.mockResolvedValue({ allowed: true, count: 1 });
   mockCreateLead.mockResolvedValue({ id: 42 });
   mockTransition.mockResolvedValue({
@@ -72,6 +73,15 @@ beforeEach(() => {
 });
 
 describe("POST /api/demo-request", () => {
+  it("fails closed (503, no side effects) when COMMERCIAL_IP_HASH_SALT is unset", async () => {
+    vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "");
+    const res = await POST(makeRequest(VALID_BODY));
+    expect(res.status).toBe(503);
+    expect(mockLimit).not.toHaveBeenCalled();
+    expect(mockCreateLead).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
   it("happy path: creates lead, transitions, sends two emails, records outcomes", async () => {
     const res = await POST(makeRequest(VALID_BODY));
     expect(res.status).toBe(200);

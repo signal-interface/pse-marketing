@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { NextRequest } from "next/server";
-import { extractIp } from "../ipHash";
+import { extractIp, hashIp, ipHashingConfigured } from "../ipHash";
 
 function makeRequest(headers: Record<string, string>): NextRequest {
   return new NextRequest("http://localhost/api/demo-request", {
@@ -49,5 +49,35 @@ describe("extractIp", () => {
         makeRequest({ "x-real-ip": "  ", "x-forwarded-for": "192.0.2.1" })
       )
     ).toBe("unknown");
+  });
+});
+
+describe("hashIp / ipHashingConfigured", () => {
+  beforeEach(() => {
+    vi.unstubAllEnvs();
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("reports unconfigured and throws (no hashing attempted) when the salt is unset", () => {
+    vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "");
+    expect(ipHashingConfigured()).toBe(false);
+    expect(() => hashIp("203.0.113.9")).toThrow(/COMMERCIAL_IP_HASH_SALT/);
+  });
+
+  it("hashes deterministically with the salt set", () => {
+    vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "test-salt");
+    expect(ipHashingConfigured()).toBe(true);
+    const a = hashIp("203.0.113.9");
+    expect(a).toMatch(/^[0-9a-f]{64}$/);
+    expect(hashIp("203.0.113.9")).toBe(a);
+  });
+
+  it("different salts produce unjoinable hashes", () => {
+    vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "salt-a");
+    const a = hashIp("203.0.113.9");
+    vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "salt-b");
+    expect(hashIp("203.0.113.9")).not.toBe(a);
   });
 });
