@@ -20,6 +20,7 @@ import {
 } from "@/lib/commercial/tokens";
 import { transitionLead, recordLeadEvent } from "@/lib/commercial/lifecycle";
 import { questionnaireInviteHtml } from "@/lib/emails";
+import { safeEqual } from "@/lib/safeEqual";
 import { sql } from "@vercel/postgres";
 
 const SITE_URL = process.env.SITE_URL || "https://payrollsynergyexperts.com";
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
 
   const secret = process.env.INTERNAL_API_SECRET;
   const auth = request.headers.get("authorization");
-  if (!secret || auth !== `Bearer ${secret}`) {
+  if (!secret || !auth || !safeEqual(auth, `Bearer ${secret}`)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

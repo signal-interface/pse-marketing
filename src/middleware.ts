@@ -9,20 +9,13 @@
 // Fails closed: if INTERNAL_API_SECRET is unset, /internal/* is 503.
 
 import { NextRequest, NextResponse } from "next/server";
+import { safeEqual } from "@/lib/safeEqual";
 
 const UNAUTHORIZED = () =>
   new NextResponse("Authentication required", {
     status: 401,
     headers: { "WWW-Authenticate": 'Basic realm="PSE Internal"' },
   });
-
-// Constant-time string comparison without node:crypto (edge runtime).
-function safeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
-}
 
 export function middleware(request: NextRequest) {
   const secret = process.env.INTERNAL_API_SECRET;

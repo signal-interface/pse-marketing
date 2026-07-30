@@ -11,10 +11,12 @@ import {
   generateDiscoveryBrief,
   getLatestBrief,
 } from "@/lib/commercial/discovery-brief";
+import { safeEqual } from "@/lib/safeEqual";
 
 function authorized(request: NextRequest): boolean {
   const secret = process.env.INTERNAL_API_SECRET;
-  return Boolean(secret) && request.headers.get("authorization") === `Bearer ${secret}`;
+  const auth = request.headers.get("authorization");
+  return Boolean(secret) && Boolean(auth) && safeEqual(auth!, `Bearer ${secret}`);
 }
 
 function parseLeadId(raw: string): number | null {
