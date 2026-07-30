@@ -99,6 +99,23 @@ describe("claims registry release gates", () => {
     }
   });
 
+  it("no claim statement grades security or compliance without a named standard", () => {
+    // A grade adjective with no referent ("enterprise-grade", "bank-level")
+    // asserts a certification-class posture without naming the certification —
+    // the construction the previous test misses when no cert is named.
+    const gradeAdjective =
+      /\b(?:enterprise|bank|military|government)[\s-]+(?:grade|level)\b|\bindustry[\s-]+leading\b|\bbest[\s-]+in[\s-]+class\b|\bworld[\s-]+class\b/i;
+    const securityContext =
+      /\b(?:secur\w*|complian\w*|encrypt\w*|protect\w*|privacy|audit\w*)\b/i;
+    for (const claim of CLAIMS) {
+      expect(
+        gradeAdjective.test(claim.statement) &&
+          securityContext.test(claim.statement),
+        `claim ${claim.id} grades a security/compliance posture without a named standard: "${claim.statement}"`,
+      ).toBe(false);
+    }
+  });
+
   it("every claim lastReviewed parses as a valid ISO date", () => {
     for (const claim of CLAIMS) {
       expect(claim.lastReviewed, `claim ${claim.id}`).toMatch(
