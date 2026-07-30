@@ -34,11 +34,9 @@ export const ENFORCEMENT_STATS = {
     amount: 15,
     source: 'IRC §6656(b)(1); IRS Notice 746 (Rev. 12-2024)',
   },
-  irsEmployerErrors: {
-    value: '33%',
-    amount: 33,
-    source: 'IRS employer compliance study; EY Payroll Operations Survey, 2024',
-  },
+  // irsEmployerErrors (33% employer error rate) STRUCK 2026-07-30: the
+  // "IRS employer compliance study" citation has no locatable primary
+  // publication. Do not reintroduce without a checkable source of record.
   payrollComplianceTopChallenge: {
     value: '63%',
     amount: 63,
@@ -54,10 +52,13 @@ export const ENFORCEMENT_STATS = {
     amount: 85,
     source: 'Ceridian/APA/GPMI Payroll Technology Survey',
   },
+  // Lano's aggregation: 29 hrs litigation + 91 hrs compliance = 120 hrs/yr.
+  // Attributed to the source of record actually read, not laundered
+  // through to EY (2026-07-30 ruling).
   hoursLostToCompliance: {
     value: '120 hrs',
     amount: 120,
-    source: 'Ernst & Young Global Payroll Operations Survey, 2024',
+    source: 'Reported by Lano, citing EY Global Payroll Operations Survey, 2024',
   },
   payrollLitigationRate: {
     value: '14%',

@@ -264,6 +264,13 @@ export const CLAIMS: readonly Claim[] = [
   // sources. The four illustrative cred-* capability placeholders
   // (1,200+ records/cycle, 500+ rules, 50 jurisdictions, 30+ sources)
   // were retired with that ruling; see git history for their entries.
+  // Only figures with a checkable primary-source URL qualify for the
+  // strip (release-gate enforced). Struck same day: the 33% employer
+  // error rate, site-wide — its "IRS employer compliance study" citation
+  // has no locatable primary publication, and on a compliance company's
+  // site an unverifiable citation reads as invented. The 120 hrs/yr
+  // figure stays on inline-cited surfaces only, re-attributed to its
+  // actual source of record (Lano, citing EY) in src/lib/stats.ts.
   // Display values and citations live in src/lib/stats.ts (single source
   // of truth); each entry below is the publication license for one figure.
   {
@@ -300,21 +307,6 @@ export const CLAIMS: readonly Claim[] = [
     lastReviewed: "2026-07-30",
   },
   {
-    id: "stat-employer-payroll-error-rate",
-    statement: "33% of employers make payroll errors in any given period",
-    status: "current",
-    evidence: [
-      { kind: "shipped_surface", path: "src/lib/stats.ts" },
-      {
-        kind: "founder_attested",
-        note: "Widely reported IRS estimate ('one-third of employers make a payroll error each year'), repeated across industry sources; no primary IRS publication located as of 2026-07-30 — sourcing flagged for review.",
-      },
-    ],
-    surfaces: ["/"],
-    owner: OWNER,
-    lastReviewed: "2026-07-30",
-  },
-  {
     id: "stat-compliance-top-challenge",
     statement:
       "63% of payroll professionals name compliance their biggest challenge",
@@ -326,22 +318,6 @@ export const CLAIMS: readonly Claim[] = [
         note: "PayrollOrg 'Getting the World Paid' survey, 2024: 63% of respondents named compliance their biggest global payroll challenge.",
       },
       { kind: "shipped_surface", path: "src/lib/stats.ts" },
-    ],
-    surfaces: ["/"],
-    owner: OWNER,
-    lastReviewed: "2026-07-30",
-  },
-  {
-    id: "stat-hours-lost-to-compliance",
-    statement:
-      "120 hours lost per employer annually to compliance issue resolution",
-    status: "current",
-    evidence: [
-      { kind: "shipped_surface", path: "src/lib/stats.ts" },
-      {
-        kind: "founder_attested",
-        note: "Cited to the EY Global Payroll Operations Survey (2024) in src/lib/stats.ts; the primary survey document could not be located as of 2026-07-30 — sourcing flagged for review.",
-      },
     ],
     surfaces: ["/"],
     owner: OWNER,

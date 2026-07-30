@@ -53,18 +53,13 @@ const stateChecks = [
 
 const proofStats = [
   {
-    number: '1 in 3',
-    label: 'employers has an active payroll error in any given period',
-    source: ENFORCEMENT_STATS.irsEmployerErrors.source,
-  },
-  {
     number: `${ENFORCEMENT_STATS.dolBackWages.fiscalYear}: ${ENFORCEMENT_STATS.dolBackWages.value}`,
     label: `recovered by DOL WHD in ${ENFORCEMENT_STATS.dolBackWages.fiscalYear} — $127M from overtime violations alone`,
     source: ENFORCEMENT_STATS.dolBackWages.source,
   },
   {
     number: ENFORCEMENT_STATS.hoursLostToCompliance.value,
-    label: 'lost per employer annually to compliance issue resolution',
+    label: 'lost per employer annually resolving payroll-related litigation and compliance issues',
     source: ENFORCEMENT_STATS.hoursLostToCompliance.source,
   },
 ];

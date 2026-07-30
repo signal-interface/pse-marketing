@@ -50,7 +50,7 @@ export const serviceData: Record<string, ServiceData> = {
     ],
     stats: [
       { value: ENFORCEMENT_STATS.irsMaxDepositPenalty.value, label: 'Maximum IRC §6656 deposit penalty — triggered by deposit timing errors CHAP AI catches pre-run', source: ENFORCEMENT_STATS.irsMaxDepositPenalty.source },
-      { value: ENFORCEMENT_STATS.irsEmployerErrors.value, label: 'Of employers make payroll errors in any given period', source: ENFORCEMENT_STATS.irsEmployerErrors.source },
+      { value: ENFORCEMENT_STATS.perErrorCost.value, label: 'Average cost per payroll error — before penalties and interest', source: ENFORCEMENT_STATS.perErrorCost.source },
     ],
     chapAiConnection: 'Governed Payroll Runs is the primary integration point for CHAP AI. Every run triggers a full pre-run scan. Violations block the run until resolved. Documentation is generated automatically.',
     screenshot: { src: '/screenshots/payroll-run.png', alt: 'Per-employee compliance checks during pre-run validation', caption: 'CHAP AI pre-run validation — every employee checked before the run commits' },
@@ -105,7 +105,7 @@ export const serviceData: Record<string, ServiceData> = {
     ],
     stats: [
       { value: ENFORCEMENT_STATS.hrTimeOnPayroll.value, label: 'Of HR department time dedicated to payroll responsibilities', source: ENFORCEMENT_STATS.hrTimeOnPayroll.source },
-      { value: ENFORCEMENT_STATS.hoursLostToCompliance.value, label: 'Lost per employer annually to compliance issue resolution', source: ENFORCEMENT_STATS.hoursLostToCompliance.source },
+      { value: ENFORCEMENT_STATS.hoursLostToCompliance.value, label: 'Lost per employer annually resolving payroll-related litigation and compliance issues', source: ENFORCEMENT_STATS.hoursLostToCompliance.source },
     ],
     chapAiConnection: 'Workforce Analytics draws directly from CHAP AI\'s scan history. Overtime exposure data, violation frequency, and compliance trends are surfaced in the analytics layer in real time.',
     ctaLabel: 'Notify Me When Available',
@@ -133,7 +133,6 @@ export const serviceData: Record<string, ServiceData> = {
       { title: 'Action plan delivery', body: 'Reconciliation findings are delivered as a structured action plan with prioritized corrections, documentation for employee communication, and guidance on preventing recurrence.' },
     ],
     stats: [
-      { value: ENFORCEMENT_STATS.irsEmployerErrors.value, label: 'Of employers have an active payroll error in any given period — benefit deduction errors are among the most common', source: ENFORCEMENT_STATS.irsEmployerErrors.source },
       { value: ENFORCEMENT_STATS.perErrorCost.value, label: 'Average cost per payroll error — deduction discrepancies compound across every pay cycle they go undetected', source: ENFORCEMENT_STATS.perErrorCost.source },
     ],
     chapAiConnection: 'CHAP AI\'s audit trail provides the baseline for benefits deduction reconciliation — surfacing the payroll-side data that is compared against benefit elections to identify discrepancies.',

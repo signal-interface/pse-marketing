@@ -8,9 +8,11 @@ import { ENFORCEMENT_STATS } from "@/lib/stats";
 // 2026-07-30 follow-up ruling: the strip publishes third-party enforcement
 // statistics (values and citations from src/lib/stats.ts), not
 // self-reported capability numbers — the exposure is the pitch, and a
-// prospect can check the sources. Rendering goes through
-// publishableClaims("/"), the only sanctioned read path; the component
-// removes itself from the page flow entirely when nothing is publishable.
+// prospect can check the sources. Only figures whose primary source
+// resolves to a checkable URL qualify (release-gate enforced); rendering
+// goes through publishableClaims("/"), the only sanctioned read path; the
+// component removes itself from the page flow entirely when nothing is
+// publishable.
 export const CRED_METRICS = [
   {
     claimId: "stat-irc-6656-max-penalty",
@@ -25,22 +27,10 @@ export const CRED_METRICS = [
     source: ENFORCEMENT_STATS.dolBackWages.source,
   },
   {
-    claimId: "stat-employer-payroll-error-rate",
-    number: ENFORCEMENT_STATS.irsEmployerErrors.value,
-    label: "Of employers make payroll errors in any given period",
-    source: ENFORCEMENT_STATS.irsEmployerErrors.source,
-  },
-  {
     claimId: "stat-compliance-top-challenge",
     number: ENFORCEMENT_STATS.payrollComplianceTopChallenge.value,
     label: "Of payroll professionals name compliance their biggest challenge",
     source: ENFORCEMENT_STATS.payrollComplianceTopChallenge.source,
-  },
-  {
-    claimId: "stat-hours-lost-to-compliance",
-    number: ENFORCEMENT_STATS.hoursLostToCompliance.value,
-    label: "Lost per employer annually to compliance issue resolution",
-    source: ENFORCEMENT_STATS.hoursLostToCompliance.source,
   },
 ] as const;
 

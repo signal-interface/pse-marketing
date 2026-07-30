@@ -65,7 +65,7 @@ const services = [
       'Action plan delivery',
       'In development',
     ],
-    stat: { value: ENFORCEMENT_STATS.irsEmployerErrors.value, label: 'Of employers have an active payroll error in any given period (IRS + EY 2024)' },
+    stat: { value: ENFORCEMENT_STATS.perErrorCost.value, label: 'Average cost per payroll error (EY, 2022)' },
   },
   {
     slug: 'system-integration',

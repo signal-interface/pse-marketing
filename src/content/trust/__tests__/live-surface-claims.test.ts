@@ -164,11 +164,14 @@ describe("2026-07-30 ruling — presentation gates", () => {
     }
   });
 
-  it("CredibilityStrip metrics are current claims registered for the homepage", () => {
+  it("CredibilityStrip metrics are current, primary-sourced claims registered for the homepage", () => {
     // 2026-07-30 follow-up ruling: the strip publishes third-party
-    // enforcement data, not self-reported capability numbers. Every metric
-    // must therefore be publishable — a strip of non-current claims renders
-    // an empty band, which is worse than no strip at all.
+    // enforcement data, not self-reported capability numbers — and its
+    // whole rationale is that a prospect can check the figures. Every
+    // metric must therefore be publishable AND carry primary_source
+    // evidence with a resolvable https URL; a figure whose source of
+    // record cannot be checked does not belong in the most prominent
+    // credibility position on the page.
     for (const m of CRED_METRICS) {
       const claim = claimById.get(m.claimId);
       expect(claim, `CRED_METRICS "${m.label}"`).toBeTruthy();
@@ -179,6 +182,17 @@ describe("2026-07-30 ruling — presentation gates", () => {
       expect(
         claim!.surfaces.includes("/"),
         `CRED_METRICS "${m.label}" renders on /, but claim "${m.claimId}" registers only [${claim!.surfaces.join(", ")}]`,
+      ).toBe(true);
+      const primary = claim!.evidence.find((e) => e.kind === "primary_source");
+      expect(
+        primary,
+        `CRED_METRICS "${m.label}" has no primary_source evidence — unverifiable figures may not render in the strip`,
+      ).toBeTruthy();
+      expect(
+        primary!.kind === "primary_source" &&
+          primary!.url.startsWith("https://") &&
+          new URL(primary!.url).hostname.length > 0,
+        `CRED_METRICS "${m.label}" primary_source URL is not a resolvable https URL: ${primary!.kind === "primary_source" ? primary!.url : "(none)"}`,
       ).toBe(true);
     }
   });
