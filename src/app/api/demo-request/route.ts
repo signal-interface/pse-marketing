@@ -196,15 +196,25 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    // Journey initiation — not delivery. Sole permitted status writer.
-    await transitionLead(lead.id, "VIDEO_SENT", {
-      actorType: "SYSTEM",
-      source: "api/demo-request",
-      requestId,
-      metadata: { campaignSource: input.source },
-    });
-
     const videoUrl = journeyVideoUrl(lead.id);
+
+    // Journey initiation — not delivery — and only when there is a video
+    // to send. With PSE_OVERVIEW_VIDEO_URL unset, a VIDEO_SENT status
+    // would assert an event that never happened and park the lead in a
+    // state whose only exit (VIDEO_ENGAGED) requires clicking a link the
+    // email doesn't contain. The lead stays NEW — which is true — and
+    // NEW's widened transition set means it isn't stuck there. Same
+    // fail-closed posture as the salt and the flags: don't claim the
+    // capability when it isn't provisioned.
+    if (videoUrl) {
+      // Sole permitted status writer.
+      await transitionLead(lead.id, "VIDEO_SENT", {
+        actorType: "SYSTEM",
+        source: "api/demo-request",
+        requestId,
+        metadata: { campaignSource: input.source },
+      });
+    }
     const legacyName = [input.firstName, input.lastName]
       .filter(Boolean)
       .join(" ");
