@@ -10,6 +10,13 @@ const STEP_COLORS: Record<string, string> = {
   green: "bg-green",
 };
 
+// The scan rows and their result are invented (registered as
+// chap-scan-terminal-sample, status illustrative) — the visible "Sample
+// scan" marker is required by the 2026-07-30 ruling. The Guard banner's
+// extension is a registered planned claim: no shipped extension exists.
+export const SCAN_TERMINAL_CLAIM_ID = "chap-scan-terminal-sample" as const;
+export const CHAP_GUARD_CLAIM_ID = "chap-guard-extension" as const;
+
 const SCAN_ROWS = [
   { status: "pass", label: "Overtime", cite: "FLSA §207" },
   { status: "pass", label: "Min wage", cite: "CA Lab §1182" },
@@ -125,8 +132,8 @@ export default function ChapAI() {
 
               {/* Footer */}
               <div className="mt-5 pt-3 border-t border-white/[0.06] flex items-center justify-between">
-                <span className="text-xs text-steel-muted">
-                  Scan completed 09:14:22 PST
+                <span className="text-xs text-steel-muted uppercase tracking-[0.06em]">
+                  Sample scan — illustrative
                 </span>
                 <span className="text-xs font-semibold text-green bg-green/10 px-2.5 py-1 rounded-full">
                   4/5 Passed

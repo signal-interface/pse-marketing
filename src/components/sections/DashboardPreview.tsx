@@ -1,24 +1,12 @@
-'use client';
-
-import { useEffect, useState } from "react";
 import { Check, AlertTriangle } from "lucide-react";
 
+// Every figure in this panel is invented (registered as
+// hero-dashboard-sample-metrics, status illustrative). The visible
+// "Sample data" marker is required by the 2026-07-30 ruling — rendered
+// product figures with no marker read as product output. It replaced the
+// live date, which implied a running dashboard (and needed a client-side
+// hydration workaround this component no longer requires).
 export default function DashboardPreview() {
-  // Render-time `new Date()` produced different text on server (UTC) vs.
-  // client (local) and tripped React #418 across the homepage. Resolve on
-  // the client only; reserve a non-breaking space placeholder so the SSR
-  // layout matches.
-  const [today, setToday] = useState<string>(" ");
-  useEffect(() => {
-    setToday(
-      new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-    );
-  }, []);
-
   return (
     <div className="flex-1 max-w-[480px]">
       <div className="bg-white rounded-[20px] p-7 shadow-[0_24px_64px_rgba(0,0,0,0.07),0_2px_4px_rgba(0,0,0,0.03)] border border-border">
@@ -31,7 +19,9 @@ export default function DashboardPreview() {
           <span className="text-sm font-semibold text-text">
             CHAP AI &mdash; Pre-Run Compliance
           </span>
-          <span className="ml-auto text-xs text-text-tertiary" suppressHydrationWarning>{today}</span>
+          <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.06em] text-text-tertiary border border-border rounded-full px-2 py-0.5">
+            Sample data
+          </span>
         </div>
 
         {/* Metric cards */}

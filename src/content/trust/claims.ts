@@ -91,9 +91,12 @@ export const CLAIMS: readonly Claim[] = [
       { kind: "shipped_surface", path: "src/app/layout.tsx" },
       { kind: "internal_document", path: "docs/gtm/SENIOR_DEV_REVIEW_HANDOFF.md" },
     ],
-    surfaces: ["/trust/data-handling", "/trust/security"],
+    // "/" and "/services" carry this as the TrustBar badge that replaced
+    // "Enterprise-Grade Security" (2026-07-30 ruling: grade adjectives with
+    // no named standard may not publish).
+    surfaces: ["/", "/services", "/trust/data-handling", "/trust/security"],
     owner: OWNER,
-    lastReviewed: REVIEWED,
+    lastReviewed: "2026-07-30",
   },
   {
     id: "fonts-self-hosted",
@@ -244,82 +247,79 @@ export const CLAIMS: readonly Claim[] = [
     lastReviewed: REVIEWED,
   },
 
-  // ── Live public surfaces (Stage F, 2026-07-30) ─────────────────────────
-  // Homepage and /services claims, registered with honest statuses. The
-  // pages are NOT yet wired to publishableClaims(); non-current entries
-  // here are the flagged inventory awaiting Tom's ruling, and rendering is
-  // unchanged until that ruling lands. Statuses follow the registry
-  // doctrine: current = evidenced by a shipped artifact; pilot = capability
-  // demonstrated below the asserted scale; planned = intended, not running;
-  // illustrative = design placeholder.
+  // ── Live public surfaces (Stage F, 2026-07-30; rulings applied ─────────
+  // 2026-07-30) ───────────────────────────────────────────────────────────
+  // Statuses follow the registry doctrine: current = evidenced by a shipped
+  // artifact; pilot = capability demonstrated below the asserted scale;
+  // planned = intended, not running; illustrative = design placeholder.
+  // Ruling (Tom, 2026-07-30): any claim asserting throughput, cadence, or
+  // an SLA requires a running job or customer data as evidence — pre-launch
+  // none qualify as current. Presentation rules: planned services carry a
+  // visible "Coming Soon" marker; illustrative product figures carry a
+  // visible sample-data marker.
+  //
+  // Follow-up ruling (Tom, 2026-07-30): the CredibilityStrip publishes
+  // third-party enforcement statistics instead of self-reported capability
+  // numbers — the exposure is the pitch, and a prospect can check the
+  // sources. The four illustrative cred-* capability placeholders
+  // (1,200+ records/cycle, 500+ rules, 50 jurisdictions, 30+ sources)
+  // were retired with that ruling; see git history for their entries.
+  // Only figures with a checkable primary-source URL qualify for the
+  // strip (release-gate enforced). Struck same day: the 33% employer
+  // error rate, site-wide — its "IRS employer compliance study" citation
+  // has no locatable primary publication, and on a compliance company's
+  // site an unverifiable citation reads as invented. The 120 hrs/yr
+  // figure stays on inline-cited surfaces only, re-attributed to its
+  // actual source of record (Lano, citing EY) in src/lib/stats.ts.
+  // Display values and citations live in src/lib/stats.ts (single source
+  // of truth); each entry below is the publication license for one figure.
   {
-    id: "cred-employee-records-per-cycle",
-    statement: "1,200+ employee records validated per payroll cycle",
-    status: "illustrative",
+    id: "stat-irc-6656-max-penalty",
+    statement: "15% maximum IRC §6656 penalty on late federal payroll tax deposits",
+    status: "current",
     evidence: [
       {
-        kind: "founder_attested",
-        note: "Design placeholder asserting operational throughput; PSE has no production customers. Requires production telemetry to evidence, or rewording.",
+        kind: "primary_source",
+        url: "https://www.law.cornell.edu/uscode/text/26/6656",
+        note: "IRC §6656(b)(1): penalty tiers of 2%/5%/10%, rising to 15% where the failure continues past demand.",
       },
+      { kind: "shipped_surface", path: "src/lib/stats.ts" },
     ],
     surfaces: ["/"],
     owner: OWNER,
     lastReviewed: "2026-07-30",
   },
   {
-    id: "cred-chap-rule-count",
-    statement: "500+ compliance rules in the CHAP AI engine",
-    status: "illustrative",
+    id: "stat-dol-fy2024-back-wages",
+    statement:
+      "$149.9M recovered by the DOL Wage & Hour Division in FY2024 back wages",
+    status: "current",
     evidence: [
       {
-        kind: "founder_attested",
-        note: "Not countable from this repository: the shipped CHAP corpus is scoped to IRC §6656 and gated pending verification (PR #4). A countable rule-set artifact would be required.",
+        kind: "primary_source",
+        url: "https://www.dol.gov/agencies/whd/data",
+        note: "DOL WHD enforcement statistics, FY2024 back-wage recoveries.",
       },
+      { kind: "shipped_surface", path: "src/lib/stats.ts" },
     ],
     surfaces: ["/"],
     owner: OWNER,
     lastReviewed: "2026-07-30",
   },
   {
-    id: "cred-jurisdictions-monitored",
-    statement: "50 state + federal jurisdictions monitored",
-    status: "illustrative",
+    id: "stat-compliance-top-challenge",
+    statement:
+      "63% of payroll professionals name compliance their biggest challenge",
+    status: "current",
     evidence: [
       {
-        kind: "founder_attested",
-        note: "'Monitored' asserts a running operation; no jurisdiction dataset or monitoring pipeline exists in this repository.",
+        kind: "primary_source",
+        url: "https://blogs.payroll.org/pay-news-now/gpw-survey-finds-compliance-remains-biggest-global-payroll-challenge",
+        note: "PayrollOrg 'Getting the World Paid' survey, 2024: 63% of respondents named compliance their biggest global payroll challenge.",
       },
+      { kind: "shipped_surface", path: "src/lib/stats.ts" },
     ],
     surfaces: ["/"],
-    owner: OWNER,
-    lastReviewed: "2026-07-30",
-  },
-  {
-    id: "cred-regulatory-sources-tracked",
-    statement: "30+ regulatory and enforcement sources tracked daily",
-    status: "illustrative",
-    evidence: [
-      {
-        kind: "founder_attested",
-        note: "No source list or daily tracking pipeline exists in this repository; 'tracked daily' asserts a running operation.",
-      },
-    ],
-    surfaces: ["/"],
-    owner: OWNER,
-    lastReviewed: "2026-07-30",
-  },
-  {
-    id: "trust-enterprise-grade-security",
-    statement: "Enterprise-Grade Security",
-    status: "illustrative",
-    evidence: [
-      { kind: "shipped_surface", path: "vercel.json" },
-      {
-        kind: "founder_attested",
-        note: "Security headers and HTTPS are shipped, but 'enterprise-grade' implies a certification-class posture (SOC 2 / ISO 27001) PSE does not hold. Passes release-gate test #8 only because it names no specific certification.",
-      },
-    ],
-    surfaces: ["/", "/services"],
     owner: OWNER,
     lastReviewed: "2026-07-30",
   },
@@ -352,13 +352,14 @@ export const CLAIMS: readonly Claim[] = [
     lastReviewed: "2026-07-30",
   },
   {
-    id: "trust-daily-regulatory-monitoring",
-    statement: "Daily Regulatory Monitoring",
-    status: "planned",
+    id: "svc-governed-payroll-validation",
+    statement:
+      "Every payroll run validated against federal statutory requirements before commit.",
+    status: "pilot",
     evidence: [
       {
         kind: "founder_attested",
-        note: "Intended operating practice; no daily monitoring pipeline is running today.",
+        note: "Demonstrated in the frozen demo; production validation depends on product-repo capabilities not yet shipped. 'State' dropped from the statement 2026-07-30: the compliance corpus contains zero state-level entries, so state statutory coverage may not be claimed until state entries exist.",
       },
     ],
     surfaces: ["/", "/services"],
@@ -366,72 +367,14 @@ export const CLAIMS: readonly Claim[] = [
     lastReviewed: "2026-07-30",
   },
   {
-    id: "chap-same-day-regulatory-updates",
-    statement: "When regulations change, CHAP AI updates the same day.",
-    status: "planned",
-    evidence: [
-      {
-        kind: "founder_attested",
-        note: "Asserts same-day operational turnaround; no regulatory-update pipeline exists yet.",
-      },
-    ],
-    surfaces: ["/"],
-    owner: OWNER,
-    lastReviewed: "2026-07-30",
-  },
-  {
-    id: "stats-traceable-decisions",
+    id: "svc-tax-compliance-audit",
     statement:
-      "100% traceable decisions — every payroll decision documented with the logic and data that produced it.",
-    status: "pilot",
+      "PSE audits payroll tax positions across active jurisdictions and delivers structured response plans for IRS and state agency notices.",
+    status: "current",
     evidence: [
       {
         kind: "founder_attested",
-        note: "Traceability is a design property of CHAP validation, demonstrated at demo scale; '100%' asserts production coverage that cannot be measured yet.",
-      },
-    ],
-    surfaces: ["/"],
-    owner: OWNER,
-    lastReviewed: "2026-07-30",
-  },
-  {
-    id: "stats-faster-processing",
-    statement: "50% faster processing",
-    status: "illustrative",
-    evidence: [
-      {
-        kind: "founder_attested",
-        note: "Internal test-harness comparison; the benchmark artifact is not in this repository and no production measurement exists. The homepage footnote discloses the internal-harness basis.",
-      },
-    ],
-    surfaces: ["/"],
-    owner: OWNER,
-    lastReviewed: "2026-07-30",
-  },
-  {
-    id: "stats-untracked-changes-zero",
-    statement:
-      "0 untracked changes — every transaction validated against compliance rules before execution.",
-    status: "pilot",
-    evidence: [
-      {
-        kind: "founder_attested",
-        note: "Validation-before-commit is a demonstrated design property at demo scale; '0' asserts production coverage.",
-      },
-    ],
-    surfaces: ["/"],
-    owner: OWNER,
-    lastReviewed: "2026-07-30",
-  },
-  {
-    id: "svc-governed-payroll-validation",
-    statement:
-      "Every payroll run validated against federal and state statutory requirements before commit.",
-    status: "pilot",
-    evidence: [
-      {
-        kind: "founder_attested",
-        note: "Demonstrated in the frozen demo; production validation depends on product-repo capabilities not yet shipped.",
+        note: "Human advisory service delivered directly by the founder, same class as svc-strategic-advisory; not dependent on unshipped product capabilities. Replaces the retired same-day-update SLA claim on the Tax & Compliance card (2026-07-30 ruling: an SLA requires a mechanism and a track record).",
       },
     ],
     surfaces: ["/", "/services"],
@@ -446,7 +389,7 @@ export const CLAIMS: readonly Claim[] = [
     evidence: [
       {
         kind: "founder_attested",
-        note: "No analytics dashboards are shipped; the described capability is planned.",
+        note: "No analytics dashboards are shipped; the described capability is planned. Card and detail page carry a visible 'Coming Soon' marker (2026-07-30 ruling: planned services rendered as shipped need the on-page marker, not just a registry status).",
       },
     ],
     surfaces: ["/", "/services"],
@@ -476,7 +419,7 @@ export const CLAIMS: readonly Claim[] = [
     evidence: [
       {
         kind: "founder_attested",
-        note: "No shipped connectors exist in any PSE repository; the integration layer is planned.",
+        note: "No shipped connectors exist in any PSE repository; the integration layer is planned. Card and detail page carry a visible 'Coming Soon' marker (2026-07-30 ruling).",
       },
     ],
     surfaces: ["/", "/services"],
@@ -495,6 +438,87 @@ export const CLAIMS: readonly Claim[] = [
       },
     ],
     surfaces: ["/", "/services"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+
+  // ── CHAP surfaces + rendered sample data (2026-07-30 ruling) ───────────
+  {
+    id: "chap-pipeline-validation",
+    statement:
+      "CHAP AI scans timecard and payroll data for statutory violations, policy exceptions, and anomalies, then flags, explains, and documents each finding.",
+    status: "pilot",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/chap-ai/page.tsx" },
+      {
+        kind: "founder_attested",
+        note: "Pipeline demonstrated at demo scale behind the CHAP gate; present-tense capability for a system behind a 503 gate is pilot, not current, until PR #4 merges and the widget answers.",
+      },
+    ],
+    surfaces: ["/", "/chap-ai"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "chap-guard-extension",
+    statement:
+      "CHAP Guard is a Chrome extension that brings CHAP AI compliance intelligence directly into UKG, ADP, and other payroll platforms.",
+    status: "planned",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "No shipped extension exists; 'Early Access' framing denotes a waitlist, which is honest but does not make the capability current.",
+      },
+    ],
+    surfaces: ["/", "/chap-ai"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "hero-dashboard-sample-metrics",
+    statement:
+      "Hero dashboard figures (2,847 employees, 96% pre-validated, 0 violations) illustrating the pre-run compliance view.",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "src/components/sections/DashboardPreview.tsx" },
+      {
+        kind: "founder_attested",
+        note: "Invented figures; the panel carries a visible 'Sample data' marker so a reader cannot take them as product output.",
+      },
+    ],
+    surfaces: ["/"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "chap-scan-terminal-sample",
+    statement:
+      "Homepage scan-terminal rows and the '4/5 Passed' result illustrating a CHAP AI pre-run scan.",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "src/components/sections/ChapAI.tsx" },
+      {
+        kind: "founder_attested",
+        note: "Invented scan output; the fabricated completion timestamp was removed and the terminal carries a visible 'Sample scan' marker.",
+      },
+    ],
+    surfaces: ["/"],
+    owner: OWNER,
+    lastReviewed: "2026-07-30",
+  },
+  {
+    id: "chap-regulatory-log-sample",
+    statement:
+      "Regulatory update log entries on the CHAP AI page illustrating how rule changes would be tracked and documented.",
+    status: "illustrative",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/chap-ai/page.tsx" },
+      {
+        kind: "founder_attested",
+        note: "Invented log entries (dates, statutes, APPLIED states); the log carries a visible 'Sample data' marker. A fabricated audit trail without a marker is the highest-cost illustration on the site.",
+      },
+    ],
+    surfaces: ["/chap-ai"],
     owner: OWNER,
     lastReviewed: "2026-07-30",
   },

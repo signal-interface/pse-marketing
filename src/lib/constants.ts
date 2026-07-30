@@ -38,13 +38,13 @@ export const SERVICES = [
     icon: "Zap" as const,
     title: "Governed Payroll Runs",
     claimId: "svc-governed-payroll-validation",
-    desc: "Multi-state payroll validation with pre-run compliance validation. Every cycle governed, every decision documented.",
+    desc: "Pre-run compliance validation before every cycle commits. Every run governed, every decision documented.",
   },
   {
     icon: "ShieldCheck" as const,
     title: "Tax & Compliance",
-    claimId: "chap-same-day-regulatory-updates",
-    desc: "Federal, state, and local statutory checks applied continuously. When regulations change, CHAP AI updates the same day.",
+    claimId: "svc-tax-compliance-audit",
+    desc: "Payroll tax positions audited across active jurisdictions, with structured response plans for IRS and state agency notices.",
   },
   {
     icon: "BarChart3" as const,
@@ -72,53 +72,34 @@ export const SERVICES = [
   },
 ] as const;
 
+// All four steps describe the one registered pipeline claim \u2014 pilot until
+// PR #4 merges and the CHAP widget answers publicly.
+export const CHAP_PIPELINE_CLAIM_ID = "chap-pipeline-validation" as const;
+
 export const CHAP_STEPS = [
   {
     step: "Detect",
+    claimId: CHAP_PIPELINE_CLAIM_ID,
     desc: "Scans timecard and payroll data for statutory violations, policy exceptions, and anomalies.",
     color: "blue-accent",
   },
   {
     step: "Flag",
+    claimId: CHAP_PIPELINE_CLAIM_ID,
     desc: "Surfaces issues with severity levels and the specific regulation or policy that triggered the flag.",
     color: "amber",
   },
   {
     step: "Explain",
+    claimId: CHAP_PIPELINE_CLAIM_ID,
     desc: "Plain-language rationale for every flag \u2014 what\u2019s wrong, why it matters, and what clears it.",
     color: "purple",
   },
   {
     step: "Document",
+    claimId: CHAP_PIPELINE_CLAIM_ID,
     desc: "Timestamped evidence of what was checked, what passed, and what was flagged. Audit-ready by default.",
     color: "green",
-  },
-] as const;
-
-export const STATS = [
-  {
-    metric: "100%",
-    label: "Traceable decisions",
-    claimId: "stats-traceable-decisions",
-    desc: "Every payroll decision documented with the logic and data that produced it.",
-  },
-  {
-    metric: "50%",
-    label: "Faster processing",
-    claimId: "stats-faster-processing",
-    desc: "Automation eliminates manual data entry, reconciliation, and approval bottlenecks.",
-  },
-  {
-    metric: "Daily",
-    label: "Regulatory monitoring",
-    claimId: "trust-daily-regulatory-monitoring",
-    desc: "Federal, state, and local changes reflected in your compliance rules within one business day.",
-  },
-  {
-    metric: "0",
-    label: "Untracked changes",
-    claimId: "stats-untracked-changes-zero",
-    desc: "Every transaction validated against compliance rules before execution.",
   },
 ] as const;
 
