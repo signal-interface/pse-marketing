@@ -74,6 +74,17 @@ export type LeadEventType = (typeof LEAD_EVENT_TYPES)[number];
 // ---------------------------------------------------------------------------
 // Transition map (ratified, incl. VIDEO_SENT -> QUESTIONNAIRE_SENT and
 // widened NURTURE re-entry)
+//
+// lead_status is NOT monotonic. NURTURE re-entry can land directly in
+// QUESTIONNAIRE_COMPLETED without ever passing through
+// QUESTIONNAIRE_STARTED, so any funnel report built on current state
+// alone will miscount stage progression — lead_events is the
+// authoritative stage history.
+//
+// QUALIFIED is deliberately non-terminal (Stage C ruling): deals stall
+// and champions leave, and a qualified lead that can never move to
+// NURTURE or DISQUALIFIED freezes and permanently overstates the
+// funnel. DISQUALIFIED is the only terminal state.
 // ---------------------------------------------------------------------------
 
 export const TRANSITIONS: Record<LeadStatus, readonly LeadStatus[]> = {
@@ -107,7 +118,7 @@ export const TRANSITIONS: Record<LeadStatus, readonly LeadStatus[]> = {
     "MEETING_SCHEDULED",
     "DISQUALIFIED",
   ],
-  QUALIFIED: [],
+  QUALIFIED: ["NURTURE", "DISQUALIFIED"],
   DISQUALIFIED: [],
 };
 

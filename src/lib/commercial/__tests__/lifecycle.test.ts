@@ -138,13 +138,65 @@ describe("transition map", () => {
     }
   });
 
-  it("QUALIFIED and DISQUALIFIED are terminal", () => {
-    expect(TRANSITIONS.QUALIFIED).toHaveLength(0);
+  it("QUALIFIED can reopen to NURTURE or DISQUALIFIED and nothing else", () => {
+    expect(canTransition("QUALIFIED", "NURTURE")).toBe(true);
+    expect(canTransition("QUALIFIED", "DISQUALIFIED")).toBe(true);
+    for (const to of LEAD_STATUSES) {
+      if (to === "NURTURE" || to === "DISQUALIFIED") continue;
+      expect(canTransition("QUALIFIED", to)).toBe(false);
+    }
+  });
+
+  it("DISQUALIFIED is the only terminal state", () => {
     expect(TRANSITIONS.DISQUALIFIED).toHaveLength(0);
     for (const to of LEAD_STATUSES) {
-      expect(canTransition("QUALIFIED", to)).toBe(false);
       expect(canTransition("DISQUALIFIED", to)).toBe(false);
     }
+    for (const from of LEAD_STATUSES) {
+      if (from === "DISQUALIFIED") continue;
+      expect(TRANSITIONS[from].length).toBeGreaterThan(0);
+    }
+  });
+
+  it("NURTURE re-entry may land directly in QUESTIONNAIRE_COMPLETED (status is not monotonic — pinned deliberately)", () => {
+    expect(canTransition("NURTURE", "QUESTIONNAIRE_COMPLETED")).toBe(true);
+  });
+
+  it("full-map regression guard", () => {
+    expect(TRANSITIONS).toEqual({
+      NEW: ["VIDEO_SENT", "DISQUALIFIED"],
+      VIDEO_SENT: [
+        "VIDEO_ENGAGED",
+        "QUESTIONNAIRE_SENT",
+        "NURTURE",
+        "DISQUALIFIED",
+      ],
+      VIDEO_ENGAGED: ["QUESTIONNAIRE_SENT", "NURTURE", "DISQUALIFIED"],
+      QUESTIONNAIRE_SENT: [
+        "QUESTIONNAIRE_STARTED",
+        "QUESTIONNAIRE_COMPLETED",
+        "NURTURE",
+        "DISQUALIFIED",
+      ],
+      QUESTIONNAIRE_STARTED: [
+        "QUESTIONNAIRE_COMPLETED",
+        "NURTURE",
+        "DISQUALIFIED",
+      ],
+      QUESTIONNAIRE_COMPLETED: ["MEETING_SCHEDULED", "NURTURE", "DISQUALIFIED"],
+      MEETING_SCHEDULED: ["DISCOVERY_COMPLETE", "NURTURE", "DISQUALIFIED"],
+      DISCOVERY_COMPLETE: ["QUALIFIED", "NURTURE", "DISQUALIFIED"],
+      NURTURE: [
+        "VIDEO_ENGAGED",
+        "QUESTIONNAIRE_SENT",
+        "QUESTIONNAIRE_STARTED",
+        "QUESTIONNAIRE_COMPLETED",
+        "MEETING_SCHEDULED",
+        "DISQUALIFIED",
+      ],
+      QUALIFIED: ["NURTURE", "DISQUALIFIED"],
+      DISQUALIFIED: [],
+    });
   });
 });
 
