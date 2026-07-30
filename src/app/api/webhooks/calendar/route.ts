@@ -22,7 +22,36 @@ import {
   externalIdFor,
   resolveBookingLead,
 } from "@/lib/commercial/scheduling";
-import { transitionLead, recordLeadEvent } from "@/lib/commercial/lifecycle";
+import {
+  transitionLead,
+  recordLeadEvent,
+  type TransitionResult,
+} from "@/lib/commercial/lifecycle";
+
+// Cal.com is the one external system that drives lifecycle state, and a
+// rejected transition here is the one place calendar reality and
+// lead_status can diverge invisibly: the booking event is recorded and
+// calendar_event_id is set, but the status stays behind. Surface every
+// rejection; do not force the transition.
+function logDroppedTransition(
+  requestId: string,
+  bookingUid: string,
+  result: TransitionResult
+): void {
+  if (result.ok) return;
+  if (result.reason === "invalid_transition") {
+    console.warn(
+      `[calendar-webhook:${requestId}] dropped transition for lead ${result.leadId}: ` +
+        `${result.from} -> ${result.to} not permitted (booking ${bookingUid}); ` +
+        `lead_status now disagrees with the calendar`
+    );
+  } else {
+    console.warn(
+      `[calendar-webhook:${requestId}] dropped transition for lead ${result.leadId}: ` +
+        `lead not found (booking ${bookingUid})`
+    );
+  }
+}
 
 export async function POST(request: NextRequest) {
   const requestId = crypto.randomUUID();
@@ -87,19 +116,21 @@ export async function POST(request: NextRequest) {
         SET calendar_event_id = ${event.bookingUid}, updated_at = NOW()
         WHERE id = ${leadId}
       `;
-      await transitionLead(leadId, "MEETING_SCHEDULED", {
+      const transition = await transitionLead(leadId, "MEETING_SCHEDULED", {
         actorType: "CALENDAR_PROVIDER",
         source: "api/webhooks/calendar",
         requestId,
         metadata: { bookingUid: event.bookingUid },
       });
+      logDroppedTransition(requestId, event.bookingUid, transition);
     } else if (event.trigger === "BOOKING_CANCELLED") {
-      await transitionLead(leadId, "NURTURE", {
+      const transition = await transitionLead(leadId, "NURTURE", {
         actorType: "CALENDAR_PROVIDER",
         source: "api/webhooks/calendar",
         requestId,
         metadata: { bookingUid: event.bookingUid, reason: "booking_cancelled" },
       });
+      logDroppedTransition(requestId, event.bookingUid, transition);
     }
     // RESCHEDULED: event recorded; status stays MEETING_SCHEDULED.
 
