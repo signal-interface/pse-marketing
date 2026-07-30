@@ -21,7 +21,7 @@ const ICON_MAP = {
 } as const;
 
 const SERVICE_SLUGS = [
-  'payroll-processing',
+  'payroll-processing', // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
   'tax-compliance',
   'workforce-analytics',
   'benefits-integration',

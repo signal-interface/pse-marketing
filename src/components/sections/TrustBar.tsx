@@ -1,11 +1,30 @@
 import { ShieldCheck, FileCheck, Globe, Radio } from "lucide-react";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
-const TRUST_ITEMS = [
-  { icon: ShieldCheck, label: "Enterprise-Grade Security" },
-  { icon: FileCheck, label: "Audit-Ready Documentation" },
-  { icon: Globe, label: "Multi-State Coverage" },
-  { icon: Radio, label: "Daily Regulatory Monitoring" },
+// Each badge is a registered claim (src/content/trust/claims.ts); the
+// live-surface-claims release-gate test enforces the linkage. Rendering is
+// not yet filtered by publishableClaims() — see the claims registry notes.
+export const TRUST_ITEMS = [
+  {
+    icon: ShieldCheck,
+    label: "Enterprise-Grade Security",
+    claimId: "trust-enterprise-grade-security",
+  },
+  {
+    icon: FileCheck,
+    label: "Audit-Ready Documentation",
+    claimId: "trust-audit-ready-documentation",
+  },
+  {
+    icon: Globe,
+    label: "Multi-State Coverage",
+    claimId: "trust-multi-state-coverage",
+  },
+  {
+    icon: Radio,
+    label: "Daily Regulatory Monitoring",
+    claimId: "trust-daily-regulatory-monitoring",
+  },
 ] as const;
 
 export default function TrustBar() {

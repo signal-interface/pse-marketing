@@ -37,31 +37,37 @@ export const SERVICES = [
   {
     icon: "Zap" as const,
     title: "Governed Payroll Runs",
+    claimId: "svc-governed-payroll-validation",
     desc: "Multi-state payroll validation with pre-run compliance validation. Every cycle governed, every decision documented.",
   },
   {
     icon: "ShieldCheck" as const,
     title: "Tax & Compliance",
+    claimId: "chap-same-day-regulatory-updates",
     desc: "Federal, state, and local statutory checks applied continuously. When regulations change, CHAP AI updates the same day.",
   },
   {
     icon: "BarChart3" as const,
     title: "Workforce Analytics",
+    claimId: "svc-workforce-analytics",
     desc: "Labor cost exposure, overtime liability, and compliance posture \u2014 visible in real time, not buried in a quarterly deck.",
   },
   {
     icon: "RefreshCw" as const,
     title: "Benefits Reconciliation",
+    claimId: "svc-benefits-reconciliation",
     desc: "Benefits deduction reconciliation \u2014 PSE audits payroll deduction reports against benefit elections to identify discrepancies.",
   },
   {
     icon: "Plug" as const,
     title: "System Integration",
+    claimId: "svc-prebuilt-integrations",
     desc: "Connect payroll to your HRIS and workforce management platforms with pre-built integrations and custom APIs.",
   },
   {
     icon: "Target" as const,
     title: "Strategic Advisory",
+    claimId: "svc-strategic-advisory",
     desc: "Payroll structure optimization, entity setup guidance, and compliance posture strategy for growing organizations.",
   },
 ] as const;
@@ -93,21 +99,25 @@ export const STATS = [
   {
     metric: "100%",
     label: "Traceable decisions",
+    claimId: "stats-traceable-decisions",
     desc: "Every payroll decision documented with the logic and data that produced it.",
   },
   {
     metric: "50%",
     label: "Faster processing",
+    claimId: "stats-faster-processing",
     desc: "Automation eliminates manual data entry, reconciliation, and approval bottlenecks.",
   },
   {
     metric: "Daily",
     label: "Regulatory monitoring",
+    claimId: "trust-daily-regulatory-monitoring",
     desc: "Federal, state, and local changes reflected in your compliance rules within one business day.",
   },
   {
     metric: "0",
     label: "Untracked changes",
+    claimId: "stats-untracked-changes-zero",
     desc: "Every transaction validated against compliance rules before execution.",
   },
 ] as const;

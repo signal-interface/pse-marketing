@@ -7,17 +7,17 @@ import { ENFORCEMENT_STATS } from '@/lib/stats';
 
 export const metadata: Metadata = {
   title: 'Services | Payroll Synergy Experts',
-  description: 'Six integrated payroll service areas. Payroll processing, tax compliance, workforce analytics, benefits integration, system integration, and strategic advisory — all powered by CHAP AI.',
+  description: 'Six integrated payroll service areas. Payroll run governance, tax compliance, workforce analytics, benefits integration, system integration, and strategic advisory — all powered by CHAP AI.',
 };
 
 const services = [
   {
-    slug: 'payroll-processing',
+    slug: 'payroll-processing', // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
     name: 'Governed Payroll Runs',
-    headline: 'Automated multi-state payroll with real-time compliance validation.',
+    headline: 'Real-time compliance validation for automated multi-state payroll.',
     body: 'Every payroll run validated against federal and state statutory requirements before commit. CHAP AI catches violations — wrong overtime calculations, missed meal break premiums, deposit timing errors — before they become penalties.',
     features: [
-      'Multi-state payroll in a single run',
+      'Multi-state validation in a single pass',
       'CHAP AI pre-run compliance scan',
       'Deposit timing validation (IRC §6656)',
       'Same-day correction workflow',
@@ -108,7 +108,7 @@ export default function ServicesPage() {
           <div className="svc-hero__inner">
             <p className="svc-eyebrow">PSE Services</p>
             <h1 className="svc-hero__headline">
-              Payroll operations built for multi-state employers<br />
+              Payroll governance built for multi-state employers<br />
               who need it right the first time.
             </h1>
             <p className="svc-hero__sub">
@@ -166,7 +166,7 @@ export default function ServicesPage() {
               <h2>Every service runs on the same compliance engine.</h2>
               <p>
                 CHAP AI isn&apos;t a reporting layer — it&apos;s the validation engine underneath
-                every payroll run, filing, and deduction reconciliation PSE processes.
+                every payroll run, filing, and deduction reconciliation PSE governs.
                 Pre-run scans, statute-level citations, and audit-ready documentation
                 are built into the platform, not bolted on.
               </p>

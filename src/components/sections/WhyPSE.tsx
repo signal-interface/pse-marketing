@@ -41,7 +41,7 @@ export default function WhyPSE() {
 
         <div className="mt-5 text-[11px] text-text-tertiary max-w-[1200px]">
           * Benchmarks reflect internal test harness comparisons against manual
-          payroll processing workflows.
+          payroll workflows.
         </div>
       </div>
     </section>

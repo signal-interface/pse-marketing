@@ -160,7 +160,7 @@ export default function ChapAIPage() {
               <ProductScreenshot
                 src="/screenshots/compliance-scan.png"
                 alt="CHAP AI pre-run compliance scan results with statute citations"
-                caption="Pre-run scan — violations flagged before payroll commits"
+                caption="Pre-run scan — violations flagged before commit"
               />
               <ProductScreenshot
                 src="/screenshots/payroll-run.png"

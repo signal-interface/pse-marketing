@@ -11,15 +11,18 @@ const ROOT = process.env.BOUNDARY_LINT_ROOT
   ? path.resolve(process.env.BOUNDARY_LINT_ROOT)
   : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+// src/app, src/components, and src/content cover every component that
+// renders to a prospect — the former narrow entries (src/app/product-tour,
+// src/app/trust, src/content/trust) are subsumed, not dropped.
 const SCOPES = [
   "docs/gtm",
   "docs/POSITIONING_STRATEGY.md",
   "docs/DEMO_FREEZE_GTM_STRATEGY.md",
-  "src/app/product-tour",
+  "src/app",
+  "src/components",
+  "src/content",
   "src/lib/constants.ts",
   "src/data/services.ts",
-  "src/content/trust",
-  "src/app/trust",
 ];
 
 const EXTENSIONS = new Set([".md", ".ts", ".tsx"]);

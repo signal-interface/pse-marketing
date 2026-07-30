@@ -45,7 +45,7 @@ const slides: Slide[] = [
     sourceText: 'Ernst & Young Global Payroll Operations Survey · via Lano, 2024',
     points: [
       'Every flag includes the specific statute, plain-language explanation, and recommended correction — eliminating research time',
-      'Pre-run detection means issues resolve before payroll commits, not after a notice or audit request',
+      'Pre-run detection means issues resolve before the run commits, not after a notice or audit request',
       'Automated documentation produces audit-ready records on demand with zero additional effort',
     ],
   },

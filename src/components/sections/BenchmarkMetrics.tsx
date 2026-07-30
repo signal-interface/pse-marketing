@@ -29,7 +29,7 @@ const metrics: MetricCardProps[] = [
     value: ENFORCEMENT_STATS.irsMaxDepositPenalty.amount,
     suffix: '%',
     label: 'Maximum deposit penalty rate',
-    description: 'The IRS four-tier penalty escalates from 2% for deposits 1–5 days late to 15% after the first IRS delinquency notice. One missed semi-weekly deposit on a $500K payroll costs up to $75,000.',
+    description: 'The IRS four-tier penalty escalates from 2% for deposits 1–5 days late to 15% after the first IRS delinquency notice. One missed semi-weekly deposit on a $500K pay cycle costs up to $75,000.',
     citation: `Source: ${ENFORCEMENT_STATS.irsMaxDepositPenalty.source}`,
   },
   {
