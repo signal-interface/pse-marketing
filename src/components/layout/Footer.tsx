@@ -30,7 +30,10 @@ export default function Footer() {
             </h4>
             <div className="flex flex-col gap-1">
               {[
-                { name: "Payroll Run Governance", slug: "payroll-processing" },
+                {
+                  name: "Payroll Run Governance",
+                  slug: "payroll-processing", // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
+                },
                 { name: "Tax & Compliance", slug: "tax-compliance" },
                 { name: "Workforce Analytics", slug: "workforce-analytics" },
                 { name: "Benefits Reconciliation", slug: "benefits-integration" },

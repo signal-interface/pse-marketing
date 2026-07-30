@@ -37,12 +37,12 @@ export const serviceData: Record<string, ServiceData> = {
   'payroll-processing': { // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
     slug: 'payroll-processing', // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
     name: 'Governed Payroll Runs',
-    headline: 'Automated multi-state payroll with real-time compliance validation.',
+    headline: 'Real-time compliance validation for automated multi-state payroll.',
     subheadline: 'Every run validated before commit. Every decision documented. Every violation caught before it costs you.',
     metaDescription: 'Multi-state payroll governance with CHAP AI pre-run compliance validation. Catch deposit timing errors, overtime violations, and statutory issues before they become IRS penalties.',
     body: 'PSE\'s governed payroll runs sit on top of CHAP AI — the pre-run compliance engine that validates every employee record against the applicable federal and state statutory ruleset before the payroll commits. This is not a post-processing audit layer. It is a blocking gate: violations are surfaced, explained in plain language, and resolved before payroll closes. PSE validates and governs — your existing payroll processor executes. The result is payroll that passes its own compliance audit on every run.',
     features: [
-      { title: 'Multi-state payroll in a single run', body: 'All active states are covered in a single payroll run, with per-state rule application handled automatically. No separate state runs, no manual rule lookups.' },
+      { title: 'Multi-state validation in a single pass', body: 'The system of record covers all active states in one payroll run; PSE applies per-state rule validation in the same pass. No separate state reviews, no manual rule lookups.' },
       { title: 'CHAP AI pre-run compliance scan', body: 'Before your provider commits the run, every employee record passes a full statutory scan — checking overtime, deposit timing, meal break premiums, minimum wage, and benefit deductions across all jurisdictions.' },
       { title: 'Deposit timing validation (IRC §6656)', body: 'CHAP AI validates deposit timing and amounts against your liability tier on every run — flagging errors before they occur. Your existing payroll processor or financial institution executes all deposits; PSE does not move funds.' },
       { title: 'Same-day correction workflow', body: 'When CHAP AI flags a violation, the correction interface surfaces the specific employee records, the applicable statute, and the exact change required. Resolution takes minutes, not hours.' },

@@ -350,7 +350,7 @@ export default function QuestionnaireClient() {
                 </div>
                 <div>
                   <label htmlFor="operatingRegions" className={LABEL_CLS}>
-                    Where you run payroll
+                    Where payroll operates
                   </label>
                   <input
                     id="operatingRegions"
