@@ -12,10 +12,11 @@
 // is logged internally via a non-consuming inspect.
 
 import { NextRequest, NextResponse } from "next/server";
-import { startQuestionnaireSession } from "@/lib/commercial/questionnaire";
+import {
+  startQuestionnaireSession,
+  SESSION_COOKIE,
+} from "@/lib/commercial/questionnaire";
 import { inspectQuestionnaireToken } from "@/lib/commercial/tokens";
-
-export const SESSION_COOKIE = "pse_dq_session";
 
 const SAFE_INVALID_MESSAGE =
   "This discovery link is no longer active. Request a new link to continue.";

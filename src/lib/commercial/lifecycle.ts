@@ -74,10 +74,34 @@ export type LeadEventType = (typeof LEAD_EVENT_TYPES)[number];
 // ---------------------------------------------------------------------------
 // Transition map (ratified, incl. VIDEO_SENT -> QUESTIONNAIRE_SENT and
 // widened NURTURE re-entry)
+//
+// lead_status is NOT monotonic. NURTURE re-entry can land directly in
+// QUESTIONNAIRE_COMPLETED without ever passing through
+// QUESTIONNAIRE_STARTED, so any funnel report built on current state
+// alone will miscount stage progression — lead_events is the
+// authoritative stage history.
+//
+// QUALIFIED is deliberately non-terminal (Stage C ruling): deals stall
+// and champions leave, and a qualified lead that can never move to
+// NURTURE or DISQUALIFIED freezes and permanently overstates the
+// funnel. DISQUALIFIED is the only terminal state.
+//
+// NEW is wide (C9 ruling): the video ladder is the DEFAULT path —
+// /api/demo-request still hard-wires NEW -> VIDEO_SENT — not the only
+// one. The funnel spec's sales journey has no mandatory video step, and
+// warm referrals (the likely case pre-launch) may book or receive the
+// questionnaire directly. The guard that matters is untouched:
+// QUALIFIED is reachable only through DISCOVERY_COMPLETE.
 // ---------------------------------------------------------------------------
 
 export const TRANSITIONS: Record<LeadStatus, readonly LeadStatus[]> = {
-  NEW: ["VIDEO_SENT", "DISQUALIFIED"],
+  NEW: [
+    "VIDEO_SENT",
+    "QUESTIONNAIRE_SENT",
+    "MEETING_SCHEDULED",
+    "NURTURE",
+    "DISQUALIFIED",
+  ],
   VIDEO_SENT: [
     "VIDEO_ENGAGED",
     "QUESTIONNAIRE_SENT",
@@ -107,7 +131,7 @@ export const TRANSITIONS: Record<LeadStatus, readonly LeadStatus[]> = {
     "MEETING_SCHEDULED",
     "DISQUALIFIED",
   ],
-  QUALIFIED: [],
+  QUALIFIED: ["NURTURE", "DISQUALIFIED"],
   DISQUALIFIED: [],
 };
 
@@ -324,9 +348,10 @@ export interface CreateLeadInput {
   lastName?: string;
   /** Already normalized (trimmed, lowercased) by the caller. */
   email: string;
-  company: string;
-  jobTitle: string;
-  employees: string;
+  /** Optional at intake (Stage C ruling); discovery fills them in. */
+  company?: string;
+  jobTitle?: string;
+  employees?: string;
   source: string;
   emailDomainType: EmailDomainType;
 }
@@ -349,8 +374,8 @@ export async function createLeadWithEvent(
          employees, source, email_domain_type, lead_status)
       VALUES
         (${legacyName}, ${input.firstName}, ${input.lastName ?? null},
-         ${input.email}, ${input.company}, ${input.jobTitle},
-         ${input.employees}, ${input.source}, ${input.emailDomainType},
+         ${input.email}, ${input.company ?? null}, ${input.jobTitle ?? null},
+         ${input.employees ?? null}, ${input.source}, ${input.emailDomainType},
          'NEW')
       RETURNING id
     `;

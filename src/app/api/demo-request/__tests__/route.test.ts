@@ -58,6 +58,7 @@ function makeRequest(body: Record<string, unknown>): NextRequest {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "test-salt");
   mockLimit.mockResolvedValue({ allowed: true, count: 1 });
   mockCreateLead.mockResolvedValue({ id: 42 });
   mockTransition.mockResolvedValue({
@@ -72,6 +73,15 @@ beforeEach(() => {
 });
 
 describe("POST /api/demo-request", () => {
+  it("fails closed (503, no side effects) when COMMERCIAL_IP_HASH_SALT is unset", async () => {
+    vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "");
+    const res = await POST(makeRequest(VALID_BODY));
+    expect(res.status).toBe(503);
+    expect(mockLimit).not.toHaveBeenCalled();
+    expect(mockCreateLead).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
   it("happy path: creates lead, transitions, sends two emails, records outcomes", async () => {
     const res = await POST(makeRequest(VALID_BODY));
     expect(res.status).toBe(200);
@@ -117,8 +127,8 @@ describe("POST /api/demo-request", () => {
   it.each([
     ["firstName", { ...VALID_BODY, firstName: "" }, "invalid_first_name"],
     ["email", { ...VALID_BODY, email: "not-an-email" }, "invalid_email"],
-    ["company", { ...VALID_BODY, company: "" }, "invalid_company"],
-    ["jobTitle", { ...VALID_BODY, jobTitle: "" }, "invalid_job_title"],
+    ["company", { ...VALID_BODY, company: "x".repeat(201) }, "invalid_company"],
+    ["jobTitle", { ...VALID_BODY, jobTitle: "x".repeat(151) }, "invalid_job_title"],
     ["employees", { ...VALID_BODY, employees: "9999" }, "invalid_employees"],
   ])("rejects invalid %s with 400 and no side effects", async (_f, body, error) => {
     const res = await POST(makeRequest(body));
@@ -126,6 +136,34 @@ describe("POST /api/demo-request", () => {
     expect((await res.json()).error).toBe(error);
     expect(mockCreateLead).not.toHaveBeenCalled();
     expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it("accepts a thin payload — company, jobTitle, employees are optional (Stage C ruling)", async () => {
+    const res = await POST(
+      makeRequest({ firstName: "Jane", email: "jane@acme.com" })
+    );
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ success: true });
+    expect(mockCreateLead.mock.calls[0][0]).toMatchObject({
+      firstName: "Jane",
+      email: "jane@acme.com",
+      company: undefined,
+      jobTitle: undefined,
+      employees: undefined,
+    });
+    expect(mockSend).toHaveBeenCalledTimes(2);
+  });
+
+  it("accepts empty-string optional fields as absent", async () => {
+    const res = await POST(
+      makeRequest({ ...VALID_BODY, company: "", jobTitle: "", employees: "" })
+    );
+    expect(res.status).toBe(200);
+    expect(mockCreateLead.mock.calls[0][0]).toMatchObject({
+      company: undefined,
+      jobTitle: undefined,
+      employees: undefined,
+    });
   });
 
   it("oversized firstName is rejected", async () => {

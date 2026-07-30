@@ -2,8 +2,10 @@
 // Completed sessions reject saves (enforced at the SQL level).
 
 import { NextRequest, NextResponse } from "next/server";
-import { saveSessionAnswers } from "@/lib/commercial/questionnaire";
-import { SESSION_COOKIE } from "../start/route";
+import {
+  saveSessionAnswers,
+  SESSION_COOKIE,
+} from "@/lib/commercial/questionnaire";
 
 export async function POST(request: NextRequest) {
   const requestId = crypto.randomUUID();
