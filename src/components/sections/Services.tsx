@@ -29,6 +29,15 @@ const SERVICE_SLUGS = [
   'strategic-advisory',
 ];
 
+// Planned services (claims registry status "planned") carry a visible
+// Coming Soon badge — 2026-07-30 ruling: a registry status nobody sees is
+// not a marker.
+const COMING_SOON_SLUGS = new Set([
+  'workforce-analytics',
+  'benefits-integration',
+  'system-integration',
+]);
+
 export default function Services() {
   return (
     <section
@@ -59,7 +68,7 @@ export default function Services() {
                 </div>
                 <h3 className="text-[19px] font-bold tracking-tight text-text mb-2.5">
                   {s.title}
-                  {SERVICE_SLUGS[i] === 'benefits-integration' && (
+                  {COMING_SOON_SLUGS.has(SERVICE_SLUGS[i]) && (
                     <> <Badge>Coming Soon</Badge></>
                   )}
                 </h3>

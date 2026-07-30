@@ -994,6 +994,11 @@ section[id] {
   color: #64748b;
   line-height: 1.4;
 }
+.cred-strip__source {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  line-height: 1.35;
+}
 .cred-strip__divider {
   width: 1px;
   height: 48px;

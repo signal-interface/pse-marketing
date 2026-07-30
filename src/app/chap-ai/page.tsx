@@ -209,29 +209,29 @@ export default function ChapAIPage() {
           </div>
         </section>
 
-        {/* Section 3.5 — Daily Regulatory Monitoring */}
+        {/* Section 3.5 — Regulatory Monitoring */}
         <section className="chap-reg">
           <div className="chap-reg__inner">
-            <p className="chap-eyebrow">Daily monitoring</p>
-            <h2 className="chap-section-headline">Regulatory changes reflected within one business day.</h2>
-            <p className="chap-section-sub">Federal, state, and local regulatory changes are monitored daily. When a rule changes, CHAP AI updates — your team doesn&apos;t have to.</p>
+            <p className="chap-eyebrow">Regulatory monitoring</p>
+            <h2 className="chap-section-headline">Regulatory changes reflected in CHAP AI rules.</h2>
+            <p className="chap-section-sub">Federal, state, and local regulatory changes are tracked. When a rule changes, CHAP AI updates — your team doesn&apos;t have to.</p>
             <div className="chap-reg__grid">
               <div className="chap-reg-card">
                 <div className="chap-reg-card__icon">📡</div>
                 <div className="chap-reg-card__title">Federal & State Monitoring</div>
                 <div className="chap-reg-card__body">
-                  DOL, IRS, and state labor agency publications scanned daily.
+                  DOL, IRS, and state labor agency publications tracked.
                   Rate changes, new requirements, and enforcement guidance reflected
-                  in CHAP AI rules within one business day.
+                  in CHAP AI rules.
                 </div>
               </div>
               <div className="chap-reg-card">
                 <div className="chap-reg-card__icon">⚡</div>
-                <div className="chap-reg-card__title">Same-Day Rule Updates</div>
+                <div className="chap-reg-card__title">Versioned Rule Updates</div>
                 <div className="chap-reg-card__body">
                   When a minimum wage changes or a new leave mandate takes effect,
-                  the applicable CHAP AI rules update before your next payroll run —
-                  not on a quarterly release cycle.
+                  the applicable CHAP AI rules are updated and versioned — not held
+                  for a quarterly release cycle.
                 </div>
               </div>
               <div className="chap-reg-card">
@@ -260,7 +260,7 @@ export default function ChapAIPage() {
                 <span className="chap-reg__log-dot" style={{background:'#ff5f57'}} />
                 <span className="chap-reg__log-dot" style={{background:'#ffbd2e'}} />
                 <span className="chap-reg__log-dot" style={{background:'#28c840'}} />
-                <span className="chap-reg__log-label">chap-ai — regulatory update log</span>
+                <span className="chap-reg__log-label">chap-ai — regulatory update log — sample data (illustrative)</span>
               </div>
               <div className="chap-reg__log-body">
                 <div><span className="chap-reg__log-date">2026-03-14</span> <span className="chap-reg__log-ok">✓ APPLIED</span>  CA SB-1234 min wage → $16.50/hr eff 2026-04-01</div>
