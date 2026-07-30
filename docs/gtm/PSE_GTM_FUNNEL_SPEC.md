@@ -32,6 +32,29 @@ Acceptance criteria:
 - Notification failure remains observable.
 - Confirmation copy remains specific to a sales walkthrough.
 
+#### Shipped journey (Release 1A commercial foundation)
+
+The shipped implementation routes this journey through a lifecycle state
+machine (`src/lib/commercial/lifecycle.ts`). The video-first ladder is
+the **default path, not the only one** (C9 ruling, 2026-07-30):
+
+`NEW → VIDEO_SENT → VIDEO_ENGAGED → QUESTIONNAIRE_SENT → QUESTIONNAIRE_STARTED → QUESTIONNAIRE_COMPLETED → MEETING_SCHEDULED → DISCOVERY_COMPLETE → QUALIFIED`
+
+- `/api/demo-request` hard-wires `NEW → VIDEO_SENT` on every inbound
+  demo request; that default is unchanged.
+- `NEW` additionally permits `QUESTIONNAIRE_SENT`, `MEETING_SCHEDULED`,
+  `NURTURE`, and `DISQUALIFIED`, so warm referrals — the expected common
+  case while access is invitation-only — may skip the video step and
+  book or receive the questionnaire directly. This matches the journey
+  definition above, which has never required a video step.
+- The guard that matters is structural: `QUALIFIED` is reachable only
+  through `DISCOVERY_COMPLETE`. `DISQUALIFIED` is the only terminal
+  state; `QUALIFIED` may reopen to `NURTURE` or `DISQUALIFIED`.
+- `lead_status` is not monotonic (`NURTURE` re-entry may skip
+  intermediate states). Funnel reporting must build on the `lead_events`
+  evidence trail, which is the authoritative stage history — never on
+  current state alone.
+
 ### Independent exploration
 
 `Visitor → Watch the PSE Product Tour → product truth labels → Request a Demo`
