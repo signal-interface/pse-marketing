@@ -9,10 +9,28 @@ export const SITE = {
 } as const;
 
 export const NAV_LINKS = [
-  { label: "Services", href: "/services" },
   { label: "CHAP AI", href: "/chap-ai" },
-  { label: "Why PSE", href: "/#proof" },
+  { label: "Services", href: "/services" },
   { label: "Risk Estimator", href: "/compliance-risk" },
+] as const;
+
+export const PUBLIC_ROUTES = [
+  "/",
+  "/chap-ai",
+  "/services",
+  "/compliance-risk",
+  "/privacy",
+  "/terms",
+] as const;
+
+export const DEMO_ANCHOR = "/#demo" as const;
+
+// Enumerated in the sitemap and footer only while TRUST_LAYER_ENABLED is on.
+export const TRUST_ROUTES = [
+  "/trust",
+  "/trust/security",
+  "/trust/subprocessors",
+  "/trust/data-handling",
 ] as const;
 
 export const SERVICES = [

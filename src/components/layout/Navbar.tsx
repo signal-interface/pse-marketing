@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { NAV_LINKS } from "@/lib/constants";
+import { DEMO_ANCHOR, NAV_LINKS } from "@/lib/constants";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -50,7 +50,7 @@ export default function Navbar() {
               </a>
             ))}
             <a
-              href="#demo"
+              href={DEMO_ANCHOR}
               className="inline-flex items-center gap-2 px-5 py-2 rounded-md text-[13px] font-semibold bg-navy text-white hover:bg-navy-dark hover:-translate-y-px transition-all tracking-[0.01em]"
             >
               Request a Demo
@@ -82,7 +82,7 @@ export default function Navbar() {
             </a>
           ))}
           <a
-            href="#demo"
+            href={DEMO_ANCHOR}
             onClick={() => setMenuOpen(false)}
             className="mt-4 inline-block text-center px-6 py-3.5 rounded-md text-[15px] font-semibold bg-navy text-white"
           >
