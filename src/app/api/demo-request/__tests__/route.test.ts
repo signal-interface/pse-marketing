@@ -127,8 +127,8 @@ describe("POST /api/demo-request", () => {
   it.each([
     ["firstName", { ...VALID_BODY, firstName: "" }, "invalid_first_name"],
     ["email", { ...VALID_BODY, email: "not-an-email" }, "invalid_email"],
-    ["company", { ...VALID_BODY, company: "" }, "invalid_company"],
-    ["jobTitle", { ...VALID_BODY, jobTitle: "" }, "invalid_job_title"],
+    ["company", { ...VALID_BODY, company: "x".repeat(201) }, "invalid_company"],
+    ["jobTitle", { ...VALID_BODY, jobTitle: "x".repeat(151) }, "invalid_job_title"],
     ["employees", { ...VALID_BODY, employees: "9999" }, "invalid_employees"],
   ])("rejects invalid %s with 400 and no side effects", async (_f, body, error) => {
     const res = await POST(makeRequest(body));
@@ -136,6 +136,34 @@ describe("POST /api/demo-request", () => {
     expect((await res.json()).error).toBe(error);
     expect(mockCreateLead).not.toHaveBeenCalled();
     expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it("accepts a thin payload — company, jobTitle, employees are optional (Stage C ruling)", async () => {
+    const res = await POST(
+      makeRequest({ firstName: "Jane", email: "jane@acme.com" })
+    );
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ success: true });
+    expect(mockCreateLead.mock.calls[0][0]).toMatchObject({
+      firstName: "Jane",
+      email: "jane@acme.com",
+      company: undefined,
+      jobTitle: undefined,
+      employees: undefined,
+    });
+    expect(mockSend).toHaveBeenCalledTimes(2);
+  });
+
+  it("accepts empty-string optional fields as absent", async () => {
+    const res = await POST(
+      makeRequest({ ...VALID_BODY, company: "", jobTitle: "", employees: "" })
+    );
+    expect(res.status).toBe(200);
+    expect(mockCreateLead.mock.calls[0][0]).toMatchObject({
+      company: undefined,
+      jobTitle: undefined,
+      employees: undefined,
+    });
   });
 
   it("oversized firstName is rejected", async () => {

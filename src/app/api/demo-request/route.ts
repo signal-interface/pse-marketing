@@ -47,9 +47,9 @@ interface ValidatedInput {
   firstName: string;
   lastName?: string;
   email: string;
-  company: string;
-  jobTitle: string;
-  employees: string;
+  company?: string;
+  jobTitle?: string;
+  employees?: string;
   source: string;
 }
 
@@ -78,14 +78,18 @@ function validate(body: Record<string, unknown>):
   if (!email || email.length > 254 || !EMAIL_RE.test(email)) {
     return { ok: false, error: "invalid_email" };
   }
-  if (!company || company.length > 200) {
+  // Company, job title, and employee count are optional (Stage C ruling):
+  // the demo form is the protected top-of-funnel surface and the discovery
+  // questionnaire collects organizational context anyway. Present values
+  // are still validated; garbage is rejected, absence is not.
+  if (company && company.length > 200) {
     return { ok: false, error: "invalid_company" };
   }
-  if (!jobTitle || jobTitle.length > 150) {
+  if (jobTitle && jobTitle.length > 150) {
     return { ok: false, error: "invalid_job_title" };
   }
   if (
-    !employees ||
+    employees &&
     !(ALLOWED_EMPLOYEE_RANGES as readonly string[]).includes(employees)
   ) {
     return { ok: false, error: "invalid_employees" };
@@ -102,9 +106,9 @@ function validate(body: Record<string, unknown>):
       firstName,
       lastName: lastName || undefined,
       email,
-      company,
-      jobTitle,
-      employees,
+      company: company || undefined,
+      jobTitle: jobTitle || undefined,
+      employees: employees || undefined,
       source: safeSource,
     },
   };
@@ -213,7 +217,7 @@ export async function POST(request: NextRequest) {
           promise: resend.emails.send({
             from: "PSE Marketing <noreply@payrollsynergyexperts.com>",
             to: NOTIFICATION_EMAIL,
-            subject: `New Demo Request: ${input.company}`,
+            subject: `New Demo Request: ${input.company ?? legacyName}`,
             html: internalNotificationHtml({
               name: legacyName,
               email: input.email,

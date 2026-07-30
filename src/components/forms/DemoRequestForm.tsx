@@ -253,14 +253,13 @@ export default function DemoRequestForm({
                       htmlFor="company"
                       className="block text-[13px] font-semibold text-text mb-1.5"
                     >
-                      Company *
+                      Company
                     </label>
                     <input
                       id="company"
                       name="company"
                       type="text"
                       placeholder="Acme Corp"
-                      required
                       autoComplete="organization"
                       value={formData.company}
                       onChange={(e) =>
@@ -274,14 +273,13 @@ export default function DemoRequestForm({
                       htmlFor="jobTitle"
                       className="block text-[13px] font-semibold text-text mb-1.5"
                     >
-                      Job Title *
+                      Job Title
                     </label>
                     <input
                       id="jobTitle"
                       name="jobTitle"
                       type="text"
                       placeholder="Payroll Director"
-                      required
                       autoComplete="organization-title"
                       value={formData.jobTitle}
                       onChange={(e) =>
@@ -295,12 +293,11 @@ export default function DemoRequestForm({
                       htmlFor="employees"
                       className="block text-[13px] font-semibold text-text mb-1.5"
                     >
-                      Employees *
+                      Employees
                     </label>
                     <select
                       id="employees"
                       name="employees"
-                      required
                       value={formData.employees}
                       onChange={(e) =>
                         setFormData({ ...formData, employees: e.target.value })

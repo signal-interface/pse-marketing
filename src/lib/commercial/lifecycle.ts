@@ -335,9 +335,10 @@ export interface CreateLeadInput {
   lastName?: string;
   /** Already normalized (trimmed, lowercased) by the caller. */
   email: string;
-  company: string;
-  jobTitle: string;
-  employees: string;
+  /** Optional at intake (Stage C ruling); discovery fills them in. */
+  company?: string;
+  jobTitle?: string;
+  employees?: string;
   source: string;
   emailDomainType: EmailDomainType;
 }
@@ -360,8 +361,8 @@ export async function createLeadWithEvent(
          employees, source, email_domain_type, lead_status)
       VALUES
         (${legacyName}, ${input.firstName}, ${input.lastName ?? null},
-         ${input.email}, ${input.company}, ${input.jobTitle},
-         ${input.employees}, ${input.source}, ${input.emailDomainType},
+         ${input.email}, ${input.company ?? null}, ${input.jobTitle ?? null},
+         ${input.employees ?? null}, ${input.source}, ${input.emailDomainType},
          'NEW')
       RETURNING id
     `;
