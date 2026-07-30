@@ -173,8 +173,11 @@ export function journeyEmailHtml(data: JourneyEmailData): string {
         </p>
 
         <p style="color: #1c1c2e; font-size: 16px; line-height: 1.6; margin: 0 0 16px;">
-          Thanks for your request. Before we meet, here&rsquo;s a short overview
-          of how PSE works.
+          ${
+            data.videoUrl
+              ? "Thanks for your request. Before we meet, here&rsquo;s a short overview of how PSE works."
+              : "Thanks for your request &mdash; we&rsquo;ve received it and will be in touch."
+          }
         </p>
         ${videoBlock}
         <p style="color: #1c1c2e; font-size: 16px; line-height: 1.6; margin: 0 0 16px;">

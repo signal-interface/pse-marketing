@@ -59,6 +59,9 @@ function makeRequest(body: Record<string, unknown>): NextRequest {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "test-salt");
+  // Default test posture: a video exists, so the VIDEO_SENT ladder runs.
+  // The unconfigured case is tested explicitly below.
+  vi.stubEnv("PSE_OVERVIEW_VIDEO_URL", "https://video.example/pse-overview");
   mockLimit.mockResolvedValue({ allowed: true, count: 1 });
   mockCreateLead.mockResolvedValue({ id: 42 });
   mockTransition.mockResolvedValue({
@@ -116,6 +119,25 @@ describe("POST /api/demo-request", () => {
       "EMAIL_SENT",
       expect.objectContaining({ metadata: expect.objectContaining({ kind: "journey" }) })
     );
+  });
+
+  it("stays NEW when no video is configured — VIDEO_SENT never asserted without a video", async () => {
+    vi.stubEnv("PSE_OVERVIEW_VIDEO_URL", "");
+    const res = await POST(makeRequest(VALID_BODY));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ success: true });
+
+    // Lead created, but no lifecycle claim about an unsent video.
+    expect(mockCreateLead).toHaveBeenCalledTimes(1);
+    expect(mockTransition).not.toHaveBeenCalled();
+
+    // Both emails still go out; the journey email degrades to a plain
+    // acknowledgment (no video block).
+    expect(mockSend).toHaveBeenCalledTimes(2);
+    const journeyHtml = mockSend.mock.calls[1][0].html as string;
+    expect(journeyHtml).not.toContain("Watch the PSE Overview");
+    expect(journeyHtml).toContain("we&rsquo;ve received it");
+    expect(mockRecordEvent).toHaveBeenCalledTimes(2);
   });
 
   it("response contains only success — no internal identifiers", async () => {
