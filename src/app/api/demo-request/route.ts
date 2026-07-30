@@ -31,7 +31,12 @@ const NOTIFICATION_EMAIL =
   process.env.NOTIFICATION_EMAIL || "info@payrollsynergyexperts.com";
 const SITE_URL = process.env.SITE_URL || "https://payrollsynergyexperts.com";
 
-const ALLOWED_SOURCES = ["pse-marketing", "benefits-interest"] as const;
+const ALLOWED_SOURCES = [
+  "pse-marketing",
+  "benefits-interest",
+  "workforce-analytics-interest",
+  "system-integration-interest",
+] as const;
 const ALLOWED_EMPLOYEE_RANGES = ["1-50", "51-200", "201-500", "500+"] as const;
 
 // Pragmatic email shape check — reject obvious garbage without attempting

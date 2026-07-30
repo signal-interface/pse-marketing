@@ -82,7 +82,7 @@ export default function DemoRequestForm({
                 />
               </div>
               <div className="text-xl font-bold text-text mb-1.5">
-                {source === 'benefits-interest' ? 'You\u2019re on the list' : 'Demo request received'}
+                {source.endsWith('-interest') ? 'You\u2019re on the list' : 'Demo request received'}
               </div>
               <div className="text-[15px] text-text-secondary">
                 {confirmationMessage}

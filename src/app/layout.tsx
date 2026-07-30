@@ -83,13 +83,14 @@ const jsonLdSoftware = {
     "@type": "Organization",
     name: "Payroll Synergy Experts",
   },
+  // Structured data cannot carry a "Coming Soon" marker, so only claims a
+  // reader could verify today belong here: no planned features (Chrome
+  // extension) and no cadence assertions ("daily") — 2026-07-30 ruling.
   featureList: [
-    "Real-time compliance validation",
+    "Pre-run compliance validation",
     "Multi-state jurisdiction coverage",
     "Audit-ready documentation generation",
-    "Chrome extension for UKG and ADP",
-    "Inline violation badges with code citations",
-    "Daily regulatory monitoring",
+    "Regulatory change monitoring",
   ],
 };
 

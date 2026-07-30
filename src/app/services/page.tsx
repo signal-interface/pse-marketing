@@ -15,12 +15,12 @@ const services = [
     slug: 'payroll-processing', // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
     name: 'Governed Payroll Runs',
     headline: 'Real-time compliance validation for automated multi-state payroll.',
-    body: 'Every payroll run validated against federal and state statutory requirements before commit. CHAP AI catches violations — wrong overtime calculations, missed meal break premiums, deposit timing errors — before they become penalties.',
+    body: 'Every payroll run validated against federal statutory requirements before commit. CHAP AI catches violations — wrong overtime calculations, missed meal break premiums, deposit timing errors — before they become penalties.',
     features: [
       'Multi-state validation in a single pass',
       'CHAP AI pre-run compliance scan',
       'Deposit timing validation (IRC §6656)',
-      'Same-day correction workflow',
+      'Guided correction workflow',
       'Audit-ready run documentation',
     ],
     stat: { value: ENFORCEMENT_STATS.irsMaxDepositPenalty.value, label: 'Max IRS deposit penalty — eliminated by pre-run validation' },
@@ -32,7 +32,7 @@ const services = [
     body: 'Payroll tax compliance audited and actioned across all active jurisdictions. When a tax notice arrives, PSE researches the issue and delivers a structured response plan. CHAP AI flags deposit timing exposure before it triggers a penalty.',
     features: [
       'Multi-jurisdiction compliance audit',
-      'Daily regulatory change monitoring',
+      'Regulatory change monitoring',
       'Tax notice support',
       'Deposit timing validation (IRC §6656)',
       'Withholding reconciliation',
@@ -113,14 +113,14 @@ export default function ServicesPage() {
             </h1>
             <p className="svc-hero__sub">
               Six integrated service areas. One compliance-first platform.
-              Every decision documented, every regulation monitored, every run validated.
+              Every decision documented, every run validated.
             </p>
+            {/* Mirrors the homepage TrustBar badges (registered claims —
+                see TRUST_ITEMS); update both together. */}
             <div className="svc-hero__trust">
-              <span className="svc-trust-item">Enterprise-Grade Security</span>
+              <span className="svc-trust-item">No Third-Party Scripts or Trackers</span>
               <span className="svc-trust-divider">·</span>
               <span className="svc-trust-item">Audit-Ready Documentation</span>
-              <span className="svc-trust-divider">·</span>
-              <span className="svc-trust-item">Daily Regulatory Monitoring</span>
             </div>
           </div>
         </section>
@@ -133,7 +133,7 @@ export default function ServicesPage() {
                 <div key={s.slug} className="svc-card">
                   <div className="svc-card__name">
                     {s.name}
-                    {s.slug === 'benefits-integration' && (
+                    {['workforce-analytics', 'benefits-integration', 'system-integration'].includes(s.slug) && (
                       <> <Badge>Coming Soon</Badge></>
                     )}
                   </div>
@@ -185,7 +185,7 @@ export default function ServicesPage() {
                 </div>
                 <div className="svc-terminal-body">
                   <div className="svc-t-ok">✓  Governed Payroll Runs  CHAP AI pre-run scan</div>
-                  <div className="svc-t-ok">✓  Tax &amp; Compliance      Daily rule updates</div>
+                  <div className="svc-t-ok">✓  Tax &amp; Compliance      Statute-cited checks</div>
                   <div className="svc-t-ok">✓  Workforce Analytics   Live exposure data</div>
                   <div className="svc-t-ok">✓  Benefits Reconciliation  Deduction validation</div>
                   <div className="svc-t-ok">✓  System Integration    Inbound data check</div>
