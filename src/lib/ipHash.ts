@@ -17,8 +17,16 @@ export function hashIp(ip: string): string {
     .digest("hex");
 }
 
+// Vercel-controlled headers only. x-forwarded-for is client-influenced
+// (the first hop is whatever the client sent) and is never consulted —
+// a spoofed value per request would evade IP-scoped rate limits
+// entirely. When neither trusted header is present, all traffic shares
+// the single "unknown" identifier, so the per-identifier cap acts as
+// the strictest possible limit rather than an open door.
 export function extractIp(request: NextRequest): string {
-  const xff = request.headers.get("x-forwarded-for");
-  if (xff) return xff.split(",")[0].trim();
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp?.trim()) return realIp.trim();
+  const vercelForwarded = request.headers.get("x-vercel-forwarded-for");
+  if (vercelForwarded?.trim()) return vercelForwarded.split(",")[0].trim();
   return "unknown";
 }
