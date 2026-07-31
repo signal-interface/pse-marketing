@@ -7,8 +7,9 @@
 #
 # The ANTHROPIC_API_KEY secret is an arming switch and fork guard, not a
 # credential the harness uses directly (production's own key serves the
-# widget). Leave the secret unset to keep the schedule dormant; set it
-# to arm the weekly run.
+# widget). Its VALUE is never consumed — a dummy string arms the
+# schedule just as well as the real key. Leave the secret unset to keep
+# the schedule dormant; set it to arm the weekly run.
 name: CHAP smoke
 
 on:
