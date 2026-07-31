@@ -1,0 +1,46 @@
+# Weekly CHAP widget smoke run (DEPLOY_CHECKLIST #5 harness).
+#
+# Deliberately NOT part of the `verify` PR gate: the harness drives the
+# live production widget, so every model-reaching question spends real
+# Anthropic tokens and writes chap_interactions rows. Wiring it into PRs
+# would bill every push and fail on fork PRs.
+#
+# The ANTHROPIC_API_KEY secret is an arming switch and fork guard, not a
+# credential the harness uses directly (production's own key serves the
+# widget). Leave the secret unset to keep the schedule dormant; set it
+# to arm the weekly run.
+name: CHAP smoke
+
+on:
+  schedule:
+    # Mondays 13:00 UTC — one hour after the governance health check.
+    - cron: "0 13 * * 1"
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    if: github.repository == 'signal-interface/pse-marketing'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Gate on arming secret
+        id: gate
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY not present — smoke run stays dormant."
+            echo "armed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "armed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Smoke the live widget
+        if: steps.gate.outputs.armed == 'true'
+        run: node --experimental-strip-types scripts/smoke-chap.mjs
