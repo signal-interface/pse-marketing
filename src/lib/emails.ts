@@ -4,6 +4,9 @@ interface DemoRequestData {
   company?: string;
   employees?: string;
   jobTitle?: string;
+  /** Campaign attribution the form submitted (e.g. "pse-marketing",
+   *  "compliance-risk-interest"). Rendered only when present. */
+  source?: string;
 }
 
 // User-supplied values must never be interpolated into email HTML raw.
@@ -63,6 +66,7 @@ export function internalNotificationHtml(data: DemoRequestData): string {
     ["Company", data.company ? escapeHtml(data.company) : "—"],
     ["Job title", data.jobTitle ? escapeHtml(data.jobTitle) : "—"],
     ["Employees", data.employees ? escapeHtml(data.employees) : "—"],
+    ...(data.source ? [["Source", escapeHtml(data.source)]] : []),
     ["Submitted", new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" })],
   ];
 

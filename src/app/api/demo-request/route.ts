@@ -240,6 +240,7 @@ export async function POST(request: NextRequest) {
               company: input.company,
               jobTitle: input.jobTitle,
               employees: input.employees,
+              source: input.source,
             }),
           }),
         },
