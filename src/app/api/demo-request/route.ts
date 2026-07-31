@@ -230,7 +230,8 @@ export async function POST(request: NextRequest) {
         {
           kind: "internal",
           promise: resend.emails.send({
-            from: "PSE Marketing <noreply@payrollsynergyexperts.com>",
+            from: "PSE Marketing <info@payrollsynergyexperts.com>",
+            replyTo: "info@payrollsynergyexperts.com",
             to: NOTIFICATION_EMAIL,
             subject: `New Demo Request: ${input.company ?? legacyName}`,
             html: internalNotificationHtml({
@@ -245,7 +246,8 @@ export async function POST(request: NextRequest) {
         {
           kind: "journey",
           promise: resend.emails.send({
-            from: "Payroll Synergy Experts <noreply@payrollsynergyexperts.com>",
+            from: "Payroll Synergy Experts <info@payrollsynergyexperts.com>",
+            replyTo: "info@payrollsynergyexperts.com",
             to: input.email,
             subject: "Your PSE overview and next steps",
             html: journeyEmailHtml({ firstName: input.firstName, videoUrl }),

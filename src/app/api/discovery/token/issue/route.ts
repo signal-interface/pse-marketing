@@ -78,7 +78,8 @@ export async function POST(request: NextRequest) {
     let errorDetail: string | undefined;
     try {
       const result = await resend.emails.send({
-        from: "Payroll Synergy Experts <noreply@payrollsynergyexperts.com>",
+        from: "Payroll Synergy Experts <info@payrollsynergyexperts.com>",
+        replyTo: "info@payrollsynergyexperts.com",
         to: email,
         subject: "Your governance discovery questionnaire",
         html: questionnaireInviteHtml({
