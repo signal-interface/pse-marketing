@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE, SOCIAL } from "@/lib/constants";
+import { TRUST_LAYER_ENABLED } from "@/lib/flags";
 import FooterLegalLinks from "./FooterLegalLinks";
 
 export default function Footer() {
@@ -29,7 +30,10 @@ export default function Footer() {
             </h4>
             <div className="flex flex-col gap-1">
               {[
-                { name: "Governed Payroll Runs", slug: "payroll-processing" },
+                {
+                  name: "Payroll Run Governance",
+                  slug: "payroll-processing", // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
+                },
                 { name: "Tax & Compliance", slug: "tax-compliance" },
                 { name: "Workforce Analytics", slug: "workforce-analytics" },
                 { name: "Benefits Reconciliation", slug: "benefits-integration" },
@@ -63,8 +67,16 @@ export default function Footer() {
                 href="/#demo"
                 className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
               >
-                Request Access
+                Request a Demo
               </Link>
+              {TRUST_LAYER_ENABLED && (
+                <Link
+                  href="/trust"
+                  className="text-sm text-steel-muted no-underline hover:text-white transition-colors py-1"
+                >
+                  Trust
+                </Link>
+              )}
             </div>
           </div>
 

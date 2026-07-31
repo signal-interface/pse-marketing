@@ -5,7 +5,6 @@ import TrustBar from "@/components/sections/TrustBar";
 import { IndustryBar } from "@/components/sections/IndustryBar";
 import Services from "@/components/sections/Services";
 import ChapAI from "@/components/sections/ChapAI";
-import { BenchmarkMetrics } from "@/components/sections/BenchmarkMetrics";
 import { InsightCarousel } from "@/components/sections/InsightCarousel";
 import { CredibilityStrip } from "@/components/sections/CredibilityStrip";
 import DemoRequestForm from "@/components/forms/DemoRequestForm";
@@ -21,7 +20,6 @@ export default function Home() {
         <IndustryBar />
         <Services />
         <ChapAI />
-        <BenchmarkMetrics />
         <InsightCarousel />
         <DemoRequestForm />
       </main>

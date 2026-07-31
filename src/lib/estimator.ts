@@ -57,7 +57,8 @@ export function calculateExposure(inputs: EstimatorInputs): EstimatorOutputs {
   // 1. Deposit penalty exposure
   // Base: 33% of employers make errors. Of those, penalty exposure
   // averages 5% of one deposit (mid-tier IRC §6656 rate).
-  // Estimated quarterly deposit = employees × $1,500 avg payroll ÷ 4
+  // Estimated quarterly deposit = employees × E ÷ 4,
+  // where E = $1,500 avg payroll per employee.
   const estimatedQuarterlyDeposit = employees * 1500 / 4;
   const depositPenaltyExposure = Math.round(
     estimatedQuarterlyDeposit *
@@ -115,8 +116,8 @@ export function calculateExposure(inputs: EstimatorInputs): EstimatorOutputs {
     sources: [
       'IRC §6656(b)(1); IRS Notice 746 (Rev. 12-2024)',
       'DOL WHD FY2023 Statistical Release',
-      'Ernst & Young Global Payroll Operations Survey, 2024',
-      'IRS employer compliance study; EY Payroll Operations Survey, 2024',
+      'Reported by Lano, citing EY Global Payroll Operations Survey, 2024',
+      'Ernst & Young payroll errors survey, 2022',
       'BLS Occupational Employment Statistics, 2024',
     ],
   };

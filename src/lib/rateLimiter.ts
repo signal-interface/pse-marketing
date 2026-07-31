@@ -32,7 +32,9 @@ const IP_HARD_CAP = 60;
 // Postgres INTERVAL literal. If you change the window length, update
 // both occurrences in this file.
 
-type Scope = "session" | "ip";
+// CHAP uses "session" | "ip". The commercial funnel adds its own scopes
+// (e.g. "demo-request-ip", "demo-request-email") against the same table.
+type Scope = string;
 
 interface CurrentCount {
   count: number;
@@ -103,4 +105,25 @@ export async function checkAndIncrementRateLimit(params: {
     remaining: Math.max(0, SESSION_FREE_LIMIT - nextSessionCount),
     requiresEmail: false,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Generic scoped limiter — commercial funnel routes
+// ---------------------------------------------------------------------------
+//
+// Simple cap-per-24h-window semantics on the same chap_rate_limits table,
+// reusing its sliding-window reset. Same accepted race posture as above
+// (read then upsert; over/under-count by ~1 is acceptable).
+
+export async function checkAndIncrementScopedLimit(
+  scope: string,
+  identifier: string,
+  cap: number
+): Promise<{ allowed: boolean; count: number }> {
+  const current = await readCurrentCount(scope, identifier);
+  if (current.count >= cap) {
+    return { allowed: false, count: current.count };
+  }
+  await incrementCount(scope, identifier);
+  return { allowed: true, count: current.count + 1 };
 }

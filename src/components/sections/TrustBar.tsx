@@ -1,11 +1,28 @@
-import { ShieldCheck, FileCheck, Globe, Radio } from "lucide-react";
+import { ShieldCheck, FileCheck, Globe } from "lucide-react";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
-const TRUST_ITEMS = [
-  { icon: ShieldCheck, label: "Enterprise-Grade Security" },
-  { icon: FileCheck, label: "Audit-Ready Documentation" },
-  { icon: Globe, label: "Multi-State Coverage" },
-  { icon: Radio, label: "Daily Regulatory Monitoring" },
+// Each badge is a registered claim (src/content/trust/claims.ts); the
+// live-surface-claims release-gate test enforces the linkage.
+// 2026-07-30 ruling: "Enterprise-Grade Security" (grade adjective, no named
+// standard) replaced with a specific, shipped-evidence statement; the
+// "Daily Regulatory Monitoring" badge removed — no daily job runs, so the
+// cadence may not be claimed.
+export const TRUST_ITEMS = [
+  {
+    icon: ShieldCheck,
+    label: "No Third-Party Scripts or Trackers",
+    claimId: "no-third-party-analytics",
+  },
+  {
+    icon: FileCheck,
+    label: "Audit-Ready Documentation",
+    claimId: "trust-audit-ready-documentation",
+  },
+  {
+    icon: Globe,
+    label: "Multi-State Coverage",
+    claimId: "trust-multi-state-coverage",
+  },
 ] as const;
 
 export default function TrustBar() {

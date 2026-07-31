@@ -7,20 +7,20 @@ import { ENFORCEMENT_STATS } from '@/lib/stats';
 
 export const metadata: Metadata = {
   title: 'Services | Payroll Synergy Experts',
-  description: 'Six integrated payroll service areas. Payroll processing, tax compliance, workforce analytics, benefits integration, system integration, and strategic advisory — all powered by CHAP AI.',
+  description: 'Six integrated payroll service areas. Payroll run governance, tax compliance, workforce analytics, benefits integration, system integration, and strategic advisory — all powered by CHAP AI.',
 };
 
 const services = [
   {
-    slug: 'payroll-processing',
+    slug: 'payroll-processing', // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
     name: 'Governed Payroll Runs',
-    headline: 'Automated multi-state payroll with real-time compliance validation.',
-    body: 'Every payroll run validated against federal and state statutory requirements before commit. CHAP AI catches violations — wrong overtime calculations, missed meal break premiums, deposit timing errors — before they become penalties.',
+    headline: 'Real-time compliance validation for automated multi-state payroll.',
+    body: 'Every payroll run validated against federal statutory requirements before commit. CHAP AI catches violations — wrong overtime calculations, missed meal break premiums, deposit timing errors — before they become penalties.',
     features: [
-      'Multi-state payroll in a single run',
+      'Multi-state validation in a single pass',
       'CHAP AI pre-run compliance scan',
       'Deposit timing validation (IRC §6656)',
-      'Same-day correction workflow',
+      'Guided correction workflow',
       'Audit-ready run documentation',
     ],
     stat: { value: ENFORCEMENT_STATS.irsMaxDepositPenalty.value, label: 'Max IRS deposit penalty — eliminated by pre-run validation' },
@@ -32,7 +32,7 @@ const services = [
     body: 'Payroll tax compliance audited and actioned across all active jurisdictions. When a tax notice arrives, PSE researches the issue and delivers a structured response plan. CHAP AI flags deposit timing exposure before it triggers a penalty.',
     features: [
       'Multi-jurisdiction compliance audit',
-      'Daily regulatory change monitoring',
+      'Regulatory change monitoring',
       'Tax notice support',
       'Deposit timing validation (IRC §6656)',
       'Withholding reconciliation',
@@ -65,7 +65,7 @@ const services = [
       'Action plan delivery',
       'In development',
     ],
-    stat: { value: ENFORCEMENT_STATS.irsEmployerErrors.value, label: 'Of employers have an active payroll error in any given period (IRS + EY 2024)' },
+    stat: { value: ENFORCEMENT_STATS.perErrorCost.value, label: 'Average cost per payroll error (EY, 2022)' },
   },
   {
     slug: 'system-integration',
@@ -108,19 +108,19 @@ export default function ServicesPage() {
           <div className="svc-hero__inner">
             <p className="svc-eyebrow">PSE Services</p>
             <h1 className="svc-hero__headline">
-              Payroll operations built for multi-state employers<br />
+              Payroll governance built for multi-state employers<br />
               who need it right the first time.
             </h1>
             <p className="svc-hero__sub">
               Six integrated service areas. One compliance-first platform.
-              Every decision documented, every regulation monitored, every run validated.
+              Every decision documented, every run validated.
             </p>
+            {/* Mirrors the homepage TrustBar badges (registered claims —
+                see TRUST_ITEMS); update both together. */}
             <div className="svc-hero__trust">
-              <span className="svc-trust-item">Enterprise-Grade Security</span>
+              <span className="svc-trust-item">No Third-Party Scripts or Trackers</span>
               <span className="svc-trust-divider">·</span>
               <span className="svc-trust-item">Audit-Ready Documentation</span>
-              <span className="svc-trust-divider">·</span>
-              <span className="svc-trust-item">Daily Regulatory Monitoring</span>
             </div>
           </div>
         </section>
@@ -133,7 +133,7 @@ export default function ServicesPage() {
                 <div key={s.slug} className="svc-card">
                   <div className="svc-card__name">
                     {s.name}
-                    {s.slug === 'benefits-integration' && (
+                    {['workforce-analytics', 'benefits-integration', 'system-integration'].includes(s.slug) && (
                       <> <Badge>Coming Soon</Badge></>
                     )}
                   </div>
@@ -166,7 +166,7 @@ export default function ServicesPage() {
               <h2>Every service runs on the same compliance engine.</h2>
               <p>
                 CHAP AI isn&apos;t a reporting layer — it&apos;s the validation engine underneath
-                every payroll run, filing, and deduction reconciliation PSE processes.
+                every payroll run, filing, and deduction reconciliation PSE governs.
                 Pre-run scans, statute-level citations, and audit-ready documentation
                 are built into the platform, not bolted on.
               </p>
@@ -185,7 +185,7 @@ export default function ServicesPage() {
                 </div>
                 <div className="svc-terminal-body">
                   <div className="svc-t-ok">✓  Governed Payroll Runs  CHAP AI pre-run scan</div>
-                  <div className="svc-t-ok">✓  Tax &amp; Compliance      Daily rule updates</div>
+                  <div className="svc-t-ok">✓  Tax &amp; Compliance      Statute-cited checks</div>
                   <div className="svc-t-ok">✓  Workforce Analytics   Live exposure data</div>
                   <div className="svc-t-ok">✓  Benefits Reconciliation  Deduction validation</div>
                   <div className="svc-t-ok">✓  System Integration    Inbound data check</div>

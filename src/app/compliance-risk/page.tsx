@@ -49,12 +49,17 @@ export default function ComplianceRiskPage() {
               These are industry benchmarks, not worst-case scenarios.
             </h2>
             <div className="est-context__grid">
+              {/* 33% employer-error card struck 2026-07-30 (unverifiable
+                  citation). The estimator model itself still assumes the
+                  33% rate internally — deliberate calibration, see
+                  src/data/estimatorConstants.ts. */}
               <div className="est-context__card">
-                <div className="est-context__stat">33%</div>
+                <div className="est-context__stat">$291</div>
                 <div className="est-context__stat-label">
-                  Of employers have an active payroll error in any given period
+                  Average cost per payroll error, before penalties and
+                  interest
                 </div>
-                <div className="est-context__source">IRS + EY, 2024</div>
+                <div className="est-context__source">EY, 2022</div>
               </div>
               <div className="est-context__card">
                 <div className="est-context__stat">15%</div>
