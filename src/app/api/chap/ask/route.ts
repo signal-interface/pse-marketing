@@ -126,7 +126,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     typeof email === "string" && email.length > 0 ? email : null;
 
   // 2. IP hash
-  const ipHash = hashIp(extractIp(request));
+  const ipHash = hashIp(extractIp(request), "chap");
 
   // 3. Ensure tables exist (idempotent, safe to call per-request)
   await ensureChapTables();

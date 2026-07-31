@@ -63,21 +63,30 @@ describe("hashIp / ipHashingConfigured", () => {
   it("reports unconfigured and throws (no hashing attempted) when the salt is unset", () => {
     vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "");
     expect(ipHashingConfigured()).toBe(false);
-    expect(() => hashIp("203.0.113.9")).toThrow(/COMMERCIAL_IP_HASH_SALT/);
+    expect(() => hashIp("203.0.113.9", "commercial")).toThrow(
+      /COMMERCIAL_IP_HASH_SALT/
+    );
   });
 
-  it("hashes deterministically with the salt set", () => {
+  it("hashes deterministically within a scope", () => {
     vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "test-salt");
     expect(ipHashingConfigured()).toBe(true);
-    const a = hashIp("203.0.113.9");
+    const a = hashIp("203.0.113.9", "commercial");
     expect(a).toMatch(/^[0-9a-f]{64}$/);
-    expect(hashIp("203.0.113.9")).toBe(a);
+    expect(hashIp("203.0.113.9", "commercial")).toBe(a);
   });
 
-  it("different salts produce unjoinable hashes", () => {
+  it("commercial and chap scopes are not joinable for the same IP", () => {
+    vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "test-salt");
+    expect(hashIp("203.0.113.9", "commercial")).not.toBe(
+      hashIp("203.0.113.9", "chap")
+    );
+  });
+
+  it("different master salts produce unjoinable hashes", () => {
     vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "salt-a");
-    const a = hashIp("203.0.113.9");
+    const a = hashIp("203.0.113.9", "commercial");
     vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "salt-b");
-    expect(hashIp("203.0.113.9")).not.toBe(a);
+    expect(hashIp("203.0.113.9", "commercial")).not.toBe(a);
   });
 });

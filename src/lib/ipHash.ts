@@ -1,32 +1,44 @@
 // lib/ipHash.ts
 //
 // IP extraction + privacy hashing for rate limiting and event metadata.
-// Single salt for all paths: the CHAP path's separate hardcoded salt was
-// retired 2026-07-30 (public repo — a salt in source makes IPv4 hashes
-// reversible by enumeration), so commercial-funnel and CHAP interaction
-// hashes are joinable by design.
+// Hashes are NOT joinable across surfaces: each scope's salt is derived
+// from the one provisioned secret (sha256(master:scope)), so an
+// anonymous CHAP question and a later demo-form submission from the
+// same IP cannot be correlated. One secret to provision, non-joinable
+// hash domains — restored 2026-07-30 after the CHAP port briefly
+// collapsed the domains into one.
 //
-// The salt comes from COMMERCIAL_IP_HASH_SALT and is required — no
-// fallback: a silent fallback would restore the hardcoded-salt weakness
-// on any deploy missing the env var. Routes that depend on hashing must
-// check ipHashingConfigured() and fail closed (503).
+// The master secret is COMMERCIAL_IP_HASH_SALT (name kept for env
+// continuity; it salts every scope) and is required — no fallback: a
+// silent fallback would restore the hardcoded-salt weakness on any
+// deploy missing the env var. Routes that depend on hashing must check
+// ipHashingConfigured() and fail closed (503).
 
 import crypto from "node:crypto";
 import type { NextRequest } from "next/server";
+
+export type IpHashScope = "commercial" | "chap";
 
 export function ipHashingConfigured(): boolean {
   return Boolean(process.env.COMMERCIAL_IP_HASH_SALT);
 }
 
-export function hashIp(ip: string): string {
-  const salt = process.env.COMMERCIAL_IP_HASH_SALT;
-  if (!salt) {
+function scopeSalt(scope: IpHashScope): string {
+  const master = process.env.COMMERCIAL_IP_HASH_SALT;
+  if (!master) {
     // Callers gate on ipHashingConfigured(); reaching here unset is a bug.
     throw new Error("COMMERCIAL_IP_HASH_SALT is not configured");
   }
   return crypto
     .createHash("sha256")
-    .update(ip + salt)
+    .update(`${master}:${scope}`)
+    .digest("hex");
+}
+
+export function hashIp(ip: string, scope: IpHashScope): string {
+  return crypto
+    .createHash("sha256")
+    .update(ip + scopeSalt(scope))
     .digest("hex");
 }
 
