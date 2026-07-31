@@ -24,7 +24,7 @@ export const SUBPROCESSORS: readonly Subprocessor[] = [
   {
     name: "Vercel",
     purpose:
-      "Hosting, CDN, serverless functions, and managed Postgres storage for the public site.",
+      "Hosting, CDN, and serverless functions for the public site; brokers the Neon Postgres integration via the Vercel Marketplace.",
     dataCategories: [
       "Request and traffic metadata",
       "Demo request submissions (name, email, optional company and employee count)",
@@ -37,6 +37,23 @@ export const SUBPROCESSORS: readonly Subprocessor[] = [
       "package.json (@vercel/postgres)",
       ".env.example (POSTGRES_URL)",
       "src/lib/db.ts",
+    ],
+  },
+  {
+    name: "Neon",
+    purpose:
+      "Serverless Postgres storage (via the Vercel Marketplace native integration); one isolated database per environment.",
+    dataCategories: [
+      "Demo request submissions (name, email, optional company and employee count)",
+      "Lead lifecycle event records",
+      "CHAP interaction records (hashed IP, question, response, optional email)",
+    ],
+    hostingRegion: "AWS us-east-1",
+    retention: NOT_DETERMINED,
+    evidence: [
+      ".env.example (POSTGRES_URL)",
+      "src/lib/db.ts",
+      "scripts/migrate.mjs",
     ],
   },
   {
