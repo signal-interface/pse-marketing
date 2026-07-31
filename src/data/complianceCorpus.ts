@@ -10,8 +10,10 @@
 // scripts/verify-corpus.mjs (fetch → strip → word-sequence compare; no
 // model in the loop), which restored cross-reference clauses and
 // sentences the 2026-07-17 transcription had dropped without ellipsis.
-// Bracketed [Note:]/[Context:] paragraphs are PSE annotations, NOT
-// source text — the verifier reports them separately. The single
+// `content` is verbatim source text with ZERO exceptions (2026-07-30
+// doctrine ruling) — the verifier asserts content === fetched source
+// unconditionally. PSE commentary goes in `editorialNote`, which never
+// reaches the model, retrieval scoring, or any cited output. The single
 // `pse_written` entry is PSE-authored analysis; its statutory assertions
 // trace to the other entries, never to itself.
 //
@@ -29,6 +31,11 @@ export interface CorpusEntry {
   jurisdiction: string;
   sourceUrl: string;
   content: string;
+  // PSE-authored commentary, never cited as source text. Excluded from
+  // the model corpus block (buildCorpusBlock), from retrieval scoring,
+  // and from verbatim verification — `content` alone must equal the
+  // fetched source, unconditionally.
+  editorialNote?: string;
   tags: string[];
 }
 
@@ -165,9 +172,9 @@ The Secretary may abate the penalty imposed by subsection (a) with respect to th
 
 (1) In general — A deposit made under this section shall be applied to the most recent period or periods within the specified tax period to which the deposit relates, unless the person making such deposit designates a different period or periods to which such deposit is to be applied.
 
-(2) Time for making designation — A person may make a designation under paragraph (1) only during the 90-day period beginning on the date of a notice that a penalty under subsection (a) has been imposed for the specified tax period to which the deposit relates.
-
-[Note: §6656 contains no de minimis provision. The de minimis / safe-harbor shortfall rule for deposits is found at 26 C.F.R. §31.6302-1(f) — see the corpus entry for that regulation.]`,
+(2) Time for making designation — A person may make a designation under paragraph (1) only during the 90-day period beginning on the date of a notice that a penalty under subsection (a) has been imposed for the specified tax period to which the deposit relates.`,
+    editorialNote:
+      "§6656 contains no de minimis provision. The de minimis / safe-harbor shortfall rule for deposits is found at 26 C.F.R. §31.6302-1(f) — see the corpus entry for that regulation.",
     tags: [
       "designation",
       "deposit application",
@@ -277,9 +284,9 @@ Penalties may apply if you don’t make required deposits on time or if you make
 
 "Reasonable cause is based on all the facts and circumstances in each situation and allows the IRS to provide relief from a penalty that would otherwise apply."
 
-"Reasonable cause relief is generally granted when the taxpayer exercised ordinary business care and prudence in determining their tax obligations but was nevertheless unable to comply with those obligations."
-
-[Context: this is the standard the IRS applies when evaluating a request to abate a §6656(a) failure-to-deposit penalty on reasonable-cause grounds. §6656(a) itself conditions the penalty on the failure NOT being "due to reasonable cause and not due to willful neglect" — see the corpus entry for 26 U.S.C. §6656(a).]`,
+"Reasonable cause relief is generally granted when the taxpayer exercised ordinary business care and prudence in determining their tax obligations but was nevertheless unable to comply with those obligations."`,
+    editorialNote:
+      'This is the standard the IRS applies when evaluating a request to abate a §6656(a) failure-to-deposit penalty on reasonable-cause grounds. §6656(a) itself conditions the penalty on the failure NOT being "due to reasonable cause and not due to willful neglect" — see the corpus entry for 26 U.S.C. §6656(a).',
     tags: [
       "reasonable cause",
       "abatement",

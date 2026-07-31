@@ -48,7 +48,6 @@ function normalize(s) {
     .trim();
 }
 
-const ANNOTATION = /^\s*\[(note|context)\b/i;
 
 let failures = 0;
 for (const entry of corpus) {
@@ -64,15 +63,15 @@ for (const entry of corpus) {
     failures++;
     continue;
   }
-  const rawParas = entry.content.split(/\n\s*\n/).filter((p) => p.trim());
-  const annotations = rawParas.filter((p) => ANNOTATION.test(p));
-  const paragraphs = rawParas
-    .filter((p) => !ANNOTATION.test(p))
+  // `content` is verbatim source text with zero exceptions — PSE
+  // commentary lives in `editorialNote` and is not verified against
+  // (or permitted in) the source. No carve-outs here by design: a
+  // binary property is auditable.
+  const paragraphs = entry.content
+    .split(/\n\s*\n/)
     .map(normalize)
     .filter(Boolean);
   const missing = paragraphs.filter((p) => !pageText.includes(p));
-  for (const a of annotations)
-    console.log(`NOTE  ${entry.id}: bracketed annotation (not source text): ${a.trim().slice(0, 90)}...`);
   if (missing.length === 0) {
     console.log(`OK    ${entry.id} (${paragraphs.length}/${paragraphs.length} paragraphs verbatim)`);
   } else {
