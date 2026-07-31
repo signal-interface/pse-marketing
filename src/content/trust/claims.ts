@@ -82,6 +82,101 @@ export const CLAIMS: readonly Claim[] = [
     owner: OWNER,
     lastReviewed: REVIEWED,
   },
+  // ── Current: added at the 2026-07-31 trust preflight ───────────────────
+  {
+    id: "ip-hash-scope-isolation",
+    statement:
+      "Visitor IP addresses are stored only as salted SHA-256 hashes, with a separate derived salt per surface, so commercial-funnel and CHAP activity cannot be correlated by IP.",
+    status: "current",
+    evidence: [
+      { kind: "shipped_surface", path: "src/lib/ipHash.ts" },
+      { kind: "shipped_surface", path: "src/lib/__tests__/ipHash.test.ts" },
+    ],
+    surfaces: ["/trust/security", "/trust/data-handling"],
+    owner: OWNER,
+    lastReviewed: "2026-07-31",
+  },
+  {
+    id: "fail-closed-data-endpoints",
+    statement:
+      "Endpoints that store visitor data fail closed: the demo request and CHAP APIs return 503 rather than operate without the IP-hashing salt configured.",
+    status: "current",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/api/demo-request/route.ts" },
+      { kind: "shipped_surface", path: "src/app/api/chap/ask/route.ts" },
+    ],
+    surfaces: ["/trust/security"],
+    owner: OWNER,
+    lastReviewed: "2026-07-31",
+  },
+  {
+    id: "internal-routes-fail-closed-auth",
+    statement:
+      "Internal routes are gated by credentials compared in constant time, and return 503 rather than serve when the secret is not configured.",
+    status: "current",
+    evidence: [
+      { kind: "shipped_surface", path: "src/middleware.ts" },
+      { kind: "shipped_surface", path: "src/lib/safeEqual.ts" },
+    ],
+    surfaces: ["/trust/security"],
+    owner: OWNER,
+    lastReviewed: "2026-07-31",
+  },
+  {
+    id: "environment-isolation",
+    statement:
+      "Production, preview, and development run against separate databases; preview and development environments hold no production data.",
+    status: "current",
+    evidence: [
+      {
+        kind: "founder_attested",
+        note: "Verified empirically 2026-07-31: three distinct Neon projects (one per environment), migrations applied to each, and a preview demo submission landed only in the preview database while production and development were unchanged.",
+      },
+    ],
+    surfaces: ["/trust/security", "/trust/data-handling"],
+    owner: OWNER,
+    lastReviewed: "2026-07-31",
+  },
+  {
+    id: "first-party-analytics-only",
+    statement:
+      "Funnel analytics are first-party, server-side event records only. The site sets no analytics or tracking cookies; the only cookie is an HTTP-only resume token for the discovery questionnaire, which contains no identifiers.",
+    status: "current",
+    evidence: [
+      { kind: "shipped_surface", path: "src/lib/commercial/lifecycle.ts" },
+      { kind: "shipped_surface", path: "src/lib/commercial/questionnaire.ts" },
+    ],
+    surfaces: ["/trust/security", "/trust/data-handling"],
+    owner: OWNER,
+    lastReviewed: "2026-07-31",
+  },
+  {
+    id: "chap-no-autonomous-action",
+    statement:
+      "CHAP AI on this site answers questions for information only: it takes no action on any payroll system and writes nothing beyond its own interaction log.",
+    status: "current",
+    evidence: [
+      { kind: "shipped_surface", path: "src/app/api/chap/ask/route.ts" },
+      { kind: "shipped_surface", path: "src/lib/chapAi.ts" },
+    ],
+    surfaces: ["/trust/security"],
+    owner: OWNER,
+    lastReviewed: "2026-07-31",
+  },
+  {
+    id: "chap-citation-integrity",
+    statement:
+      "Every citation CHAP returns must resolve to a corpus of verbatim primary-source excerpts. The server rejects responses citing outside that corpus, and a mechanical verifier checks the corpus text against its sources.",
+    status: "current",
+    evidence: [
+      { kind: "shipped_surface", path: "src/lib/chapValidation.ts" },
+      { kind: "shipped_surface", path: "scripts/verify-corpus.mjs" },
+      { kind: "shipped_surface", path: "src/data/complianceCorpus.ts" },
+    ],
+    surfaces: ["/trust/security"],
+    owner: OWNER,
+    lastReviewed: "2026-07-31",
+  },
   {
     id: "no-third-party-analytics",
     statement:
