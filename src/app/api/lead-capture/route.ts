@@ -61,7 +61,8 @@ export async function POST(request: NextRequest) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const emailResults = await Promise.allSettled([
       resend.emails.send({
-        from: "PSE Marketing <noreply@payrollsynergyexperts.com>",
+        from: "PSE Marketing <info@payrollsynergyexperts.com>",
+        replyTo: "info@payrollsynergyexperts.com",
         to: NOTIFICATION_EMAIL,
         subject: `New CHAP Widget Lead: ${email}`,
         html: chapLeadNotificationHtml({

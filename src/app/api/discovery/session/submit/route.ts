@@ -69,7 +69,8 @@ export async function POST(request: NextRequest) {
       let errorDetail: string | undefined;
       try {
         const sent = await resend.emails.send({
-          from: "Payroll Synergy Experts <noreply@payrollsynergyexperts.com>",
+          from: "Payroll Synergy Experts <info@payrollsynergyexperts.com>",
+          replyTo: "info@payrollsynergyexperts.com",
           to: lead.email as string,
           subject: "Schedule your PSE discovery session",
           html: schedulingUnlockHtml({ firstName, schedulingUrl }),
