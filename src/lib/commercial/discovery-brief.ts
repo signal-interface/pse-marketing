@@ -115,7 +115,7 @@ export function buildBriefContent(
   if (orgSize) env.push(stmt(`Organization size (questionnaire): ${orgSize}.`, "customer_stated", ["organizationSize"]));
   const regions = arr(answers, "operatingRegions");
   if (regions.length) {
-    env.push(stmt(`Runs payroll in: ${regions.join(", ")}.`, "customer_stated", ["operatingRegions"]));
+    env.push(stmt(`Runs payroll in: ${regions.join(", ")}.`, "customer_stated", ["operatingRegions"])); // boundary-lint-allow: prohibited-execution -- customer_stated provenance: the subject is the prospect's own payroll operation, not a PSE capability
     if (regions.length > 1) {
       env.push(
         stmt(
@@ -153,7 +153,7 @@ export function buildBriefContent(
   if (hcm && provider && hcm.toLowerCase() !== provider.toLowerCase()) {
     sys.push(
       stmt(
-        "HCM and payroll execution are split across two systems — reconciliation surface between them is worth exploring.",
+        "HCM and payroll execution are split across two systems — reconciliation surface between them is worth exploring.", // boundary-lint-allow: prohibited-execution-nominal -- derived_summary of the prospect's SoR stack: the execution described belongs to the customer's two systems, not PSE
         "derived_summary",
         ["hcmSystem", "payrollProvider"]
       )

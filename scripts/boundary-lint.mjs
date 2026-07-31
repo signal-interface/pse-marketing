@@ -14,6 +14,10 @@ const ROOT = process.env.BOUNDARY_LINT_ROOT
 // src/app, src/components, and src/content cover every component that
 // renders to a prospect — the former narrow entries (src/app/product-tour,
 // src/app/trust, src/content/trust) are subsumed, not dropped.
+// src/lib is in scope because lib modules feed rendered surfaces: the
+// estimator sources footnote (src/lib/estimator.ts) escaped two PR sweeps
+// by living outside the lint. Subsumes the former src/lib/constants.ts
+// entry. Noise on non-rendering modules is accepted over a third escape.
 const SCOPES = [
   "docs/gtm",
   "docs/POSITIONING_STRATEGY.md",
@@ -21,7 +25,7 @@ const SCOPES = [
   "src/app",
   "src/components",
   "src/content",
-  "src/lib/constants.ts",
+  "src/lib",
   "src/data/services.ts",
 ];
 
