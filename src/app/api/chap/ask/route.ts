@@ -201,10 +201,13 @@ export async function POST(request: NextRequest): Promise<Response> {
           sseEvent({ type: "final", response: validated })
         );
         controller.enqueue(sseEvent("[DONE]"));
-        controller.close();
 
-        // Fire-and-forget log after successful close.
-        void logInteraction({
+        // Awaited BEFORE close: once close() ends the response, the
+        // serverless function can freeze and a fire-and-forget insert
+        // never lands (verified in prod — streamed determinations left
+        // no chap_interactions row). The client acts on the final event
+        // above, so the extra ~tens of ms before close are invisible.
+        await logInteraction({
           sessionId,
           ipHash,
           email: emailStr,
@@ -212,15 +215,15 @@ export async function POST(request: NextRequest): Promise<Response> {
           response: validated,
           latencyMs: Date.now() - startedAt,
         });
+        controller.close();
       } catch (err) {
         console.error("[chap/ask] stream error:", err);
         try {
           controller.enqueue(sseEvent({ type: "error" }));
-          controller.close();
         } catch {
           // controller may already be closed
         }
-        void logInteraction({
+        await logInteraction({
           sessionId,
           ipHash,
           email: emailStr,
@@ -228,6 +231,11 @@ export async function POST(request: NextRequest): Promise<Response> {
           response: null,
           latencyMs: Date.now() - startedAt,
         });
+        try {
+          controller.close();
+        } catch {
+          // controller may already be closed
+        }
       }
     },
   });
