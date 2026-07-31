@@ -17,15 +17,14 @@
 // or on failure, a single `{"type":"error"}` event before close.
 
 import { NextRequest } from "next/server";
-import crypto from "node:crypto";
 import { sql } from "@vercel/postgres";
 import { ensureChapTables } from "@/lib/db";
 import {
   streamDetermination,
   MODEL,
-  IP_HASH_SALT,
   containsInjectionPattern,
 } from "@/lib/chapAi";
+import { extractIp, hashIp, ipHashingConfigured } from "@/lib/ipHash";
 import { retrieveRelevantCorpus } from "@/lib/corpusRetrieval";
 import {
   validateChapResponse,
@@ -39,19 +38,6 @@ const encoder = new TextEncoder();
 function sseEvent(data: object | string): Uint8Array {
   const payload = typeof data === "string" ? data : JSON.stringify(data);
   return encoder.encode(`data: ${payload}\n\n`);
-}
-
-function hashIp(ip: string): string {
-  return crypto
-    .createHash("sha256")
-    .update(ip + IP_HASH_SALT)
-    .digest("hex");
-}
-
-function extractIp(request: NextRequest): string {
-  const xff = request.headers.get("x-forwarded-for");
-  if (xff) return xff.split(",")[0].trim();
-  return "unknown";
 }
 
 function jsonResponse(body: object, status: number): Response {
@@ -100,6 +86,13 @@ async function logInteraction(params: {
 }
 
 export async function POST(request: NextRequest): Promise<Response> {
+  // 0. Fail closed if the IP-hashing salt is not provisioned — same
+  // posture as /api/demo-request. Serving without it would mean either
+  // unhashed IPs or a hardcoded salt, both ruled out.
+  if (!ipHashingConfigured()) {
+    return jsonResponse({ error: "service_unavailable" }, 503);
+  }
+
   // 1. Parse + validate body
   let body: unknown;
   try {

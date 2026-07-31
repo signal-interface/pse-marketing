@@ -1,15 +1,15 @@
 // lib/ipHash.ts
 //
 // IP extraction + privacy hashing for rate limiting and event metadata.
-// Distinct salt from the CHAP path so commercial-funnel hashes are not
-// joinable with CHAP interaction hashes.
+// Single salt for all paths: the CHAP path's separate hardcoded salt was
+// retired 2026-07-30 (public repo — a salt in source makes IPv4 hashes
+// reversible by enumeration), so commercial-funnel and CHAP interaction
+// hashes are joinable by design.
 //
 // The salt comes from COMMERCIAL_IP_HASH_SALT and is required — no
-// fallback. This repo is public: a salt in source makes IPv4 hashes
-// reversible by enumeration, and a silent fallback would restore that
-// weakness on any deploy missing the env var. Routes that depend on
-// hashing must check ipHashingConfigured() and fail closed (503),
-// matching the CHAP_WIDGET_ENABLED posture.
+// fallback: a silent fallback would restore the hardcoded-salt weakness
+// on any deploy missing the env var. Routes that depend on hashing must
+// check ipHashingConfigured() and fail closed (503).
 
 import crypto from "node:crypto";
 import type { NextRequest } from "next/server";

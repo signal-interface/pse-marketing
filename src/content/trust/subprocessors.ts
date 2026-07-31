@@ -58,7 +58,7 @@ export const SUBPROCESSORS: readonly Subprocessor[] = [
   {
     name: "Anthropic",
     purpose:
-      "Large-language-model API behind the CHAP AI widget (disabled by default via CHAP_WIDGET_ENABLED).",
+      "Large-language-model API behind the CHAP AI widget on /chap-ai.",
     dataCategories: ["Visitor-submitted compliance questions"],
     hostingRegion: NOT_DETERMINED,
     retention: NOT_DETERMINED,
