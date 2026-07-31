@@ -234,16 +234,17 @@ export const CLAIMS: readonly Claim[] = [
     id: "dedicated-trust-contacts",
     statement:
       "Dedicated trust and security contact addresses monitored by PSE.",
-    status: "planned",
+    status: "current",
     evidence: [
       {
         kind: "founder_attested",
-        note: "trust@ and security@ are not yet provisioned; contact routes through the demo request path until TRUST_CONTACTS_LIVE is enabled.",
+        note: "Delivery verified 2026-07-31: probes to trust@ (Resend id c777b7d4-4a17-4e6b-b6c5-da2c2cf480fa, 05:10:21Z) and security@ (Resend id c1b6a09e-61af-4865-aa66-f3eaac914bbc, 05:10:23Z) both reached terminal status `delivered` after the Google Workspace aliases were provisioned and the prior bounce suppressions were cleared.",
       },
+      { kind: "shipped_surface", path: "src/app/trust/TrustContact.tsx" },
     ],
     surfaces: ["/trust/security"],
     owner: OWNER,
-    lastReviewed: REVIEWED,
+    lastReviewed: "2026-07-31",
   },
 
   // ── Illustrative: /product-tour statements, verbatim (fix #2) ──────────
