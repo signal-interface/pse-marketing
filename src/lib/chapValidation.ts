@@ -167,8 +167,15 @@ export function validateChapResponse(
   let parsed: unknown = raw;
 
   if (typeof raw === "string") {
+    // The model routinely wraps its JSON in a markdown fence despite the
+    // schema instruction; strip one before parsing or every fenced
+    // response validates to null.
+    const unfenced = raw
+      .trim()
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/\s*```$/, "");
     try {
-      parsed = JSON.parse(raw);
+      parsed = JSON.parse(unfenced);
     } catch {
       return null;
     }

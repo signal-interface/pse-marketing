@@ -25,10 +25,9 @@ vi.mock("@/lib/rateLimiter", () => ({
   checkAndIncrementRateLimit: mockCheckAndIncrement,
 }));
 
-// Partially mock @/lib/chapAi so containsInjectionPattern + MODEL +
-// IP_HASH_SALT keep their real implementations — we only stub
-// streamDetermination to prove the Anthropic client is never called in
-// the failure paths.
+// Partially mock @/lib/chapAi so containsInjectionPattern + MODEL keep
+// their real implementations — we only stub streamDetermination to
+// prove the Anthropic client is never called in the failure paths.
 vi.mock("@/lib/chapAi", async () => {
   const actual =
     await vi.importActual<typeof import("@/lib/chapAi")>("@/lib/chapAi");
@@ -48,29 +47,6 @@ vi.mock("@anthropic-ai/sdk", () => ({
 }));
 
 import { POST } from "../route";
-
-// The widget gate (CHAP_WIDGET_ENABLED) must be open for the suite —
-// every existing test exercises behavior behind the gate.
-process.env.CHAP_WIDGET_ENABLED = "true";
-
-describe("widget gate", () => {
-  it("returns 503 without touching any dependency when the flag is off", async () => {
-    const prev = process.env.CHAP_WIDGET_ENABLED;
-    delete process.env.CHAP_WIDGET_ENABLED;
-    try {
-      const res = await POST(
-        makeRequest({ question: "What is the IRC 6656 penalty structure?", sessionId: "s1" })
-      );
-      const json = await res.json();
-      expect(res.status).toBe(503);
-      expect(json.error).toBe("chap_unavailable");
-      expect(mockStreamDetermination).not.toHaveBeenCalled();
-      expect(mockCheckAndIncrement).not.toHaveBeenCalled();
-    } finally {
-      process.env.CHAP_WIDGET_ENABLED = prev;
-    }
-  });
-});
 
 function makeRequest(body: Record<string, unknown> | string): NextRequest {
   const req = new Request("http://localhost/api/chap/ask", {
@@ -97,11 +73,19 @@ async function readSseBody(res: Response): Promise<string> {
 describe("POST /api/chap/ask", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "test-salt");
     mockCheckAndIncrement.mockResolvedValue({
       allowed: true,
       remaining: 2,
       requiresEmail: false,
     });
+  });
+
+  it("fails closed (503) when COMMERCIAL_IP_HASH_SALT is unset", async () => {
+    vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "");
+    const res = await POST(makeRequest({ question: "How is the failure-to-deposit penalty calculated?", sessionId: "s1" }));
+    expect(res.status).toBe(503);
+    expect(mockStreamDetermination).not.toHaveBeenCalled();
   });
 
   it("returns 400 when question is missing", async () => {

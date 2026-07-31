@@ -17,15 +17,14 @@
 // or on failure, a single `{"type":"error"}` event before close.
 
 import { NextRequest } from "next/server";
-import crypto from "node:crypto";
 import { sql } from "@vercel/postgres";
 import { ensureChapTables } from "@/lib/db";
 import {
   streamDetermination,
   MODEL,
-  IP_HASH_SALT,
   containsInjectionPattern,
 } from "@/lib/chapAi";
+import { extractIp, hashIp, ipHashingConfigured } from "@/lib/ipHash";
 import { retrieveRelevantCorpus } from "@/lib/corpusRetrieval";
 import {
   validateChapResponse,
@@ -34,24 +33,16 @@ import {
 } from "@/lib/chapValidation";
 import { checkAndIncrementRateLimit } from "@/lib/rateLimiter";
 
+// Streaming a full determination (~2k tokens) exceeds the platform's
+// default function duration; without this the connection dies
+// mid-generation and the client never receives the final event.
+export const maxDuration = 60;
+
 const encoder = new TextEncoder();
 
 function sseEvent(data: object | string): Uint8Array {
   const payload = typeof data === "string" ? data : JSON.stringify(data);
   return encoder.encode(`data: ${payload}\n\n`);
-}
-
-function hashIp(ip: string): string {
-  return crypto
-    .createHash("sha256")
-    .update(ip + IP_HASH_SALT)
-    .digest("hex");
-}
-
-function extractIp(request: NextRequest): string {
-  const xff = request.headers.get("x-forwarded-for");
-  if (xff) return xff.split(",")[0].trim();
-  return "unknown";
 }
 
 function jsonResponse(body: object, status: number): Response {
@@ -100,12 +91,11 @@ async function logInteraction(params: {
 }
 
 export async function POST(request: NextRequest): Promise<Response> {
-  // 0. Widget gate — live questions stay offline until the compliance
-  // corpus carries verified primary-source text (DEPLOY_CHECKLIST.md #2).
-  // The /chap-ai page hides the widget behind the same flag; this guard
-  // covers direct POSTs.
-  if (process.env.CHAP_WIDGET_ENABLED !== "true") {
-    return jsonResponse({ error: "chap_unavailable" }, 503);
+  // 0. Fail closed if the IP-hashing salt is not provisioned — same
+  // posture as /api/demo-request. Serving without it would mean either
+  // unhashed IPs or a hardcoded salt, both ruled out.
+  if (!ipHashingConfigured()) {
+    return jsonResponse({ error: "service_unavailable" }, 503);
   }
 
   // 1. Parse + validate body

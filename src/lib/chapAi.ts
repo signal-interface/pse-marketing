@@ -10,12 +10,6 @@ import type { CorpusEntry } from "@/data/complianceCorpus";
 // (Sonnet 4.6 is the current general-purpose Sonnet).
 export const MODEL = "claude-sonnet-4-6";
 
-// Privacy-only salt for hashing visitor IPs before logging. Rotating
-// this invalidates historical IP-based rate limits. A constant is fine
-// for v1 — move to an env var if/when we care about rotation without a
-// code deploy.
-export const IP_HASH_SALT = "chap-ai-v1-ip-salt-8f3c2a1b";
-
 // Obvious prompt-injection patterns. Checked BEFORE calling the model;
 // matches are short-circuited to a synthetic out_of_scope response.
 // Deliberately conservative — we'd rather let a borderline question

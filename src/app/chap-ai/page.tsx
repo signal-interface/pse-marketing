@@ -64,32 +64,6 @@ const proofStats = [
   },
 ];
 
-// Live-question gate. The interactive widget stays offline until the
-// compliance corpus is populated with verified primary-source text
-// (DEPLOY_CHECKLIST.md item #2) — CHAP answers must never be grounded on
-// placeholder content. POST /api/chap/ask enforces the same flag.
-const WIDGET_ENABLED = process.env.CHAP_WIDGET_ENABLED === 'true';
-
-function ChapComingSoon() {
-  return (
-    <div className="chap-step-card" style={{ textAlign: 'center', padding: '48px 28px' }}>
-      <div className="chap-step-name">Coming Soon</div>
-      <div className="chap-step-headline" style={{ marginTop: '8px' }}>
-        Live CHAP AI questions are almost ready.
-      </div>
-      <p className="chap-step-body" style={{ marginTop: '12px' }}>
-        Every CHAP AI answer is grounded in a curated regulatory corpus. We&apos;re
-        completing primary-source verification of that corpus before opening live
-        questions — citation integrity comes first. In the meantime, request a demo
-        for a guided walkthrough.
-      </p>
-      <Link href="/#demo" className="chap-btn-primary" style={{ marginTop: '20px', display: 'inline-block' }}>
-        Request a Demo
-      </Link>
-    </div>
-  );
-}
-
 export default function ChapAIPage() {
   return (
     <div className="chap-page">
@@ -116,7 +90,7 @@ export default function ChapAIPage() {
               </div>
             </div>
             <div className="chap-hero__terminal">
-              {WIDGET_ENABLED ? <ChapaInterface /> : <ChapComingSoon />}
+              <ChapaInterface />
             </div>
           </div>
         </section>
