@@ -33,6 +33,11 @@ import {
 } from "@/lib/chapValidation";
 import { checkAndIncrementRateLimit } from "@/lib/rateLimiter";
 
+// Streaming a full determination (~2k tokens) exceeds the platform's
+// default function duration; without this the connection dies
+// mid-generation and the client never receives the final event.
+export const maxDuration = 60;
+
 const encoder = new TextEncoder();
 
 function sseEvent(data: object | string): Uint8Array {
