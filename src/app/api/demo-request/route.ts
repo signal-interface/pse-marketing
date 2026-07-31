@@ -171,7 +171,7 @@ export async function POST(request: NextRequest) {
     // effects, so double-clicks and reposts don't respam the prospect).
     const ipLimit = await checkAndIncrementScopedLimit(
       "demo-request-ip",
-      hashIp(extractIp(request)),
+      hashIp(extractIp(request), "commercial"),
       IP_SUBMISSION_CAP
     );
     if (!ipLimit.allowed) {
