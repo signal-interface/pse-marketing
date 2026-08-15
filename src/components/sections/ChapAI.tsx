@@ -34,6 +34,9 @@ export default function ChapAI() {
           <span className="inline-block px-4 py-[7px] rounded-full bg-white/[0.08] text-steel-light text-xs font-bold tracking-[0.06em] uppercase">
             CHAP AI&trade;
           </span>
+          <p className="mt-3 text-sm font-semibold text-steel-light">
+            Compliance, Helpdesk &amp; Automation Platform
+          </p>
           <h2 className="text-[clamp(2rem,4vw,2.75rem)] mt-4 text-white tracking-[-0.02em] leading-[1.12] font-bold">
             The compliance brain behind every payroll run.
           </h2>
