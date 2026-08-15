@@ -162,7 +162,7 @@ export default function ServicesPage() {
         <section className="svc-chap-callout">
           <div className="svc-chap-callout__inner">
             <div className="svc-chap-callout__content">
-              <p className="svc-eyebrow" style={{ color: '#6b8caa' }}>Powered by CHAP AI™</p>
+              <p className="svc-eyebrow" style={{ color: '#6b8caa' }}>Powered by CHAP AI™ — Compliance, Helpdesk &amp; Automation Platform</p>
               <h2>Every service runs on the same compliance engine.</h2>
               <p>
                 CHAP AI isn&apos;t a reporting layer — it&apos;s the validation engine underneath
