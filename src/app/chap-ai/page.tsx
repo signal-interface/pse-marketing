@@ -7,8 +7,8 @@ import Link from 'next/link';
 import { ENFORCEMENT_STATS } from '@/lib/stats';
 
 export const metadata: Metadata = {
-  title: 'CHAP AI — Compliance Intelligence Layer | Payroll Synergy Experts',
-  description: 'CHAP AI analyzes payroll scenarios against federal and state regulations, surfaces exceptions with statute citations, and produces audit-ready determinations.',
+  title: 'CHAP AI — Compliance, Helpdesk & Automation Platform | Payroll Synergy Experts',
+  description: 'CHAP AI — Compliance, Helpdesk & Automation Platform — analyzes payroll scenarios against federal and state regulations, surfaces exceptions with statute citations, and produces audit-ready determinations.',
 };
 
 const steps = [
@@ -74,7 +74,7 @@ export default function ChapAIPage() {
         <section className="chap-hero">
           <div className="chap-hero__inner">
             <div className="chap-hero__content">
-              <p className="chap-eyebrow">CHAP AI™</p>
+              <p className="chap-eyebrow">CHAP AI™ — Compliance, Helpdesk &amp; Automation Platform</p>
               <h1 className="chap-hero__headline">
                 Your compliance intelligence layer.<br />
                 <em>Every exception explained. Every determination documented.</em>
@@ -121,26 +121,10 @@ export default function ChapAIPage() {
             <h2 className="chap-section-headline">See what CHAP AI surfaces.</h2>
             <p className="chap-section-sub">Live screenshots from the PSE compliance platform — the same interface your payroll team uses every cycle.</p>
             <div className="chap-screenshots__grid">
-              <ProductScreenshot
-                src="/screenshots/dashboard-overview.png"
-                alt="PSE dashboard showing compliance status across all active states"
-                caption="Dashboard — compliance status at a glance"
-              />
-              <ProductScreenshot
-                src="/screenshots/compliance-scan.png"
-                alt="CHAP AI pre-run compliance scan results with statute citations"
-                caption="Pre-run scan — violations flagged before commit"
-              />
-              <ProductScreenshot
-                src="/screenshots/payroll-run.png"
-                alt="Payroll run validation showing per-employee compliance checks"
-                caption="Run validation — per-employee statutory checks"
-              />
-              <ProductScreenshot
-                src="/screenshots/audit-trail.png"
-                alt="Audit trail showing timestamped compliance records"
-                caption="Audit trail — every decision documented"
-              />
+              <ProductScreenshot src="/screenshots/dashboard-overview.png" alt="PSE dashboard showing compliance status across all active states" caption="Dashboard — compliance status at a glance" />
+              <ProductScreenshot src="/screenshots/compliance-scan.png" alt="CHAP AI pre-run compliance scan results with statute citations" caption="Pre-run scan — violations flagged before commit" />
+              <ProductScreenshot src="/screenshots/payroll-run.png" alt="Payroll run validation showing per-employee compliance checks" caption="Run validation — per-employee statutory checks" />
+              <ProductScreenshot src="/screenshots/audit-trail.png" alt="Audit trail showing timestamped compliance records" caption="Audit trail — every decision documented" />
             </div>
           </div>
         </section>
@@ -155,10 +139,7 @@ export default function ChapAIPage() {
               <div>
                 <div className="chap-coverage-col-label">Federal</div>
                 {federalChecks.map((c) => (
-                  <div key={c.statute} className="chap-check-row">
-                    <span className="chap-check-statute">{c.statute}</span>
-                    <span className="chap-check-name">{c.name}</span>
-                  </div>
+                  <div key={c.statute} className="chap-check-row"><span className="chap-check-statute">{c.statute}</span><span className="chap-check-name">{c.name}</span></div>
                 ))}
               </div>
               <div>
@@ -166,11 +147,7 @@ export default function ChapAIPage() {
                 {stateChecks.map((s) => (
                   <div key={s.state} className="chap-state-row">
                     <div className="chap-state-name">{s.state}</div>
-                    <div className="chap-state-checks">
-                      {s.checks.map((c) => (
-                        <span key={c} className="chap-state-tag">{c}</span>
-                      ))}
-                    </div>
+                    <div className="chap-state-checks">{s.checks.map((c) => (<span key={c} className="chap-state-tag">{c}</span>))}</div>
                   </div>
                 ))}
               </div>
@@ -185,52 +162,13 @@ export default function ChapAIPage() {
             <h2 className="chap-section-headline">Regulatory changes reflected in CHAP AI rules.</h2>
             <p className="chap-section-sub">Federal, state, and local regulatory changes are tracked. When a rule changes, CHAP AI updates — your team doesn&apos;t have to.</p>
             <div className="chap-reg__grid">
-              <div className="chap-reg-card">
-                <div className="chap-reg-card__icon">📡</div>
-                <div className="chap-reg-card__title">Federal & State Monitoring</div>
-                <div className="chap-reg-card__body">
-                  DOL, IRS, and state labor agency publications tracked.
-                  Rate changes, new requirements, and enforcement guidance reflected
-                  in CHAP AI rules.
-                </div>
-              </div>
-              <div className="chap-reg-card">
-                <div className="chap-reg-card__icon">⚡</div>
-                <div className="chap-reg-card__title">Versioned Rule Updates</div>
-                <div className="chap-reg-card__body">
-                  When a minimum wage changes or a new leave mandate takes effect,
-                  the applicable CHAP AI rules are updated and versioned — not held
-                  for a quarterly release cycle.
-                </div>
-              </div>
-              <div className="chap-reg-card">
-                <div className="chap-reg-card__icon">📋</div>
-                <div className="chap-reg-card__title">Change Documentation</div>
-                <div className="chap-reg-card__body">
-                  Every rule update is logged with the source regulation, effective date,
-                  and the specific CHAP AI check it modifies — creating an audit trail
-                  of your compliance posture over time.
-                </div>
-              </div>
-              <div className="chap-reg-card">
-                <div className="chap-reg-card__icon">🔔</div>
-                <div className="chap-reg-card__title">Proactive Alerts</div>
-                <div className="chap-reg-card__body">
-                  When a regulatory change impacts your active employee population,
-                  CHAP AI flags it before your next payroll cycle — not after a
-                  violation occurs.
-                </div>
-              </div>
+              <div className="chap-reg-card"><div className="chap-reg-card__icon">📡</div><div className="chap-reg-card__title">Federal &amp; State Monitoring</div><div className="chap-reg-card__body">DOL, IRS, and state labor agency publications tracked. Rate changes, new requirements, and enforcement guidance reflected in CHAP AI rules.</div></div>
+              <div className="chap-reg-card"><div className="chap-reg-card__icon">⚡</div><div className="chap-reg-card__title">Versioned Rule Updates</div><div className="chap-reg-card__body">When a minimum wage changes or a new leave mandate takes effect, the applicable CHAP AI rules are updated and versioned — not held for a quarterly release cycle.</div></div>
+              <div className="chap-reg-card"><div className="chap-reg-card__icon">📋</div><div className="chap-reg-card__title">Change Documentation</div><div className="chap-reg-card__body">Every rule update is logged with the source regulation, effective date, and the specific CHAP AI check it modifies — creating an audit trail of your compliance posture over time.</div></div>
+              <div className="chap-reg-card"><div className="chap-reg-card__icon">🔔</div><div className="chap-reg-card__title">Proactive Alerts</div><div className="chap-reg-card__body">When a regulatory change impacts your active employee population, CHAP AI flags it before your next payroll cycle — not after a violation occurs.</div></div>
             </div>
-
-            {/* Example audit log */}
             <div className="chap-reg__log">
-              <div className="chap-reg__log-bar">
-                <span className="chap-reg__log-dot" style={{background:'#ff5f57'}} />
-                <span className="chap-reg__log-dot" style={{background:'#ffbd2e'}} />
-                <span className="chap-reg__log-dot" style={{background:'#28c840'}} />
-                <span className="chap-reg__log-label">chap-ai — regulatory update log — sample data (illustrative)</span>
-              </div>
+              <div className="chap-reg__log-bar"><span className="chap-reg__log-dot" style={{background:'#ff5f57'}} /><span className="chap-reg__log-dot" style={{background:'#ffbd2e'}} /><span className="chap-reg__log-dot" style={{background:'#28c840'}} /><span className="chap-reg__log-label">chap-ai — regulatory update log — sample data (illustrative)</span></div>
               <div className="chap-reg__log-body">
                 <div><span className="chap-reg__log-date">2026-03-14</span> <span className="chap-reg__log-ok">✓ APPLIED</span>  CA SB-1234 min wage → $16.50/hr eff 2026-04-01</div>
                 <div><span className="chap-reg__log-date">2026-03-13</span> <span className="chap-reg__log-ok">✓ APPLIED</span>  IRS Rev. Proc. 2026-12 deposit threshold update</div>
@@ -243,53 +181,13 @@ export default function ChapAIPage() {
         </section>
 
         {/* Section 4 — CHAP Guard */}
-        <section className="chap-guard-section">
-          <div className="chap-guard__inner">
-            <div className="chap-guard__badge">
-              <span className="chap-badge-label">Early Access</span>
-            </div>
-            <h2>CHAP Guard — Compliance in your payroll system</h2>
-            <p>
-              CHAP Guard is a Chrome extension that brings CHAP AI compliance intelligence
-              directly into UKG, ADP, and other payroll platforms — surfacing inline violation
-              indicators and statute context without leaving your existing workflow.
-              Early access available for qualifying PSE clients.
-            </p>
-            <div className="chap-guard__platforms">
-              <span className="chap-platform-badge">UKG</span>
-              <span className="chap-platform-badge">ADP</span>
-              <span className="chap-platform-badge">Dayforce</span>
-              <span className="chap-platform-badge">More coming</span>
-            </div>
-            <Link href="/#demo" className="chap-btn-primary">Request Access</Link>
-          </div>
-        </section>
+        <section className="chap-guard-section"><div className="chap-guard__inner"><div className="chap-guard__badge"><span className="chap-badge-label">Early Access</span></div><h2>CHAP Guard — Compliance in your payroll system</h2><p>CHAP Guard is a Chrome extension that brings CHAP AI compliance intelligence directly into UKG, ADP, and other payroll platforms — surfacing inline violation indicators and statute context without leaving your existing workflow. Early access available for qualifying PSE clients.</p><div className="chap-guard__platforms"><span className="chap-platform-badge">UKG</span><span className="chap-platform-badge">ADP</span><span className="chap-platform-badge">Dayforce</span><span className="chap-platform-badge">More coming</span></div><Link href="/#demo" className="chap-btn-primary">Request Access</Link></div></section>
 
         {/* Section 5 — Proof */}
-        <section className="chap-proof-section">
-          <div className="chap-section__inner">
-            <p className="chap-eyebrow">Industry data</p>
-            <h2 className="chap-section-headline">The compliance exposure CHAP AI addresses.</h2>
-            <div className="chap-proof-list">
-              {proofStats.map((s) => (
-                <div key={s.number} className="chap-proof-stat">
-                  <div className="chap-proof-number">{s.number}</div>
-                  <div>
-                    <div className="chap-proof-label">{s.label}</div>
-                    <div className="chap-proof-source">Source: {s.source}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <section className="chap-proof-section"><div className="chap-section__inner"><p className="chap-eyebrow">Industry data</p><h2 className="chap-section-headline">The compliance exposure CHAP AI addresses.</h2><div className="chap-proof-list">{proofStats.map((s) => (<div key={s.number} className="chap-proof-stat"><div className="chap-proof-number">{s.number}</div><div><div className="chap-proof-label">{s.label}</div><div className="chap-proof-source">Source: {s.source}</div></div></div>))}</div></div></section>
 
         {/* Section 6 — CTA */}
-        <section className="chap-cta-section">
-          <h2>See CHAP AI analyze your payroll compliance posture.</h2>
-          <p>30-minute personalized walkthrough. Bring your last payroll file.</p>
-          <Link href="/#demo" className="chap-btn-primary chap-btn-lg">Request a Demo</Link>
-        </section>
+        <section className="chap-cta-section"><h2>See CHAP AI analyze your payroll compliance posture.</h2><p>30-minute personalized walkthrough. Bring your last payroll file.</p><Link href="/#demo" className="chap-btn-primary chap-btn-lg">Request a Demo</Link></section>
 
       </main>
       <Footer />
