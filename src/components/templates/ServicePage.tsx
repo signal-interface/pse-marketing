@@ -91,7 +91,7 @@ export function ServicePage({ service }: Props) {
         {/* CHAP AI connection */}
         <section className="svc-sub-chap-section">
           <div className="svc-sub-chap__inner">
-            <p className="svc-eyebrow">Powered by CHAP AI™</p>
+            <p className="svc-eyebrow">Powered by CHAP AI™ — Compliance, Helpdesk &amp; Automation Platform</p>
             <h2 className="svc-sub-chap__headline">How CHAP AI supports {service.name}</h2>
             <p className="svc-sub-chap__body">{service.chapAiConnection}</p>
             <Link href="/chap-ai" className="svc-chap-link">
