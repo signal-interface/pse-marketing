@@ -115,6 +115,9 @@ export default function ServicesPage() {
               Six integrated service areas. One compliance-first platform.
               Every decision documented, every run validated.
             </p>
+            <p className="svc-hero__sub">
+              Powered by CHAP AI™ — Compliance, Helpdesk &amp; Automation Platform.
+            </p>
             {/* Mirrors the homepage TrustBar badges (registered claims —
                 see TRUST_ITEMS); update both together. */}
             <div className="svc-hero__trust">
@@ -162,7 +165,7 @@ export default function ServicesPage() {
         <section className="svc-chap-callout">
           <div className="svc-chap-callout__inner">
             <div className="svc-chap-callout__content">
-              <p className="svc-eyebrow" style={{ color: '#6b8caa' }}>Powered by CHAP AI™ — Compliance, Helpdesk &amp; Automation Platform</p>
+              <p className="svc-eyebrow" style={{ color: '#6b8caa' }}>Powered by CHAP AI™</p>
               <h2>Every service runs on the same compliance engine.</h2>
               <p>
                 CHAP AI isn&apos;t a reporting layer — it&apos;s the validation engine underneath
