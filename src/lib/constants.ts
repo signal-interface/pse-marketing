@@ -12,6 +12,7 @@ export const NAV_LINKS = [
   { label: "CHAP AI", href: "/chap-ai" },
   { label: "Services", href: "/services" },
   { label: "Risk Estimator", href: "/compliance-risk" },
+  { label: "Investors", href: "https://signal-executive-interface.vercel.app/investor" },
 ] as const;
 
 export const PUBLIC_ROUTES = [
@@ -50,13 +51,13 @@ export const SERVICES = [
     icon: "BarChart3" as const,
     title: "Workforce Analytics",
     claimId: "svc-workforce-analytics",
-    desc: "Labor cost exposure, overtime liability, and compliance posture \u2014 visible in real time, not buried in a quarterly deck.",
+    desc: "Labor cost exposure, overtime liability, and compliance posture — visible in real time, not buried in a quarterly deck.",
   },
   {
     icon: "RefreshCw" as const,
     title: "Benefits Reconciliation",
     claimId: "svc-benefits-reconciliation",
-    desc: "Benefits deduction reconciliation \u2014 PSE audits payroll deduction reports against benefit elections to identify discrepancies.",
+    desc: "Benefits deduction reconciliation — PSE audits payroll deduction reports against benefit elections to identify discrepancies.",
   },
   {
     icon: "Plug" as const,
@@ -72,8 +73,6 @@ export const SERVICES = [
   },
 ] as const;
 
-// All four steps describe the one registered pipeline claim \u2014 pilot until
-// PR #4 merges and the CHAP widget answers publicly.
 export const CHAP_PIPELINE_CLAIM_ID = "chap-pipeline-validation" as const;
 
 export const CHAP_STEPS = [
@@ -92,7 +91,7 @@ export const CHAP_STEPS = [
   {
     step: "Explain",
     claimId: CHAP_PIPELINE_CLAIM_ID,
-    desc: "Plain-language rationale for every flag \u2014 what\u2019s wrong, why it matters, and what clears it.",
+    desc: "Plain-language rationale for every flag — what’s wrong, why it matters, and what clears it.",
     color: "purple",
   },
   {
