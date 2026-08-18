@@ -1,0 +1,48 @@
+{
+  "contractVersion": "0.1",
+  "product": {
+    "productId": "pse",
+    "displayName": "Payroll Synergy Experts",
+    "owner": "signal-interface/pse-marketing",
+    "marketingSurface": {
+      "topology": "standalone-repo",
+      "repository": "signal-interface/pse-marketing",
+      "baseUrl": "https://payrollsynergyexperts.com"
+    }
+  },
+  "lifecycle": "pilot",
+  "audiences": [],
+  "positioning": {
+    "authority": "product-owned"
+  },
+  "offers": [],
+  "claims": {
+    "registry": "src/content/trust/claims.ts",
+    "copyClaimsIntoEngine": false
+  },
+  "evidence": {
+    "authority": "product-owned",
+    "failClosedWhenRequiredEvidenceMissing": true
+  },
+  "channels": [],
+  "conversions": [],
+  "capabilities": {
+    "signals": [],
+    "analyzers": [],
+    "generators": [],
+    "publishers": [],
+    "measurements": []
+  },
+  "autonomy": {
+    "mode": "recommend"
+  },
+  "approvals": {
+    "default": "human-required-for-external-mutation"
+  },
+  "privacy": {
+    "productOwned": true
+  },
+  "brand": {
+    "authority": "pse-marketing"
+  }
+}
