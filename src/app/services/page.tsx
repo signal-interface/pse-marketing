@@ -115,6 +115,9 @@ export default function ServicesPage() {
               Six integrated service areas. One compliance-first platform.
               Every decision documented, every run validated.
             </p>
+            <p className="svc-hero__sub">
+              Powered by CHAP AI™ — Compliance, Helpdesk &amp; Automation Platform.
+            </p>
             {/* Mirrors the homepage TrustBar badges (registered claims —
                 see TRUST_ITEMS); update both together. */}
             <div className="svc-hero__trust">

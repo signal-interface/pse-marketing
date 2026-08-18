@@ -34,6 +34,9 @@ export function ServicePage({ service }: Props) {
             </p>
             <h1 className="svc-sub-hero__headline">{service.headline}</h1>
             <p className="svc-sub-hero__sub">{service.subheadline}</p>
+            <p className="svc-sub-hero__sub">
+              Powered by CHAP AI™ — Compliance, Helpdesk &amp; Automation Platform.
+            </p>
             {service.ctaSource ? (
               <a href="#demo" className="svc-btn-primary">{service.ctaLabel || 'Request a Demo'}</a>
             ) : (

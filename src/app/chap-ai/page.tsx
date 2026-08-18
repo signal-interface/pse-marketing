@@ -7,8 +7,8 @@ import Link from 'next/link';
 import { ENFORCEMENT_STATS } from '@/lib/stats';
 
 export const metadata: Metadata = {
-  title: 'CHAP AI — Compliance Intelligence Layer | Payroll Synergy Experts',
-  description: 'CHAP AI analyzes payroll scenarios against federal and state regulations, surfaces exceptions with statute citations, and produces audit-ready determinations.',
+  title: 'CHAP AI — Compliance, Helpdesk & Automation Platform | Payroll Synergy Experts',
+  description: 'CHAP AI — Compliance, Helpdesk & Automation Platform — analyzes payroll scenarios against federal and state regulations, surfaces exceptions with statute citations, and produces audit-ready determinations.',
 };
 
 const steps = [
@@ -74,7 +74,7 @@ export default function ChapAIPage() {
         <section className="chap-hero">
           <div className="chap-hero__inner">
             <div className="chap-hero__content">
-              <p className="chap-eyebrow">CHAP AI™</p>
+              <p className="chap-eyebrow">CHAP AI™ — Compliance, Helpdesk &amp; Automation Platform</p>
               <h1 className="chap-hero__headline">
                 Your compliance intelligence layer.<br />
                 <em>Every exception explained. Every determination documented.</em>
