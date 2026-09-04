@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "venture_id": "pse",
+  "surface_type": "marketing",
+  "capital_access": {
+    "status": "enabled",
+    "cta_mode": "canonical-link",
+    "canonical_intake_url": "https://www.srholdingsllc.com/investors",
+    "source_site": "pse-marketing"
+  }
+}
