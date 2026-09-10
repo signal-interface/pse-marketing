@@ -1,7 +1,5 @@
 import { ArrowRight } from "lucide-react";
-
-const INVESTOR_INTEREST_URL =
-  "https://www.srholdingsllc.com/investors?venture=pse&source=pse-marketing#investor-form";
+import { INVESTOR_INTEREST_URL } from "@/lib/constants";
 
 export default function InvestorInterest() {
   return (
