@@ -8,11 +8,14 @@ export const SITE = {
   ogImage: "https://payrollsynergyexperts.com/opengraph-image",
 } as const;
 
+export const INVESTOR_INTEREST_URL =
+  "https://www.srholdingsllc.com/investors?venture=pse&source=pse-marketing#investor-form" as const;
+
 export const NAV_LINKS = [
   { label: "CHAP AI", href: "/chap-ai" },
   { label: "Services", href: "/services" },
   { label: "Risk Estimator", href: "/compliance-risk" },
-  { label: "Investors", href: "https://signal-executive-interface.vercel.app/investor" },
+  { label: "Investors", href: INVESTOR_INTEREST_URL },
 ] as const;
 
 export const PUBLIC_ROUTES = [
