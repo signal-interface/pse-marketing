@@ -8,7 +8,7 @@ describe("state payroll source intake boundary",()=>{
   expect(stateSourceIntake.map(s=>s.state).sort()).toEqual(["CA","CO","CT","FL","GA","IL","NJ","NY","PA","TX","WA"]);
   expect(inspectStateSourceIntake()).toEqual([]);
   for(const row of stateSourceIntake){
-   expect(row.authority.url).toMatch(/^https:\/);
+   expect(row.authority.url.startsWith("https://")).toBe(true);
    expect(row.authority.agency.length).toBeGreaterThan(8);
    expect(row.authority.pinpoint.length).toBeGreaterThan(6);
    expect(row.caveat.length).toBeGreaterThan(25);
