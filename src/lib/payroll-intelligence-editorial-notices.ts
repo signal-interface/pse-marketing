@@ -60,7 +60,7 @@ const edits: Record<string, NoticeDraft[]> = {
     {wording:"Cross-border payroll requires country-specific authority, treaty and social-security review based on the worker, employing entity, assignment and location."},
   ],
   "payroll-competency-model": [
-    {wording:"IRS employment-tax resources describe tax requirements, not independent professional credential standards. Consult the relevant credentialing organization for certification rules."},
+    {wording:"IRS employment-tax resources describe tax requirements, not independent professional credential standards. Consult the relevant credentialing organization for certification rules.",source:{label:"IRS Employment Taxes resources",url:"https://www.irs.gov/businesses/small-businesses-self-employed/employment-taxes"}},
     {wording:"PSE competency exercises and continuing-learning suggestions are educational practices; do not treat them as mandatory legal qualifications."},
   ],
 };
