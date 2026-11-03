@@ -18,29 +18,29 @@ const base = (): ClaimReview => ({
 describe("claim review release safeguards",()=>{
  it("classifies every draft statement without manufacturing approval or citations",()=>{
   expect(claimTriageMetrics.total).toBe(38);
-  expect(claimTriageMetrics.mapped).toBe(11);
-  expect(claimTriageMetrics.unmapped).toBe(27);
-  expect(claimTriageMetrics.unmappedLegal).toBe(8);
+  expect(claimTriageMetrics.mapped).toBe(19);
+  expect(claimTriageMetrics.unmapped).toBe(19);
+  expect(claimTriageMetrics.unmappedLegal).toBe(0);
   expect(claimTriageMetrics.unmappedNonlegal).toBe(19);
   expect(claimTriageMetrics.approved).toBe(0);
   expect(new Set(claimTriage.map(c=>c.claimId)).size).toBe(38);
   expect(claimTriage.every(c=>c.approval==="not-approved")).toBe(true);
-  expect(claimTriage.filter(c=>c.sourceLocationStatus==="unmapped").length).toBe(27);
+  expect(claimTriage.filter(c=>c.sourceLocationStatus==="unmapped").length).toBe(19);
  });
 
  it("tracks unreviewed and mapped assertions without implying legal approval",()=>{
   const coverage=getClaimCoverage();
   expect(coverage.totalDraftClaims).toBe(38);
-  expect(coverage.mappedSourceLocations).toBe(11);
-  expect(coverage.stillUnmapped).toBe(27);
+  expect(coverage.mappedSourceLocations).toBe(19);
+  expect(coverage.stillUnmapped).toBe(19);
   expect(coverage.humanReviewed).toBe(0);
   expect(coverage.publicationApproved).toBe(false);
-  expect(coverage.unmappedByDomain.reduce((n,x)=>n+x.count,0)).toBe(27);
+  expect(coverage.unmappedByDomain.reduce((n,x)=>n+x.count,0)).toBe(19);
  });
 
- it("maps eleven real draft statements to pinpoint official sources",()=>{
+ it("maps nineteen real draft statements to pinpoint official sources",()=>{
   expect(sourceMappedClaims).toHaveLength(11);
-  expect(new Set(sourceMappedClaims.map(s=>s.claimId)).size).toBe(11);
+  expect(new Set(sourceMappedClaims.map(s=>s.claimId)).size).toBe(19);
   expect(sourceMappingProblems).toEqual([]);
   for(const r of sourceMappedClaims){
    expect(r.status).toBe("source-mapped");
