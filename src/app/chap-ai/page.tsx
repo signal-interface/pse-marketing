@@ -246,14 +246,14 @@ export default function ChapAIPage() {
         <section className="chap-guard-section">
           <div className="chap-guard__inner">
             <div className="chap-guard__badge">
-              <span className="chap-badge-label">Early Access</span>
+              <span className="chap-badge-label">CHAP Guard</span>
             </div>
             <h2>CHAP Guard — Compliance in your payroll system</h2>
             <p>
               CHAP Guard is a Chrome extension that brings CHAP AI compliance intelligence
               directly into UKG, ADP, and other payroll platforms — surfacing inline violation
               indicators and statute context without leaving your existing workflow.
-              Early access available for qualifying PSE clients.
+              Connect with PSE for a walkthrough of the integration experience.
             </p>
             <div className="chap-guard__platforms">
               <span className="chap-platform-badge">UKG</span>
