@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { editorialClaimInventory } from "../payroll-intelligence-claim-inventory";
 import { sourceMappedClaims, sourceMappingProblems } from "../payroll-intelligence-source-mappings";
+import { getClaimCoverage } from "../payroll-intelligence-coverage";
 import { editorialPublicationAuthorized, initialClaimReviewRecords, inspectClaimReview, type ClaimReview } from "../payroll-intelligence-review";
 
 const base = (): ClaimReview => ({
@@ -14,6 +15,16 @@ const base = (): ClaimReview => ({
 });
 
 describe("claim review release safeguards",()=>{
+ it("tracks unreviewed and mapped assertions without implying legal approval",()=>{
+  const coverage=getClaimCoverage();
+  expect(coverage.totalDraftClaims).toBe(38);
+  expect(coverage.mappedSourceLocations).toBe(11);
+  expect(coverage.stillUnmapped).toBe(27);
+  expect(coverage.humanReviewed).toBe(0);
+  expect(coverage.publicationApproved).toBe(false);
+  expect(coverage.unmappedByDomain.reduce((n,x)=>n+x.count,0)).toBe(27);
+ });
+
  it("maps eleven real draft statements to pinpoint official sources",()=>{
   expect(sourceMappedClaims).toHaveLength(11);
   expect(new Set(sourceMappedClaims.map(s=>s.claimId)).size).toBe(11);
