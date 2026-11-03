@@ -25,7 +25,8 @@ export default function PayrollIntelligencePage(){return <><Navbar/><main classN
  <div><h2 className="text-2xl font-bold mb-3">Quarterly regulatory reviews</h2><p className="text-text-secondary mb-4">PSE reviews sources quarterly and separately identifies substantive updates. A scheduled review does not mean every published rule was amended.</p><Link className="text-blue-accent underline" href="/payroll-intelligence/updates">View review schedule</Link></div>
  <div><h2 className="text-2xl font-bold mb-3">Federal source reference</h2><p className="text-text-secondary mb-4">Start with 2026 federal employment-tax figures and specific IRS and DOL source sections.</p>
  <Link className="text-blue-accent underline" href="/payroll-intelligence/2026-federal-payroll-baseline">2026 federal baseline</Link>
- <p className="mt-3"><Link className="text-blue-accent underline" href="/payroll-intelligence/briefings">Browse source-linked briefings</Link></p></div>
+ <p className="mt-3"><Link className="text-blue-accent underline" href="/payroll-intelligence/briefings">Browse source-linked briefings</Link></p>
+ <p className="mt-3"><Link className="text-blue-accent underline" href="/payroll-intelligence/state-sources">Explore official state-source directory (research)</Link></p></div>
  </div></section>
  <aside className="max-w-6xl mx-auto px-6 pb-12 text-sm text-text-secondary">Educational reference only. PSE does not warrant that the information is complete or suitable for any specific employer. Verify current law, effective dates and jurisdictional rules before acting.</aside>
  </main><Footer/></>;}
