@@ -70,7 +70,6 @@ export const briefings:Briefing[]=[
   ],
   sources:[{title:"U.S. DOL Fact Sheet #21: Recordkeeping Requirements under FLSA",url:"https://www.dol.gov/agencies/whd/fact-sheets/21-flsa-recordkeeping",relevance:"Federal FLSA recordkeeping content and minimum retention periods"}]
  }
-,
  {
   slug:"2026-worker-classification-federal-tax",
   title:"Worker status: federal employment-tax classification",
@@ -149,7 +148,6 @@ export const briefings:Briefing[]=[
   ],
   sources:[{title:"IRS Publication 15-B (2026), cafeteria plans and health FSAs",url:"https://www.irs.gov/publications/p15b",relevance:"2026 health FSA salary-reduction limit and cafeteria plan requirements"}],
  },
-,
 {
   "slug": "payday-frequency-review",
   "title": "Pay frequency and final wages",
