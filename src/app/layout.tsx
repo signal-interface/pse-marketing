@@ -71,21 +71,14 @@ const jsonLdSoftware = {
   name: "CHAP AI",
   alternateName: "CHAP Guard",
   applicationCategory: "BusinessApplication",
-  operatingSystem: "Web, Chrome Extension",
+  operatingSystem: "Web",
   description:
     "AI-powered compliance intelligence engine for payroll. Detects statutory violations, flags risks, explains issues in plain language, and generates audit-ready documentation.",
-  offers: {
-    "@type": "Offer",
-    availability: "https://schema.org/PreOrder",
-    description: "Platform access is by invitation only",
-  },
   creator: {
     "@type": "Organization",
     name: "Payroll Synergy Experts",
   },
-  // Structured data cannot carry a "Coming Soon" marker, so only claims a
-  // reader could verify today belong here: no planned features (Chrome
-  // extension) and no cadence assertions ("daily") — 2026-07-30 ruling.
+  // Metadata lists product capability categories, not deployment or certification claims.
   featureList: [
     "Pre-run compliance validation",
     "Multi-state jurisdiction coverage",
