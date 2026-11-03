@@ -30,7 +30,7 @@ describe("state-source educational briefing publication gate",()=>{
   expect(page).toContain("b.sourceUrl");
   expect(page).toContain("index:false");
   expect(page).toContain("notFound()");
-  expect(index).toContain("/payroll-intelligence/state-sources/");
+  expect(index).toContain("StateSourceExplorer");
   expect(stateBriefings.every(b=>b.sourceUrl.startsWith("https://"))).toBe(true);
  });
 });
