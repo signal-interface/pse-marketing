@@ -44,7 +44,7 @@ const laneMap: Record<string, readonly ClaimLane[]> = {
     "legal-assertion", "legal-assertion", "legal-assertion",
   ],
   "2026-health-fsa-pretax-review": [
-    "legal-assertion", "jurisdictional-limitation", "legal-assertion",
+    "legal-assertion", "jurisdictional-limitation", "pse-control-recommendation",
   ],
   "payday-frequency-review": [
     "source-limitation", "jurisdictional-limitation",
