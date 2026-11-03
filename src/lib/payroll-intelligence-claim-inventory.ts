@@ -22,10 +22,20 @@ export type EditorialClaim = {
   approvalAt: null;
 };
 
+/** Deterministic non-cryptographic content fingerprint; identity changes if assertion changes. */
+function fingerprint(value: string): string {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index++) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
 export const editorialClaimInventory: readonly EditorialClaim[] = briefings.flatMap(b => {
   const domainId = b.domain.slice(0, 2);
-  return b.keyPoints.map((claimText, index) => ({
-    id: `PSE-PI-D${domainId}-C${String(index + 1).padStart(2, "0")}`,
+  return b.keyPoints.map(claimText => ({
+    id: `PSE-PI-D${domainId}-${fingerprint(`${b.slug}:${claimText}`)}`,
     briefingSlug: b.slug,
     domainId,
     claimText,
