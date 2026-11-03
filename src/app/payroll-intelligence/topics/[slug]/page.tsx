@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { domains } from "@/lib/payroll-intelligence";
 import { controlPlanBySlug } from "@/lib/payroll-intelligence-controls";
+import { noticesByDomain } from "@/lib/payroll-intelligence-editorial-notices";
 type Props={params:Promise<{slug:string}>};
 export function generateStaticParams(){return domains.map(d=>({slug:d.slug}));}
 export async function generateMetadata({params}:Props):Promise<Metadata>{
@@ -14,6 +15,7 @@ export async function generateMetadata({params}:Props):Promise<Metadata>{
 export default async function DomainPage({params}:Props){
  const {slug}=await params;const d=domains.find(v=>v.slug===slug);if(!d)notFound();
  const plan=controlPlanBySlug[slug];if(!plan)notFound();
+ const notices=noticesByDomain(d.id);
  return <><Navbar/><main className="pt-24 min-h-screen bg-ice-light px-6 pb-20"><article className="max-w-4xl mx-auto">
  <Link href="/payroll-intelligence" className="text-blue-accent underline text-sm">← All domains</Link>
  <p className="font-mono text-sm text-steel mt-10 mb-3">DOMAIN {d.id} · EDUCATIONAL COVERAGE</p>
@@ -28,6 +30,14 @@ export default async function DomainPage({params}:Props){
  <h3 className="text-xl font-semibold mb-3">Example evidence</h3><ul className="list-disc pl-6 space-y-3 mb-6 text-text-secondary">{plan.evidence.map(v=><li key={v}>{v}</li>)}</ul>
  <h3 className="text-xl font-semibold mb-3">Starting source or framework</h3><a href={plan.source.url} target="_blank" rel="noopener noreferrer" className="text-blue-accent underline">{plan.source.name}</a>
  <p className="mt-4 text-sm text-text-secondary">{plan.caveat}</p></div>
+ {notices.length>0 && <section aria-labelledby="qualification-title" className="bg-white rounded-xl border border-border p-7 mb-8">
+ <h2 id="qualification-title" className="text-2xl font-semibold mb-3">Important scope and source qualifications</h2>
+ <p className="text-sm text-text-secondary mb-6">These educational notices explain source limitations and PSE recommendations. They are not independently certified legal conclusions.</p>
+ <div className="space-y-6">{notices.map(n=><div key={n.claimId} className="border-l-2 border-steel-200 pl-4">
+ <h3 className="font-semibold text-navy mb-2">{n.heading}</h3>
+ <p className="text-text-secondary leading-relaxed">{n.wording}</p>
+ {n.source && <p className="text-sm mt-2"><a href={n.source.url} className="underline text-blue-accent" target="_blank" rel="noopener noreferrer">{n.source.label}</a></p>}
+ </div>)}</div></section>}
  <p className="text-text-secondary mb-6">This topic index is an educational planning aid; it does not represent complete statutory guidance for every jurisdiction or employer. Current primary legal authorities and effective dates govern.</p>
  <Link href="/payroll-intelligence/briefings" className="text-blue-accent underline">Explore source-linked federal briefings</Link>
  </article></main><Footer/></>;
