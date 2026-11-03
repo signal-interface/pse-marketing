@@ -136,7 +136,7 @@ export function ComplianceEstimator() {
         <div className="est-results" id="estimator-results">
 
           <div className="est-results__header">
-            <p className="est-results__eyebrow">Estimated annual exposure</p>
+            <p className="est-results__eyebrow">Illustrative modeled annual exposure</p>
             <div className="est-results__total">
               {formatCurrency(results.totalAnnualExposure)}
             </div>
@@ -236,9 +236,7 @@ export function ComplianceEstimator() {
           )}
 
           <div className="est-disclaimer">
-            Estimates use industry benchmark data — not PSE client outcomes.
-            Actual exposure varies by payroll structure, error history,
-            and jurisdiction. Sources: {results.sources.join(' · ')}
+            This scenario uses public benchmark references and PSE internal assumptions, including a 33% employer-error calibration, estimated deposit amounts, investigation probability and industry/state multipliers. The 33% assumption is not a verified IRS or DOL statistic. Results are illustrative, not predicted losses or PSE client outcomes. Actual exposure varies by payroll structure, error history, and jurisdiction. References: {results.sources.join(' · ')}
           </div>
 
           <button
