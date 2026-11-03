@@ -27,7 +27,7 @@ describe("state-source educational batch 02",()=>{
  it("renders full 15-state directory and dynamic source-cited routes as noindex",()=>{
   const index=readFileSync("src/app/payroll-intelligence/state-sources/page.tsx","utf8");
   const page=readFileSync("src/app/payroll-intelligence/state-sources/[state]/page.tsx","utf8");
-  expect(index).toContain("additionalStateBriefings.map");
+  expect(index).toContain("StateSourceExplorer");
   expect(page).toContain("allBriefings.map");
   expect(page).toContain("additionalStateBriefings.find");
   expect(page).toContain("b.finding");
