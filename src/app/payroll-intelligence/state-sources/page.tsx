@@ -10,6 +10,7 @@ import { stateBatch04Briefings } from "@/lib/payroll-intelligence-state-batch04"
 import { stateBatch05Briefings } from "@/lib/payroll-intelligence-state-batch05";
 import { stateBatch06Briefings } from "@/lib/payroll-intelligence-state-batch06";
 import { stateBatch07Briefings } from "@/lib/payroll-intelligence-state-batch07";
+import { stateBatch08Briefings } from "@/lib/payroll-intelligence-state-batch08";
 
 export const metadata: Metadata = {
  title: "State Payroll Source Directory | PSE Payroll Intelligence",
@@ -29,7 +30,7 @@ export default function StatePayrollSources() {
    <Link href="/payroll-intelligence" className="text-blue-accent underline text-sm">← Payroll Intelligence</Link>
    <p className="font-mono text-sm text-steel mt-9 mb-3">STATE SOURCE DIRECTORY · RESEARCH REFERENCE</p>
    <h1 className="text-4xl font-bold text-navy mb-5">Explore official state payroll sources</h1>
-   <p className="text-lg text-text-secondary max-w-4xl mb-6">These agency and legislative references are research starting points for selected payroll topics in 35 states. They are not complete state compliance profiles, legal conclusions, current rate tables, or instructions to configure payroll.</p>
+   <p className="text-lg text-text-secondary max-w-4xl mb-6">These agency and legislative references are research starting points for selected payroll topics in all 50 states and Washington, D.C.. They are not complete state compliance profiles, legal conclusions, current rate tables, or instructions to configure payroll.</p>
    <aside className="bg-white border border-border rounded-xl p-6 mb-10">
     <h2 className="text-xl font-semibold mb-3">How to use this directory</h2>
     <p className="text-text-secondary">Open the official source, confirm the current statutory text and effective date, then evaluate the employer, employee, industry, locality, exemptions, and any special authorization. Source location alone does not establish legal applicability. A full jurisdiction-by-jurisdiction library remains under development.</p>
@@ -114,6 +115,19 @@ export default function StatePayrollSources() {
     <h2 id="batch07-state-sources" className="text-2xl font-bold text-navy mb-4">More state wage-payment references</h2>
     <p className="text-text-secondary mb-6">Four additional official-source educational summaries, with final-pay deadlines, variable pay and policy exceptions kept distinct.</p>
     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">{stateBatch07Briefings.map(s=><article key={s.state} className="bg-white border border-border rounded-xl p-6">
+      <p className="font-mono text-sm text-steel mb-2">{s.state}</p>
+      <h3 className="text-xl font-semibold text-navy mb-3">{s.stateName}</h3>
+      <p className="text-sm font-semibold mb-3">{s.topic}</p>
+      <p className="text-sm text-text-secondary mb-4">What to review: {s.caution}</p>
+      <p className="text-sm text-text-secondary mb-3">Official authority: {s.agency} — {s.pinpoint}</p>
+      <Link href={`/payroll-intelligence/state-sources/${s.state.toLowerCase()}`} className="text-blue-accent underline text-sm font-semibold">Read source-linked educational briefing</Link>
+      <p className="mt-3"><a href={s.sourceUrl} className="underline text-blue-accent text-sm" target="_blank" rel="noopener noreferrer">Open official source</a></p>
+    </article>)}</div>
+   </section>
+   <section className="mt-12" aria-labelledby="complete-geography-state-sources">
+    <h2 id="complete-geography-state-sources" className="text-2xl font-bold text-navy mb-4">Further state and D.C. introductory references</h2>
+    <p className="text-text-secondary mb-6">Sixteen additional official-source educational summaries, with important legal distinctions, effective-date limitations and payroll-specific exceptions. Geographic presence does not mean full regulatory coverage.</p>
+    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">{stateBatch08Briefings.map(s=><article key={s.state} className="bg-white border border-border rounded-xl p-6">
       <p className="font-mono text-sm text-steel mb-2">{s.state}</p>
       <h3 className="text-xl font-semibold text-navy mb-3">{s.stateName}</h3>
       <p className="text-sm font-semibold mb-3">{s.topic}</p>

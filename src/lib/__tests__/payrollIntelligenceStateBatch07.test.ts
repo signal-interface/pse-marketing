@@ -34,6 +34,6 @@ describe("state-source education batch07",()=>{
   expect(page).toContain("index:false");
   expect(page).toContain("b.caution");
   expect(index).toContain("stateBatch07Briefings.map");
-  expect(index).toContain("selected payroll topics in 35 states");
+  expect(index).toContain("selected payroll topics in all 50 states and Washington, D.C.");
  });
 });
