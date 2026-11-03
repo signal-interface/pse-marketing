@@ -9,6 +9,12 @@ All items remain unapproved, noindex and outside public navigation.
 | PSE-PI-2026-002 | Federal withholding assurance | IRS Publication 15-T (2026) | Editorial draft | Candidate Q4 |
 | PSE-PI-2026-003 | Employment-tax deposit assurance | IRS Publication 15 (2026) §11 | Editorial draft | Candidate Q4 |
 | PSE-PI-2026-004 | FLSA record retention | DOL Fact Sheet #21 | Editorial draft | Candidate Q4 |
+| PSE-PI-2026-005 | Worker classification, federal employment tax | IRS Publication 15-A (2026) | Editorial draft; federal only | Candidate Q4 |
+| PSE-PI-2026-006 | Regular-rate overtime review | DOL Fact Sheets #56A and #23 | Editorial draft; federal only | Candidate Q4 |
+| PSE-PI-2026-007 | Fringe-benefit taxability | IRS Publication 15-B (2026) | Editorial draft; federal only | Candidate Q4 |
+| PSE-PI-2026-008 | Health FSA election and deduction assurance | IRS Publication 15-B (2026) | Editorial draft; plan-year specific | Candidate Q4 |
+
+**Scope note:** The entry count is eight because the first FICA overview is separate from the seven structured assurance briefings. Each is an editorial draft, and the site currently exposes no approved regulatory articles.
 
 ## Review workflow for every entry
 1. Confirm source title/version, government authority, current URL, content validity, tax year and effective date.
