@@ -14,14 +14,14 @@ A typed state source intake now covers eleven jurisdictions: NY, NJ, CT, CA, WA,
 |---|---|---|---|---|
 | NY | Payday frequency | https://dol.ny.gov/frequency-pay | Manual worker weekly and clerical/other twice monthly, worker-specific exemptions and permits | NY Labor Law §191, categories and manual-worker permit |
 | NJ | Payday frequency | https://www.nj.gov/labor/wageandhour/tools-resources/laws/selectedstatelaborlaws.shtml | N.J.S.A. 34:11-4.2 | Covered classes, collective bargaining exceptions |
-| CT | Payday frequency | https://portal.ct.gov/dol/divisions/wage-and-workplace-standards/wage-and-hour | Conn. Gen. Stat. §§31-71b, 31-71i | Weekly pay and commissioner waivers |
+| CT | Payday frequency | https://www.cga.ct.gov/current/pub/chap_558.htm | Conn. Gen. Stat. §§31-71b, 31-71i | Weekly or biweekly pay under §31-71b(a)(1); commissioner-authorized less-frequent schedules under §31-71i |
 | CA | Final wages | https://www.dir.ca.gov/dlse/faq_paydays.htm | Labor Code §§201–203 | Discharge versus quitting, 72-hour notice, commissions, penalties |
 | WA | Final wages | https://lni.wa.gov/workers-rights/wages/getting-paid/ | Paychecks / Final paychecks | Separate benefit, leave, deductions and local rules |
 | IL | Final wages | https://labor.illinois.gov/faqs/wage-payment-faq.html | FAQ Q8/Q11; 820 ILCS 115/5 | Earned vacation, contract-defined bonus/commissions |
 | CO | Pay periods | https://cdle.colorado.gov/sites/cdle/files/colorado_wage_act_revised_august_6_2025.pdf | C.R.S. §8-4-103(1)(a) | Confirm amendments, local overlays and permitted alternatives |
-| FL | Minimum wage | https://floridajobs.org/florida-minimum-wage | $15 from 2026-09-30, as stated by Florida Department of Commerce | Tipped work, coverage, 2027 rule currency |
+| FL | Minimum wage | https://floridajobs.org/florida-minimum-wage | $15 from 2026-09-30 through 2027-12-31 per Florida Department of Commerce; confirm later updates | Tipped work, coverage, 2027 rule currency |
 | GA | Minimum wage | https://dol.georgia.gov/minimum-wage | State/federal interaction and O.C.G.A. §34-4-3 | Covered worker, higher controlling federal rate |
-| PA | Wage payment | https://www.pa.gov/services/dli/file-a-wage-payment-and-collection-complaint | Wage Payment and Collection Law | October 22, 2026 Act 101; effective 2026-12-21 requires separate review |
+| PA | Wage payment | https://www.pa.gov/services/dli/file-a-wage-payment-and-collection-complaint | Wage Payment and Collection Law | WPCL wage-payment requirements are distinct from Act 101 of 2026, a Prevailing Wage Act amendment effective 2026-12-21 |
 | TX | Final wages | https://efte.twc.texas.gov/final_pay.html | Tex. Labor Code §61.014 | Involuntary versus voluntary termination; commission/benefit agreements |
 
 ### Authority hierarchy
@@ -69,3 +69,12 @@ State regulatory public articles remain withheld until Phase C.
 
 ## PSE Context Hub — review after Phase A
 Conduct a read-only inventory of the PSE Context Hub and identify reuse opportunities for source metadata, document classification, searchable citations, change detection, quarterly jobs, evidence provenance and editorial approvals. Do NOT assume the Context Hub is an approved source of payroll law or grant it publication authority. No builds, integrations, repo modifications or product-priority changes without separate authorization.
+
+## Marketing-only public reference surface
+
+A public-facing `/payroll-intelligence/state-sources` educational directory is proposed in this branch. It shows each state, the selected topic, official-source link, precise starting authority and caveat; it deliberately **does not render preliminaryStatement values** or claim rule-specific verification. Its `noindex` metadata avoids treating a research starting point as a finished searchable 50-state compliance product. The directory is linked from the framework landing page. No new operational authority is created; PSE Context Hub remains the intended owner of governed regulatory data after a separately approved future integration.
+
+### Mandatory corrections before publishing
+- Connecticut: §31-71b(a)(1) expressly permits pay weekly **or once every two weeks** for generally covered workers; §31-71i governs commissioner authorization for a less frequent schedule. Prefer current statute over the outdated agency weekly-only overview. https://www.cga.ct.gov/current/pub/chap_558.htm
+- Pennsylvania: Act 101 of 2026 amends the **Prevailing Wage Act**, not the general Wage Payment and Collection Law; signed 2026-10-22 and effective 2026-12-21. Separate prevailing wage for public works from general wage payment. https://www.palegis.us/legislation/bills/2025/SB908
+- Florida: Florida Department of Commerce identifies the statewide $15 hourly minimum from 2026-09-30 through 2027-12-31. Tipped pay, coverage and later source changes remain separate applicability questions. https://floridajobs.org/florida-minimum-wage
