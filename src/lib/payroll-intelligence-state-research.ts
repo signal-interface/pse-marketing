@@ -39,10 +39,10 @@ export const stateSourceIntake: readonly StateSourceIntake[] = [
   },
   {
     state:"CT",stateName:"Connecticut",topic:"wage-payment",
-    preliminaryStatement:"Connecticut generally requires weekly wages on a designated payday; the Labor Commissioner may permit less-frequent paydays upon application.",
-    authority:{agency:"Connecticut Department of Labor",title:"Wage and Hour — Minimum Wage/Overtime",url:"https://portal.ct.gov/dol/divisions/wage-and-workplace-standards/wage-and-hour",pinpoint:"Weekly Pay Requirement, Conn. Gen. Stat. §31-71b; Waiver of Payment Schedule Requirement, §31-71i",kind:"agency-guidance"},
+    preliminaryStatement:"Connecticut General Statutes §31-71b(a)(1) provides weekly or once-every-two-weeks payment for generally covered employees; §31-71i addresses commissioner-authorized less-frequent schedules.",
+    authority:{agency:"Connecticut General Assembly",title:"Chapter 558 — Wages (current statutes)",url:"https://www.cga.ct.gov/current/pub/chap_558.htm",pinpoint:"Conn. Gen. Stat. §31-71b(a)(1), weekly or every two weeks; §31-71i, commissioner waiver",kind:"statute"},
     sourceCheckedOn:"2026-11-03",effectiveDateStatus:"needs-rule-specific-verification",applicabilityStatus:"unassessed",localOverlayStatus:"not-reviewed",reviewStatus:"research-intake",authorizedForPublicRegulatoryClaims:false,
-    caveat:"Verify whether an employer has the relevant authorization and whether specialized employment categories require different treatment.",
+    caveat:"The agency overview may still describe a weekly default; the controlling statutory wording permits weekly or biweekly payment. Check special categories and commissioner-authorized alternatives.",
   },
   {
     state:"CA",stateName:"California",topic:"final-wages",
@@ -77,7 +77,7 @@ export const stateSourceIntake: readonly StateSourceIntake[] = [
     preliminaryStatement:"Florida's Department of Commerce states the statewide minimum wage became $15.00 per hour effective September 30, 2026.",
     authority:{agency:"Florida Department of Commerce",title:"Florida Minimum Wage",url:"https://floridajobs.org/florida-minimum-wage",pinpoint:"Florida's Minimum Wage — effective September 30, 2026",kind:"agency-guidance"},
     sourceCheckedOn:"2026-11-03",effectiveDateStatus:"needs-rule-specific-verification",applicabilityStatus:"unassessed",localOverlayStatus:"not-reviewed",reviewStatus:"research-intake",authorizedForPublicRegulatoryClaims:false,
-    caveat:"Review tipped-employee treatment, coverage, Florida constitutional provisions, and any superseding rate notice; 2027 status needs separate review.",
+    caveat:"Official state guidance identifies the $15 hourly rate as applicable September 30, 2026 through December 31, 2027; separately review tipped-employee treatment, covered workers, exemptions, and later notices.",
   },
   {
     state:"GA",stateName:"Georgia",topic:"minimum-wage",
@@ -91,7 +91,7 @@ export const stateSourceIntake: readonly StateSourceIntake[] = [
     preliminaryStatement:"Pennsylvania's Wage Payment and Collection Law governs agreed wage-payment timing, methods, deductions and payroll records.",
     authority:{agency:"Pennsylvania Department of Labor & Industry",title:"Wage Payment and Collection Complaint",url:"https://www.pa.gov/services/dli/file-a-wage-payment-and-collection-complaint",pinpoint:"Wage Payment and Collection Law overview",kind:"agency-guidance"},
     sourceCheckedOn:"2026-11-03",effectiveDateStatus:"needs-rule-specific-verification",applicabilityStatus:"unassessed",localOverlayStatus:"not-reviewed",reviewStatus:"research-intake",authorizedForPublicRegulatoryClaims:false,
-    caveat:"Pennsylvania posted that Act 101 of 2026 takes effect December 21, 2026; check scope and legislative changes before publication or operational reliance.",
+    caveat:"The Wage Payment and Collection Law is distinct from Act 101 of 2026, which amends the Prevailing Wage Act (public-works scope), effective December 21, 2026. Do not describe Act 101 as changing general pay frequency.",
   },
   {
     state:"TX",stateName:"Texas",topic:"final-wages",
