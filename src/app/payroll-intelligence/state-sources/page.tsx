@@ -25,7 +25,7 @@ export default function StatePayrollSources(){
     <p className="text-sm mt-4"><Link href="/payroll-intelligence/methodology" className="text-blue-accent underline">Read the editorial methodology</Link></p>
    </aside>
    <StateSourceExplorer entries={stateDirectoryEntries} topics={stateDirectoryTopics}/>
-   <aside className="text-sm text-text-secondary mt-10">These materials do not publish PSE's unratified operational Final Pay seed or PSE Context Hub rules and do not make employer-specific payroll determinations.</aside>
+   <aside className="text-sm text-text-secondary mt-10">These materials do not publish PSE&apos;s unratified operational Final Pay seed or PSE Context Hub rules and do not make employer-specific payroll determinations.</aside>
   </div>
  </main><Footer/></>;
 }
