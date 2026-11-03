@@ -8,14 +8,15 @@ import { stateBriefings } from "@/lib/payroll-intelligence-state-briefings";
 import { additionalStateBriefings } from "@/lib/payroll-intelligence-state-expansion";
 import { furtherStateBriefings } from "@/lib/payroll-intelligence-state-batch03";
 import { stateBatch04Briefings } from "@/lib/payroll-intelligence-state-batch04";
-const allBriefings = [...stateBriefings, ...additionalStateBriefings, ...furtherStateBriefings, ...stateBatch04Briefings];
+import { stateBatch05Briefings } from "@/lib/payroll-intelligence-state-batch05";
+const allBriefings = [...stateBriefings, ...additionalStateBriefings, ...furtherStateBriefings, ...stateBatch04Briefings, ...stateBatch05Briefings];
 
 type Props = { params: Promise<{state: string}> };
 export function generateStaticParams(){return allBriefings.map(b=>({state:b.state.toLowerCase()}));}
 export async function generateMetadata({params}:Props):Promise<Metadata>{
  const {state}=await params;
  const b=allBriefings.find(x=>x.state.toLowerCase()===state.toLowerCase());
- const s=stateSourceIntake.find(x=>x.state===b?.state) ?? additionalStateBriefings.find(x=>x.state===b?.state) ?? furtherStateBriefings.find(x=>x.state===b?.state) ?? stateBatch04Briefings.find(x=>x.state===b?.state);
+ const s=stateSourceIntake.find(x=>x.state===b?.state) ?? additionalStateBriefings.find(x=>x.state===b?.state) ?? furtherStateBriefings.find(x=>x.state===b?.state) ?? stateBatch04Briefings.find(x=>x.state===b?.state) ?? stateBatch05Briefings.find(x=>x.state===b?.state);
  return {title:b&&s?`${s.stateName}: ${b.topic} | PSE Payroll Intelligence`:"Briefing not found",
  description:"Source-linked state payroll educational briefing; employer applicability and local exceptions require separate verification.",
  robots:{index:false,follow:false}};
@@ -23,7 +24,7 @@ export async function generateMetadata({params}:Props):Promise<Metadata>{
 export default async function StateBriefingPage({params}:Props){
  const {state}=await params;
  const b=allBriefings.find(x=>x.state.toLowerCase()===state.toLowerCase());
- const s=stateSourceIntake.find(x=>x.state===b?.state) ?? additionalStateBriefings.find(x=>x.state===b?.state) ?? furtherStateBriefings.find(x=>x.state===b?.state) ?? stateBatch04Briefings.find(x=>x.state===b?.state);
+ const s=stateSourceIntake.find(x=>x.state===b?.state) ?? additionalStateBriefings.find(x=>x.state===b?.state) ?? furtherStateBriefings.find(x=>x.state===b?.state) ?? stateBatch04Briefings.find(x=>x.state===b?.state) ?? stateBatch05Briefings.find(x=>x.state===b?.state);
  if(!b||!s)notFound();
  return <><Navbar/><main className="pt-24 pb-20 px-6 bg-ice-light min-h-screen"><article className="max-w-4xl mx-auto">
  <Link href="/payroll-intelligence/state-sources" className="text-sm text-blue-accent underline">← State source directory</Link>
