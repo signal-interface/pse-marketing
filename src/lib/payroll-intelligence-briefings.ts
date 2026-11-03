@@ -149,4 +149,197 @@ export const briefings:Briefing[]=[
   ],
   sources:[{title:"IRS Publication 15-B (2026), cafeteria plans and health FSAs",url:"https://www.irs.gov/publications/p15b",relevance:"2026 health FSA salary-reduction limit and cafeteria plan requirements"}],
  },
+,
+{
+  "slug": "payday-frequency-review",
+  "title": "Pay frequency and final wages",
+  "domain": "05 · Employee Pay Delivery",
+  "summary": "State payday requirements differ, including timing and worker-category exceptions.",
+  "checked": "2026-11-03",
+  "status": "editorial-draft",
+  "keyPoints": [
+    "The DOL state payday table is historical and cannot replace current state labor-agency review.",
+    "The content is a federal or general control starting point; review the employer's applicable state, local and cross-border obligations before relying on it."
+  ],
+  "controlChecklist": [
+    "Validate pay frequency, final-pay rules, worksite and payment methods by jurisdiction.",
+    "Review termination samples, pay statements, payment evidence and approved exceptions.",
+    "Record source versions, reviewer decisions, applicability exceptions and corrective action approvals."
+  ],
+  "sources": [
+    {
+      "title": "U.S. DOL state payday requirements",
+      "url": "https://www.dol.gov/agencies/whd/state/payday",
+      "relevance": "Primary federal or general guidance; editorial control mapping is independently authored"
+    }
+  ]
+},
+{
+  "slug": "unemployment-tax-review",
+  "title": "Unemployment tax account assurance",
+  "domain": "07 · Unemployment & Disability Programs",
+  "summary": "FUTA and state unemployment insurance require distinct account and wage-base controls.",
+  "checked": "2026-11-03",
+  "status": "editorial-draft",
+  "keyPoints": [
+    "Federal IRS guidance does not replace state agency rate notices, reporting rules or employer account decisions.",
+    "The content is a federal or general control starting point; review the employer's applicable state, local and cross-border obligations before relying on it."
+  ],
+  "controlChecklist": [
+    "Verify employer registrations, rate notices, wage-base setup and state reporting periods.",
+    "Reconcile unemployment liabilities, rate changes, tax returns and exception approvals.",
+    "Record source versions, reviewer decisions, applicability exceptions and corrective action approvals."
+  ],
+  "sources": [
+    {
+      "title": "IRS Publication 15",
+      "url": "https://www.irs.gov/publications/p15",
+      "relevance": "Primary federal or general guidance; editorial control mapping is independently authored"
+    }
+  ]
+},
+{
+  "slug": "garnishment-review",
+  "title": "Wage garnishment controls",
+  "domain": "09 · Payroll Deductions",
+  "summary": "Federal CCPA restrictions and order-specific rules warrant documented payroll review.",
+  "checked": "2026-11-03",
+  "status": "editorial-draft",
+  "keyPoints": [
+    "Federal protections against certain garnishment practices coexist with different rules for child support, taxes and applicable state requirements.",
+    "The content is a federal or general control starting point; review the employer's applicable state, local and cross-border obligations before relying on it."
+  ],
+  "controlChecklist": [
+    "Review order type, disposable earnings methodology and limits supported by current authority.",
+    "Reconcile deductions and maintain order, notice, escalation and remittance evidence.",
+    "Record source versions, reviewer decisions, applicability exceptions and corrective action approvals."
+  ],
+  "sources": [
+    {
+      "title": "DOL Federal Wage Garnishments",
+      "url": "https://www.dol.gov/agencies/whd/wage-garnishment",
+      "relevance": "Primary federal or general guidance; editorial control mapping is independently authored"
+    }
+  ]
+},
+{
+  "slug": "payroll-accounting-assurance",
+  "title": "Payroll financial reconciliation",
+  "domain": "11 · Payroll Accounting & Assurance",
+  "summary": "General-ledger reconciliation is an employer assurance control, not a single federally prescribed journal-entry model.",
+  "checked": "2026-11-03",
+  "status": "editorial-draft",
+  "keyPoints": [
+    "The IRS identifies categories of employment-tax records employers should retain for review; financial controls must also reflect accounting policies.",
+    "The content is a federal or general control starting point; review the employer's applicable state, local and cross-border obligations before relying on it."
+  ],
+  "controlChecklist": [
+    "Map wage, deduction, benefit and tax categories to approved accounts and evidence owners.",
+    "Review unmatched ledger differences, outstanding liability balances and corrections.",
+    "Record source versions, reviewer decisions, applicability exceptions and corrective action approvals."
+  ],
+  "sources": [
+    {
+      "title": "IRS Employment Tax Recordkeeping",
+      "url": "https://www.irs.gov/businesses/small-businesses-self-employed/employment-tax-recordkeeping",
+      "relevance": "Primary federal or general guidance; editorial control mapping is independently authored"
+    }
+  ]
+},
+{
+  "slug": "payroll-technology-controls",
+  "title": "Payroll technology and resilience",
+  "domain": "12 · Payroll Technology & Resilience",
+  "summary": "NIST CSF 2.0 provides voluntary security-risk guidance that can inform PSE assurance checklists.",
+  "checked": "2026-11-03",
+  "status": "editorial-draft",
+  "keyPoints": [
+    "Cybersecurity framework guidance does not by itself establish payroll statutory compliance.",
+    "The content is a federal or general control starting point; review the employer's applicable state, local and cross-border obligations before relying on it."
+  ],
+  "controlChecklist": [
+    "Review access, segregation of duties, change approvals and data-interface ownership.",
+    "Document recovery tests, interface exceptions, privacy review and approvals.",
+    "Record source versions, reviewer decisions, applicability exceptions and corrective action approvals."
+  ],
+  "sources": [
+    {
+      "title": "NIST Cybersecurity Framework",
+      "url": "https://www.nist.gov/cyberframework",
+      "relevance": "Primary federal or general guidance; editorial control mapping is independently authored"
+    }
+  ]
+},
+{
+  "slug": "payroll-leadership-controls",
+  "title": "Payroll operating-model assurance",
+  "domain": "13 · Payroll Management & Leadership",
+  "summary": "PSE recommendations for quality oversight, responsibility mapping and payroll continuity.",
+  "checked": "2026-11-03",
+  "status": "editorial-draft",
+  "keyPoints": [
+    "Leadership controls and performance indicators here are recommended practices rather than requirements issued by the cited agency.",
+    "The content is a federal or general control starting point; review the employer's applicable state, local and cross-border obligations before relying on it."
+  ],
+  "controlChecklist": [
+    "Define control owners, escalation paths, backup coverage and periodic quality reviews.",
+    "Record review completion, aged exceptions, root-cause findings and continuity exercises.",
+    "Record source versions, reviewer decisions, applicability exceptions and corrective action approvals."
+  ],
+  "sources": [
+    {
+      "title": "DOL Employer Resources",
+      "url": "https://www.dol.gov/agencies/whd/employers",
+      "relevance": "Primary federal or general guidance; editorial control mapping is independently authored"
+    }
+  ]
+},
+{
+  "slug": "international-payroll-assessment",
+  "title": "Cross-border payroll review",
+  "domain": "14 · Cross-Border & International Payroll",
+  "summary": "IRS Publication 54 provides U.S. individual-tax context for certain Americans working abroad.",
+  "checked": "2026-11-03",
+  "status": "editorial-draft",
+  "keyPoints": [
+    "U.S. individual income-tax treatment does not alone determine foreign employer withholding, labor-law or social-security duties.",
+    "The content is a federal or general control starting point; review the employer's applicable state, local and cross-border obligations before relying on it."
+  ],
+  "controlChecklist": [
+    "Review residence, country of work, employer entity, treaty and totalization considerations.",
+    "Retain country-specific professional review, assignment records and reconciliation evidence.",
+    "Record source versions, reviewer decisions, applicability exceptions and corrective action approvals."
+  ],
+  "sources": [
+    {
+      "title": "IRS Publication 54 (2025 edition)",
+      "url": "https://www.irs.gov/publications/p54",
+      "relevance": "Primary federal or general guidance; editorial control mapping is independently authored"
+    }
+  ]
+},
+{
+  "slug": "payroll-competency-model",
+  "title": "Professional payroll practice",
+  "domain": "15 · Payroll Capability & Professional Practice",
+  "summary": "An original PSE educational practice model for source literacy, ethics and continuing learning.",
+  "checked": "2026-11-03",
+  "status": "editorial-draft",
+  "keyPoints": [
+    "IRS guidance is a source for federal taxes, not an authority for independent credentialing standards.",
+    "The content is a federal or general control starting point; review the employer's applicable state, local and cross-border obligations before relying on it."
+  ],
+  "controlChecklist": [
+    "Maintain role-specific competency inventories, ethics escalation rules and up-to-date source reviews.",
+    "Use anonymized original exercises and preserve learning, review and approval evidence.",
+    "Record source versions, reviewer decisions, applicability exceptions and corrective action approvals."
+  ],
+  "sources": [
+    {
+      "title": "IRS Employment Taxes",
+      "url": "https://www.irs.gov/businesses/small-businesses-self-employed/employment-taxes",
+      "relevance": "Primary federal or general guidance; editorial control mapping is independently authored"
+    }
+  ]
+}
 ];
