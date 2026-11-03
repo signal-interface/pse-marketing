@@ -11,7 +11,7 @@ export const briefings:Briefing[]=[
  {
   slug:"2026-federal-withholding-control-review",
   title:"Federal withholding: 2026 control review", domain:"06 · Withholding & Employment Taxes",
-  summary:"A payroll assurance checklist to help employers validate the applicability of current IRS withholding methods without suggesting that PSE computes or remits payroll.",
+  summary:"A payroll assurance checklist to help employers validate the applicability of current IRS withholding methods while distinguishing PSE oversight from employer calculation and remittance obligations.",
   checked:"2026-11-03", status:"editorial-draft",
   keyPoints:[
    "Publication 15-T (2026) describes federal income-tax withholding methods, including an automated percentage method and wage-bracket tables.",
@@ -38,7 +38,7 @@ export const briefings:Briefing[]=[
   checked:"2026-11-03", status:"editorial-draft",
   keyPoints:[
    "For Form 941 filers, Publication 15 generally distinguishes monthly from semiweekly deposit schedules using a defined lookback period: $50,000 or less generally corresponds to monthly, and more than $50,000 to semiweekly.",
-   "The deposit schedule is not simply the employer's payroll frequency. The $100,000 next-day deposit rule and other exceptions can affect the obligation.",
+   "The IRS remittance timetable differs from the employer's payroll frequency. The $100,000 next-day deposit rule and other exceptions can affect the obligation.",
    "Applicable federal employment-tax deposits are generally made electronically; narrow exceptions for payment with a return must be evaluated against current IRS rules.",
   ],
   controlChecklist:[
