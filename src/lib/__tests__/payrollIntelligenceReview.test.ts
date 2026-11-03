@@ -39,7 +39,7 @@ describe("claim review release safeguards",()=>{
  });
 
  it("maps nineteen real draft statements to pinpoint official sources",()=>{
-  expect(sourceMappedClaims).toHaveLength(11);
+  expect(sourceMappedClaims).toHaveLength(19);
   expect(new Set(sourceMappedClaims.map(s=>s.claimId)).size).toBe(19);
   expect(sourceMappingProblems).toEqual([]);
   for(const r of sourceMappedClaims){
