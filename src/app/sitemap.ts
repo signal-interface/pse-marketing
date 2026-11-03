@@ -9,7 +9,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
   return routes.map((route) => ({
       url: `${SITE.url}${route === "/" ? "" : route}`,
-      lastModified: new Date(),
+      // Do not assert a modification date without a documented content revision.
+      // Editorial publication dates may be added per route after source verification.
       changeFrequency: "weekly",
       priority: route === "/" ? 1 : 0.7,
     }));
