@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { stateSourceIntake } from "@/lib/payroll-intelligence-state-research";
 import { stateBriefings } from "@/lib/payroll-intelligence-state-briefings";
+import { additionalStateBriefings } from "@/lib/payroll-intelligence-state-expansion";
 
 export const metadata: Metadata = {
  title: "State Payroll Source Directory | PSE Payroll Intelligence",
@@ -23,7 +24,7 @@ export default function StatePayrollSources() {
    <Link href="/payroll-intelligence" className="text-blue-accent underline text-sm">← Payroll Intelligence</Link>
    <p className="font-mono text-sm text-steel mt-9 mb-3">STATE SOURCE DIRECTORY · RESEARCH REFERENCE</p>
    <h1 className="text-4xl font-bold text-navy mb-5">Explore official state payroll sources</h1>
-   <p className="text-lg text-text-secondary max-w-4xl mb-6">These agency and legislative references are research starting points for selected payroll topics in 11 states. They are not complete state compliance profiles, legal conclusions, current rate tables, or instructions to configure payroll.</p>
+   <p className="text-lg text-text-secondary max-w-4xl mb-6">These agency and legislative references are research starting points for selected payroll topics in 15 states. They are not complete state compliance profiles, legal conclusions, current rate tables, or instructions to configure payroll.</p>
    <aside className="bg-white border border-border rounded-xl p-6 mb-10">
     <h2 className="text-xl font-semibold mb-3">How to use this directory</h2>
     <p className="text-text-secondary">Open the official source, confirm the current statutory text and effective date, then evaluate the employer, employee, industry, locality, exemptions, and any special authorization. Source location alone does not establish legal applicability. A full jurisdiction-by-jurisdiction library remains under development.</p>
@@ -39,6 +40,19 @@ export default function StatePayrollSources() {
     <p className="text-xs text-text-secondary mt-3">Reviewed scope: {stateBriefings.find(b=>b.state===s.state)?.topic ?? "Source reference"}</p>
     <p className="mt-3"><a href={s.authority.url} className="underline text-blue-accent text-sm" rel="noopener noreferrer" target="_blank">Open original authority</a></p>
    </article>)}</div>
+   <section className="mt-12" aria-labelledby="additional-states">
+    <h2 id="additional-states" className="text-2xl font-bold text-navy mb-4">Additional state references</h2>
+    <p className="text-text-secondary mb-6">Four further official-source payroll briefings. These are narrow educational summaries, not complete state legal profiles.</p>
+    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">{additionalStateBriefings.map(s=><article key={s.state} className="bg-white border border-border rounded-xl p-6">
+      <p className="font-mono text-sm text-steel mb-2">{s.state}</p>
+      <h3 className="text-xl font-semibold text-navy mb-3">{s.stateName}</h3>
+      <p className="text-sm font-semibold mb-3">{s.topic}</p>
+      <p className="text-sm text-text-secondary mb-4">What to review: {s.caution}</p>
+      <p className="text-sm text-text-secondary mb-3">Source: {s.agency} — {s.pinpoint}</p>
+      <Link href={`/payroll-intelligence/state-sources/${s.state.toLowerCase()}`} className="text-blue-accent underline text-sm font-semibold">Read source-linked educational briefing</Link>
+      <p className="mt-3"><a href={s.sourceUrl} className="underline text-blue-accent text-sm" target="_blank" rel="noopener noreferrer">Open official source</a></p>
+    </article>)}</div>
+   </section>
    <p className="text-sm text-text-secondary mt-10">This directory does not publish the unratified 51-jurisdiction final-pay seed or operational PSE Context Hub rules. It does not make employer-specific determinations.</p>
   </div>
  </main><Footer/></>;
