@@ -30,7 +30,7 @@ describe("PSE state payroll batch 03 source and marketing boundaries",()=>{
   expect(detail).toContain("...furtherStateBriefings");
   expect(detail).toContain("index:false");
   expect(detail).toContain("b.caution");
-  expect(index).toContain("furtherStateBriefings.map");
-  expect(index).toContain("selected payroll topics in all 50 states and Washington, D.C.");
+  expect(index).toContain("StateSourceExplorer");
+  expect(index).toContain("all 50 states and Washington, D.C.");
  });
 });
