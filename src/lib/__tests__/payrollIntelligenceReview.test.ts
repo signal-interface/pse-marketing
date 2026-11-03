@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { editorialClaimInventory } from "../payroll-intelligence-claim-inventory";
+import { sourceMappedClaims, sourceMappingProblems } from "../payroll-intelligence-source-mappings";
 import { editorialPublicationAuthorized, initialClaimReviewRecords, inspectClaimReview, type ClaimReview } from "../payroll-intelligence-review";
 
 const base = (): ClaimReview => ({
@@ -13,6 +14,20 @@ const base = (): ClaimReview => ({
 });
 
 describe("claim review release safeguards",()=>{
+ it("maps only nine real draft statements to pinpoint official sources",()=>{
+  expect(sourceMappedClaims).toHaveLength(9);
+  expect(new Set(sourceMappedClaims.map(s=>s.claimId)).size).toBe(9);
+  expect(sourceMappingProblems).toEqual([]);
+  for(const r of sourceMappedClaims){
+   expect(r.status).toBe("source-mapped");
+   expect(r.source?.pinpoint.length).toBeGreaterThan(12);
+   expect(r.source?.checkedDate).toBe("2026-11-03");
+   expect(r.applicability).toBeNull();
+   expect(r.reviewer).toBeNull();
+  }
+  expect(editorialPublicationAuthorized).toBe(false);
+ });
+
  it("starts with exactly one evidence-free record per draft claim",()=>{
   expect(initialClaimReviewRecords.length).toBe(editorialClaimInventory.length);
   expect(new Set(initialClaimReviewRecords.map(r=>r.claimId)).size).toBe(initialClaimReviewRecords.length);
