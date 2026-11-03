@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { domains } from "../payroll-intelligence";
 import { domainControlPlans, controlPlanBySlug } from "../payroll-intelligence-controls";
 import { briefings } from "../payroll-intelligence-briefings";
+import { editorialClaimInventory, claimsAreApproved } from "../payroll-intelligence-claim-inventory";
 
 describe("payroll intelligence editorial coverage contract", () => {
  it("defines exactly 15 unique domains and matching review plans", () => {
@@ -19,6 +20,26 @@ describe("payroll intelligence editorial coverage contract", () => {
    expect(plan?.evidence.length).toBeGreaterThanOrEqual(3);
    expect(plan?.caveat.length).toBeGreaterThan(15);
    expect(plan?.source.url).toMatch(/^https:\/\//);
+  }
+ });
+ it("accounts for every individual source-sensitive claim without issuing approval", () => {
+  const expected = briefings.reduce((count,b)=>count+b.keyPoints.length,0);
+  expect(editorialClaimInventory.length).toBe(expected);
+  expect(new Set(editorialClaimInventory.map(c=>c.id)).size).toBe(expected);
+  expect(claimsAreApproved(editorialClaimInventory)).toBe(false);
+  for(const b of briefings){
+   const claims=editorialClaimInventory.filter(c=>c.briefingSlug===b.slug);
+   expect(claims.map(c=>c.claimText)).toEqual(b.keyPoints);
+   for(const c of claims){
+    expect(c.evidenceStatus).toBe("unreviewed");
+    expect(c.applicabilityStatus).toBe("unassessed");
+    expect(c.effectiveFrom).toBeNull();
+    expect(c.exactAuthoritySection).toBeNull();
+    expect(c.reviewer).toBeNull();
+    expect(c.approver).toBeNull();
+    expect(c.approvalAt).toBeNull();
+    expect(c.candidateAuthorities.length).toBeGreaterThan(0);
+   }
   }
  });
  it("keeps draft briefings distinguished from approved articles",()=>{
