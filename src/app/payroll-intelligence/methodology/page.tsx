@@ -11,7 +11,7 @@ export default function MethodologyPage(){return <><Navbar/><main className="pt-
  <h2 className="text-2xl font-semibold mb-3">Verification and publication</h2><ol className="list-decimal pl-6 space-y-3 mb-7">
  <li>Identify the rule, affected workers or employers, jurisdiction, effective date and original source.</li>
  <li>Draft an original interpretation and map it to payroll inputs, outputs, preventive controls and review evidence.</li>
- <li>Perform payroll subject-matter review and, where appropriate, independent legal or tax review.</li>
+ <li>Obtain payroll subject-matter review and, where appropriate, independent legal or tax review.</li>
  <li>Approve and version the article; retain citations, editorial decision and change log.</li>
  <li>Publish quarterly updates plus material interim corrections, without silently rewriting historical editions.</li>
  </ol>
