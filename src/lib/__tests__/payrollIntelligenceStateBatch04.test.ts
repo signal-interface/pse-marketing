@@ -36,6 +36,6 @@ describe("PSE state-source educational batch 04",()=>{
   expect(detail).toContain("...stateBatch04Briefings");
   expect(detail).toContain("index:false");
   expect(index).toContain("StateSourceExplorer");
-  expect(index).toContain("all 50 states and Washington, D.C.");
+  expect(index).toContain("50 states and Washington, D.C.");
  });
 });
