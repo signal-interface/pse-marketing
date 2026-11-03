@@ -4,6 +4,7 @@ import { sourceMappedClaims, sourceMappingProblems } from "../payroll-intelligen
 import { getClaimCoverage } from "../payroll-intelligence-coverage";
 import { claimTriage, claimTriageMetrics } from "../payroll-intelligence-claim-triage";
 import { nonlegalReviewTickets, getCandidateReleaseGates, candidateReleaseAllowed, validateEditorialQueue } from "../payroll-intelligence-publication-preflight";
+import { makeEditorialReviewHandoff } from "../payroll-intelligence-review-handoff";
 import { editorialPublicationAuthorized, initialClaimReviewRecords, inspectClaimReview, type ClaimReview } from "../payroll-intelligence-review";
 
 const base = (): ClaimReview => ({
@@ -17,6 +18,22 @@ const base = (): ClaimReview => ({
 });
 
 describe("claim review release safeguards",()=>{
+ it("generates a reviewer packet with one unapproved assignment per claim",()=>{
+  const packet=makeEditorialReviewHandoff();
+  expect(packet.framework).toBe("PSE-PI-2026-Q4");
+  expect(packet.publicationDecision).toBe("HOLD");
+  expect(packet.domains).toBe(15);
+  expect(packet.claims).toBe(38);
+  expect(packet.sourceReviewRequests).toBe(19);
+  expect(packet.editorialDispositionRequests).toBe(19);
+  expect(packet.completedHumanReviews).toBe(0);
+  expect(packet.blockingGates).toContain("owner-publication-authorisation");
+  expect(new Set(packet.items.map(i=>i.claimId)).size).toBe(38);
+  expect(packet.items.every(i=>i.reviewDecision==="not-started" && i.assignedReviewer===null && !i.releaseApproval)).toBe(true);
+  expect(packet.items.filter(i=>i.reviewTrack==="regulatory-support").every(i=>Boolean(i.candidateSource?.pinpoint))).toBe(true);
+  expect(packet.items.filter(i=>i.reviewTrack==="editorial-disposition").every(i=>i.candidateSource===null)).toBe(true);
+ });
+
  it("creates exactly nineteen unapproved editorial tickets and fails closed",()=>{
   expect(nonlegalReviewTickets).toHaveLength(19);
   expect(new Set(nonlegalReviewTickets.map(t=>t.claimId)).size).toBe(19);
