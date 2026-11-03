@@ -158,11 +158,7 @@ export default function ChapAI() {
         <RevealOnScroll delay="reveal-d3" className="mt-8">
           <div className="bg-navy-light border border-white/[0.06] rounded-2xl p-7 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex-1">
-              <div className="flex items-center gap-2.5 mb-2">
-                <span className="text-xs font-bold text-green bg-green/10 px-2.5 py-1 rounded-full uppercase tracking-wider">
-                  Early Access
-                </span>
-              </div>
+              
               <div className="text-lg font-bold text-white mb-1">
                 CHAP Guard — Chrome Extension
               </div>

@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Badge } from '@/components/ui/Badge';
 import { ENFORCEMENT_STATS } from '@/lib/stats';
 
 export const metadata: Metadata = {
@@ -57,13 +56,13 @@ const services = [
     slug: 'benefits-integration',
     name: 'Benefits Reconciliation',
     headline: 'Benefits deduction reconciliation — audited against payroll records.',
-    body: 'Benefits deduction reconciliation — PSE audits payroll deduction reports against benefit elections to identify discrepancies. Service currently in development.',
+    body: 'Benefits deduction reconciliation — PSE audits payroll deduction reports against benefit elections to identify discrepancies. ',
     features: [
       'Deduction reconciliation audit',
       'Discrepancy documentation',
       'Payroll-benefits gap analysis',
       'Action plan delivery',
-      'In development',
+      'Reconciliation exception review',
     ],
     stat: { value: ENFORCEMENT_STATS.perErrorCost.value, label: 'Average cost per payroll error (EY, 2022)' },
   },
@@ -136,9 +135,6 @@ export default function ServicesPage() {
                 <div key={s.slug} className="svc-card">
                   <div className="svc-card__name">
                     {s.name}
-                    {['workforce-analytics', 'benefits-integration', 'system-integration'].includes(s.slug) && (
-                      <> <Badge>Coming Soon</Badge></>
-                    )}
                   </div>
                   <div className="svc-card__headline">{s.headline}</div>
                   <p className="svc-card__body">{s.body}</p>

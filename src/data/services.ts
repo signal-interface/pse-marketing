@@ -95,7 +95,7 @@ export const serviceData: Record<string, ServiceData> = {
     headline: 'Labor costs, overtime exposure, and headcount trends — updated live.',
     subheadline: 'Real-time visibility into the compliance and cost drivers that matter before they appear in a quarterly review.',
     metaDescription: 'Live workforce analytics for multi-state employers. Overtime exposure, labor cost dashboards, exception trend reporting, and headcount reporting updated in real time.',
-    body: 'This service is currently in development — sign up below to be notified when it launches. PSE\'s workforce analytics will give payroll directors real-time visibility into the metrics that drive compliance exposure: overtime trends by department, multi-state headcount, labor cost variance, and benefit utilization. These are not lagging indicators pulled from a data warehouse — they are live views of the same data CHAP AI uses to run compliance audits. Recurring exception patterns surface automatically, so systemic issues are addressed before they compound.',
+    body: 'PSE\'s workforce analytics will give payroll directors real-time visibility into the metrics that drive compliance exposure: overtime trends by department, multi-state headcount, labor cost variance, and benefit utilization. These are not lagging indicators pulled from a data warehouse — they are live views of the same data CHAP AI uses to run compliance audits. Recurring exception patterns surface automatically, so systemic issues are addressed before they compound.',
     features: [
       { title: 'Live labor cost dashboards', body: 'Real-time labor cost tracking by department, location, and entity. Variance alerts when actual costs diverge from budget.' },
       { title: 'Overtime exposure monitoring', body: 'Per-employee and per-department overtime tracking updated in real time as hours are recorded. Exposure flagged before it becomes a violation.' },
@@ -108,8 +108,6 @@ export const serviceData: Record<string, ServiceData> = {
       { value: ENFORCEMENT_STATS.hoursLostToCompliance.value, label: 'Lost per employer annually resolving payroll-related litigation and compliance issues', source: ENFORCEMENT_STATS.hoursLostToCompliance.source },
     ],
     chapAiConnection: 'Workforce Analytics draws directly from CHAP AI\'s scan history. Overtime exposure data, violation frequency, and compliance trends are surfaced in the analytics layer in real time.',
-    ctaLabel: 'Notify Me When Available',
-    ctaSource: 'workforce-analytics-interest',
     related: [
       {
         slug: 'payroll-processing', // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
@@ -125,7 +123,7 @@ export const serviceData: Record<string, ServiceData> = {
     headline: 'Benefits deduction reconciliation — audited against payroll records.',
     subheadline: 'PSE audits payroll deduction reports against benefit elections to identify discrepancies before they become compliance or employee relations issues.',
     metaDescription: 'Benefits deduction reconciliation for payroll. PSE audits payroll deduction reports against benefit elections to identify over-deductions, missed elections, and plan code mismatches.',
-    body: 'This service is currently in development — sign up below to be notified when it launches. Benefits data lives in your HRIS or HCM system — PSE does not replace or drive that workflow. What PSE does is audit your payroll deduction reports against benefit elections to identify discrepancies: over-deductions, missed elections, and plan code mismatches that create compliance exposure and employee trust issues.',
+    body: 'Benefits data lives in your HRIS or HCM system — PSE does not replace or drive that workflow. What PSE does is audit your payroll deduction reports against benefit elections to identify discrepancies: over-deductions, missed elections, and plan code mismatches that create compliance exposure and employee trust issues.',
     features: [
       { title: 'Deduction reconciliation audit', body: 'PSE audits payroll deduction reports against benefit elections — identifying over-deductions, under-deductions, missed enrollment updates, and plan code mismatches that create compliance or payroll exposure.' },
       { title: 'Discrepancy documentation', body: 'Every identified discrepancy is documented with the affected employee, deduction category, variance amount, and recommended correction — in an audit-ready format.' },
@@ -136,8 +134,6 @@ export const serviceData: Record<string, ServiceData> = {
       { value: ENFORCEMENT_STATS.perErrorCost.value, label: 'Average cost per payroll error — deduction discrepancies compound across every pay cycle they go undetected', source: ENFORCEMENT_STATS.perErrorCost.source },
     ],
     chapAiConnection: 'CHAP AI\'s audit trail provides the baseline for benefits deduction reconciliation — surfacing the payroll-side data that is compared against benefit elections to identify discrepancies.',
-    ctaLabel: 'Notify Me When Available',
-    ctaSource: 'benefits-interest',
     related: [
       {
         slug: 'payroll-processing', // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
@@ -153,7 +149,7 @@ export const serviceData: Record<string, ServiceData> = {
     headline: 'Connect payroll to your HRIS and workforce management platforms.',
     subheadline: 'Pre-built connectors for UKG, ADP, and Dayforce. Custom API for everything else.',
     metaDescription: 'Payroll system integration with UKG, ADP, Dayforce, and major HRIS platforms. Bi-directional data sync, real-time validation on inbound data, and custom REST API.',
-    body: 'This service is currently in development — sign up below to be notified when it launches. PSE will integrate with the HRIS and workforce management platforms your team already uses. Pre-built connectors for UKG, ADP, and Dayforce handle bi-directional data sync out of the box. Inbound data from connected systems passes through CHAP AI validation before it reaches payroll — catching classification errors, rate mismatches, and missing required fields at the source system boundary, not after a payroll run fails.',
+    body: 'PSE connects payroll governance with HRIS and workforce management environments. Pre-built connectors for UKG, ADP, and Dayforce handle bi-directional data sync out of the box. Inbound data from connected systems passes through CHAP AI validation before it reaches payroll — catching classification errors, rate mismatches, and missing required fields at the source system boundary, not after a payroll run fails.',
     features: [
       { title: 'UKG, ADP, Dayforce connectors', body: 'Pre-built, maintained integrations with the three largest enterprise payroll and workforce platforms. Configuration-based setup, no custom development required.' },
       { title: 'Custom REST API', body: 'Full REST API for proprietary HRIS systems, internal tools, and custom workflows. Webhook support for real-time event-driven sync.' },
@@ -166,8 +162,6 @@ export const serviceData: Record<string, ServiceData> = {
       { value: ENFORCEMENT_STATS.reconciliationOverhead.value, label: 'Of payroll teams spend 30+ hours weekly reconciling payroll and HR data', source: ENFORCEMENT_STATS.reconciliationOverhead.source },
     ],
     chapAiConnection: 'CHAP AI validation runs at the integration boundary — data arriving from connected systems is checked before entering the payroll workflow. This catches source-system errors at the earliest possible point.',
-    ctaLabel: 'Notify Me When Available',
-    ctaSource: 'system-integration-interest',
     related: [
       {
         slug: 'payroll-processing', // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
