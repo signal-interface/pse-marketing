@@ -48,6 +48,6 @@ export default async function StateBriefingPage({params}:Props){
  <aside className="text-sm text-text-secondary border-l-2 border-steel-200 pl-4">
  This material is general payroll education, not individualized legal or tax advice, certification or a guarantee of compliance. Verify the current controlling authority and relevant facts before applying any requirement. These summaries are separate from operational PSE Context Hub approvals.
  </aside>
- <p className="mt-10"><Link href="/payroll-intelligence/methodology" className="text-blue-accent underline">Review our editorial methodology</Link></p>
+ <section aria-labelledby="state-governance-conversation" className="mt-10 rounded-xl border border-border bg-white p-6"><h2 id="state-governance-conversation" className="text-xl font-semibold mb-3">Discuss multi-state payroll governance</h2><p className="text-text-secondary mb-4">Connect this educational reference to your organization’s payroll controls through a PSE business conversation. Applicability of state and local rules requires an independent review of your circumstances.</p><Link href="/#demo" className="text-blue-accent font-semibold underline">Request a payroll governance demo</Link></section><p className="mt-10"><Link href="/payroll-intelligence/methodology" className="text-blue-accent underline">Review our editorial methodology</Link></p>
  </article></main><Footer/></>;
 }

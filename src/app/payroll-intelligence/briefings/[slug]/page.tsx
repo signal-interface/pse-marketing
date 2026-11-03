@@ -31,5 +31,5 @@ export default async function BriefingPage({params}:Props){
  <ol className="list-decimal pl-6 space-y-4 mb-9">{b.controlChecklist.map(c=><li key={c}>{c}</li>)}</ol>
  <aside className="bg-ice rounded-lg p-5 text-sm text-text-secondary">
  Educational reference; not individualized legal or tax advice, a guarantee of compliance or confirmation of applicability. Official references were initially researched November 3, 2026. Verify current controlling authority, effective dates, exceptions and state/local requirements before acting. The 2027 edition will be reviewed separately as rules become available.
- </aside></article></main><Footer/></>;
+ </aside><section aria-labelledby="discuss-payroll-controls" className="mt-10 rounded-xl border border-border bg-ice p-6"><h2 id="discuss-payroll-controls" className="text-xl font-semibold mb-3">Discuss your payroll controls</h2><p className="text-text-secondary mb-4">Explore how PSE can help review your organization’s payroll governance and assurance needs. This educational briefing does not determine your specific compliance obligations.</p><Link href="/#demo" className="text-blue-accent font-semibold underline">Request a payroll governance demo</Link></section></article></main><Footer/></>;
 }
