@@ -1,5 +1,5 @@
 // Compliance Risk Estimator — Model Constants
-// All values sourced from public enforcement data.
+// Mix of cited public reference values and internal scenario-model assumptions.
 // DO NOT add Signal model constants here.
 // Sources documented inline for legal/compliance review.
 
@@ -8,7 +8,7 @@ export const BENCHMARKS = {
   // Source: IRS Notice 746 (Rev. 12-2024)
   MAX_DEPOSIT_PENALTY_RATE: 0.15,
 
-  // Internal modeling assumption — the once-cited "IRS employer
+  // NOT A VERIFIED EXTERNAL STATISTIC. Internal modeling assumption — the once-cited "IRS employer
   // compliance study" has no locatable primary publication (struck as a
   // citation site-wide 2026-07-30). The rate is deliberate calibration;
   // changing it changes every estimator output and PDF.
@@ -42,8 +42,8 @@ export const BENCHMARKS = {
 } as const;
 
 export const INDUSTRY_RISK_MULTIPLIERS: Record<string, number> = {
-  // Multipliers derived from DOL WHD enforcement data by industry
-  // Source: DOL WHD FY2023 Low Wage, High Violation Industries report
+  // Internal relative-risk scenario multipliers. DOL enforcement figures may
+  // inform qualitative sector selection, but do not validate these factors.
   healthcare:     1.45,
   transportation: 1.38,
   retail:         1.32,
@@ -58,7 +58,7 @@ export const INDUSTRY_RISK_MULTIPLIERS: Record<string, number> = {
 export const STATE_COMPLEXITY_MULTIPLIERS: Record<number, number> = {
   // Multiplier applied per number of states
   // Each additional state adds compliance surface area
-  // Derived from DOL multi-state enforcement case distribution
+  // Internal scenario scaling; do not represent as a sourced DOL coefficient.
   1:  1.00,
   2:  1.18,
   3:  1.32,
