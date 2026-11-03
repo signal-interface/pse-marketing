@@ -22,7 +22,10 @@ describe("payroll intelligence editorial coverage contract", () => {
   }
  });
  it("keeps draft briefings distinguished from approved articles",()=>{
-  expect(briefings.length).toBeGreaterThanOrEqual(3);
+  expect(briefings.length).toBe(7);
+  expect(new Set(briefings.map(b=>b.slug)).size).toBe(briefings.length);
+  const covered = new Set(briefings.map(b=>b.domain.slice(0,2)));
+  for(const id of ["01","02","03","04","06","08","10"]){expect(covered.has(id)).toBe(true);}
   for(const b of briefings){
    expect(b.status).toBe("editorial-draft");
    expect(b.sources.length).toBeGreaterThan(0);
