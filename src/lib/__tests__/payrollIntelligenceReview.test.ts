@@ -3,6 +3,7 @@ import { editorialClaimInventory } from "../payroll-intelligence-claim-inventory
 import { sourceMappedClaims, sourceMappingProblems } from "../payroll-intelligence-source-mappings";
 import { getClaimCoverage } from "../payroll-intelligence-coverage";
 import { claimTriage, claimTriageMetrics } from "../payroll-intelligence-claim-triage";
+import { nonlegalReviewTickets, getCandidateReleaseGates, candidateReleaseAllowed, validateEditorialQueue } from "../payroll-intelligence-publication-preflight";
 import { editorialPublicationAuthorized, initialClaimReviewRecords, inspectClaimReview, type ClaimReview } from "../payroll-intelligence-review";
 
 const base = (): ClaimReview => ({
@@ -16,6 +17,18 @@ const base = (): ClaimReview => ({
 });
 
 describe("claim review release safeguards",()=>{
+ it("creates exactly nineteen unapproved editorial tickets and fails closed",()=>{
+  expect(nonlegalReviewTickets).toHaveLength(19);
+  expect(new Set(nonlegalReviewTickets.map(t=>t.claimId)).size).toBe(19);
+  expect(nonlegalReviewTickets.every(t=>t.disposition==="open" && t.approved===false && t.reviewer===null)).toBe(true);
+  expect(nonlegalReviewTickets.every(t=>t.requiredLabel.length>15 && t.reviewQuestion.length>15 && t.requiredEvidence.length>15)).toBe(true);
+  expect(()=>validateEditorialQueue()).not.toThrow();
+  const gates=getCandidateReleaseGates();
+  expect(gates.length).toBeGreaterThanOrEqual(8);
+  expect(gates.some(g=>!g.passed)).toBe(true);
+  expect(candidateReleaseAllowed).toBe(false);
+ });
+
  it("classifies every draft statement without manufacturing approval or citations",()=>{
   expect(claimTriageMetrics.total).toBe(38);
   expect(claimTriageMetrics.mapped).toBe(19);
