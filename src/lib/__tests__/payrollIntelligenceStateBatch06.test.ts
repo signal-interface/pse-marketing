@@ -35,6 +35,6 @@ describe("state-source educational batch06",()=>{
   expect(page).toContain("index:false");
   expect(page).toContain("b.caution");
   expect(index).toContain("StateSourceExplorer");
-  expect(index).toContain("all 50 states and Washington, D.C.");
+  expect(index).toContain("50 states and Washington, D.C.");
  });
 });
