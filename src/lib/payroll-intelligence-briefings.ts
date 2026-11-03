@@ -69,7 +69,7 @@ export const briefings:Briefing[]=[
    "Document any evidence gaps, corrective actions and owner sign-off.",
   ],
   sources:[{title:"U.S. DOL Fact Sheet #21: Recordkeeping Requirements under FLSA",url:"https://www.dol.gov/agencies/whd/fact-sheets/21-flsa-recordkeeping",relevance:"Federal FLSA recordkeeping content and minimum retention periods"}]
- }
+ },
  {
   slug:"2026-worker-classification-federal-tax",
   title:"Worker status: federal employment-tax classification",
