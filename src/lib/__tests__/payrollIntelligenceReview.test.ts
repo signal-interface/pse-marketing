@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { editorialClaimInventory } from "../payroll-intelligence-claim-inventory";
 import { sourceMappedClaims, sourceMappingProblems } from "../payroll-intelligence-source-mappings";
 import { getClaimCoverage } from "../payroll-intelligence-coverage";
+import { claimTriage, claimTriageMetrics } from "../payroll-intelligence-claim-triage";
 import { editorialPublicationAuthorized, initialClaimReviewRecords, inspectClaimReview, type ClaimReview } from "../payroll-intelligence-review";
 
 const base = (): ClaimReview => ({
@@ -15,6 +16,18 @@ const base = (): ClaimReview => ({
 });
 
 describe("claim review release safeguards",()=>{
+ it("classifies every draft statement without manufacturing approval or citations",()=>{
+  expect(claimTriageMetrics.total).toBe(38);
+  expect(claimTriageMetrics.mapped).toBe(11);
+  expect(claimTriageMetrics.unmapped).toBe(27);
+  expect(claimTriageMetrics.unmappedLegal).toBe(8);
+  expect(claimTriageMetrics.unmappedNonlegal).toBe(19);
+  expect(claimTriageMetrics.approved).toBe(0);
+  expect(new Set(claimTriage.map(c=>c.claimId)).size).toBe(38);
+  expect(claimTriage.every(c=>c.approval==="not-approved")).toBe(true);
+  expect(claimTriage.filter(c=>c.sourceLocationStatus==="unmapped").length).toBe(27);
+ });
+
  it("tracks unreviewed and mapped assertions without implying legal approval",()=>{
   const coverage=getClaimCoverage();
   expect(coverage.totalDraftClaims).toBe(38);
