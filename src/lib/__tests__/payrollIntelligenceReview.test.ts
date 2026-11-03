@@ -14,9 +14,9 @@ const base = (): ClaimReview => ({
 });
 
 describe("claim review release safeguards",()=>{
- it("maps only nine real draft statements to pinpoint official sources",()=>{
-  expect(sourceMappedClaims).toHaveLength(9);
-  expect(new Set(sourceMappedClaims.map(s=>s.claimId)).size).toBe(9);
+ it("maps eleven real draft statements to pinpoint official sources",()=>{
+  expect(sourceMappedClaims).toHaveLength(11);
+  expect(new Set(sourceMappedClaims.map(s=>s.claimId)).size).toBe(11);
   expect(sourceMappingProblems).toEqual([]);
   for(const r of sourceMappedClaims){
    expect(r.status).toBe("source-mapped");
