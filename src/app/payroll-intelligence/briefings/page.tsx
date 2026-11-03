@@ -5,7 +5,7 @@ import Footer from "@/components/layout/Footer";
 import { briefings } from "@/lib/payroll-intelligence-briefings";
 import { sourceMappedClaims } from "@/lib/payroll-intelligence-source-mappings";
 
-const publicBriefings = briefings.filter(b=>sourceMappedClaims.some(c=>c.claimId && c.exactClaimText && c.claimId.startsWith("PSE-PI-") && c.exactClaimText && c.source && c.claimId && c.claimId === (sourceMappedClaims.find(x=>x.claimId===c.claimId)?.claimId) && c.claimId && sourceMappedClaims.some(x=>x.claimId===c.claimId && x.exactClaimText && x.source && b.keyPoints.includes(x.exactClaimText))));
+const publicBriefings = briefings.filter(b => sourceMappedClaims.some(c => b.keyPoints.includes(c.exactClaimText)));
 export const metadata: Metadata = {
  title:"Source-linked Payroll Reference Briefings | PSE",
  description:"Original payroll educational briefings with direct references to IRS and DOL guidance, and PSE recommended assurance controls.",
