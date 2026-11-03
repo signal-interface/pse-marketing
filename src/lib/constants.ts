@@ -15,6 +15,7 @@ export const NAV_LINKS = [
   { label: "CHAP AI", href: "/chap-ai" },
   { label: "Services", href: "/services" },
   { label: "Risk Estimator", href: "/compliance-risk" },
+  { label: "Payroll Intelligence", href: "/payroll-intelligence" },
   { label: "Investors", href: INVESTOR_INTEREST_URL },
 ] as const;
 
@@ -23,6 +24,11 @@ export const PUBLIC_ROUTES = [
   "/chap-ai",
   "/services",
   "/compliance-risk",
+  "/payroll-intelligence",
+  "/payroll-intelligence/briefings",
+  "/payroll-intelligence/methodology",
+  "/payroll-intelligence/updates",
+  "/payroll-intelligence/2026-federal-payroll-baseline",
   "/privacy",
   "/terms",
 ] as const;
