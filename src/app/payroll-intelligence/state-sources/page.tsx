@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { stateSourceIntake } from "@/lib/payroll-intelligence-state-research";
+import { stateBriefings } from "@/lib/payroll-intelligence-state-briefings";
 
 export const metadata: Metadata = {
  title: "State Payroll Source Directory | PSE Payroll Intelligence",
@@ -34,7 +35,9 @@ export default function StatePayrollSources() {
     <p className="text-sm font-semibold mb-3">{topicLabels[s.topic]}</p>
     <p className="text-sm text-text-secondary mb-4">What to review: {s.caveat}</p>
     <p className="text-sm text-text-secondary mb-3">Starting authority: {s.authority.agency} — {s.authority.pinpoint}</p>
-    <a href={s.authority.url} className="underline text-blue-accent text-sm" rel="noopener noreferrer" target="_blank">Open official source</a>
+    <Link href={`/payroll-intelligence/state-sources/${s.state.toLowerCase()}`} className="text-blue-accent underline text-sm font-semibold">Read source-linked educational briefing</Link>
+    <p className="text-xs text-text-secondary mt-3">Reviewed scope: {stateBriefings.find(b=>b.state===s.state)?.topic ?? "Source reference"}</p>
+    <p className="mt-3"><a href={s.authority.url} className="underline text-blue-accent text-sm" rel="noopener noreferrer" target="_blank">Open original authority</a></p>
    </article>)}</div>
    <p className="text-sm text-text-secondary mt-10">This directory does not publish the unratified 51-jurisdiction final-pay seed or operational PSE Context Hub rules. It does not make employer-specific determinations.</p>
   </div>
