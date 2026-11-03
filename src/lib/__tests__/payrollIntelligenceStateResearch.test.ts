@@ -27,11 +27,11 @@ describe("state payroll source intake boundary",()=>{
  });
  it("only displays official source leads rather than unresolved preliminary rules on state directory",()=>{
   const page=readFileSync("src/app/payroll-intelligence/state-sources/page.tsx","utf8");
-  expect(page).toContain("stateSourceIntake.map");
+  expect(page).toContain("StateSourceExplorer");
   expect(page).toContain("index: false");
   expect(page).not.toContain("s.preliminaryStatement");
-  expect(page).toContain("s.caveat");
-  expect(page).toContain("s.authority.url");
+  expect(page).toContain("stateDirectoryEntries");
+  expect(page).toContain("stateDirectoryTopics");
  });
  it("does not promote source leads into legally verified or publishable rules",()=>{
   expect(stateSourceIntake.every(row=>
