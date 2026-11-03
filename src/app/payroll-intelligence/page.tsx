@@ -34,7 +34,8 @@ export default function PayrollIntelligencePage() {
    </section>
    <section className="border-t border-border px-6 py-12"><div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
      <div><h2 className="text-2xl font-bold mb-3">Quarterly releases</h2><p className="text-text-secondary mb-4">Inaugural edition proposed for Q4 2026. Future releases preserve historical context and separately identify material changes between quarters.</p><Link className="text-blue-accent underline" href="/payroll-intelligence/updates">View release plan</Link></div>
-     <div><h2 className="text-2xl font-bold mb-3">Federal reference spotlight</h2><p className="text-text-secondary mb-4">Review the 2026 federal employment-tax baseline and the operational controls to validate before payroll processing.</p><Link className="text-blue-accent underline" href="/payroll-intelligence/2026-federal-payroll-baseline">Read the source-linked briefing</Link></div>
+     <div><h2 className="text-2xl font-bold mb-3">Federal reference spotlight</h2><p className="text-text-secondary mb-4">Review the 2026 federal employment-tax baseline and the operational controls to validate before payroll processing.</p><Link className="text-blue-accent underline" href="/payroll-intelligence/2026-federal-payroll-baseline">Read the source-linked briefing</Link>
+     <p className="mt-3"><Link className="text-blue-accent underline" href="/payroll-intelligence/briefings">Browse three original draft control briefings</Link></p></div>
    </div></section>
    <aside className="max-w-6xl mx-auto px-6 pb-12 text-sm text-text-secondary">Educational reference only. Payroll law, local requirements and administrative guidance can change. Verify the governing source and effective date before making employment or tax decisions.</aside>
  </main><Footer/></>;
