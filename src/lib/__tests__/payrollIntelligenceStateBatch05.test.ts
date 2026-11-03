@@ -34,6 +34,6 @@ describe("state educational source batch05",()=>{
   expect(detail).toContain("index:false");
   expect(detail).toContain("b.caution");
   expect(index).toContain("stateBatch05Briefings.map");
-  expect(index).toMatch(/selected payroll topics in (?:2[7-9]|[3-9][0-9]) states/);
+  expect(index).toContain("selected payroll topics in all 50 states and Washington, D.C.");
  });
 });
