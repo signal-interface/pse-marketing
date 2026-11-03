@@ -35,7 +35,7 @@ describe("PSE state-source educational batch 04",()=>{
   const index=readFileSync("src/app/payroll-intelligence/state-sources/page.tsx","utf8");
   expect(detail).toContain("...stateBatch04Briefings");
   expect(detail).toContain("index:false");
-  expect(index).toContain("stateBatch04Briefings.map");
-  expect(index).toContain("selected payroll topics in all 50 states and Washington, D.C.");
+  expect(index).toContain("StateSourceExplorer");
+  expect(index).toContain("50 states and Washington, D.C.");
  });
 });

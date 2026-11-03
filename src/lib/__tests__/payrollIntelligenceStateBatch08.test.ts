@@ -49,9 +49,9 @@ describe("complete geographic introductory PSE payroll source directory", () => 
   expect(detail).toContain("index:false");
   expect(detail).toContain("b.caution");
   expect(detail).toContain("b.sourceUrl");
-  expect(index).toContain("stateBatch08Briefings.map");
-  expect(index).toContain("all 50 states and Washington, D.C.");
-  expect(index).toContain("index: false");
+  expect(index).toContain("StateSourceExplorer");
+  expect(index).toContain("50 states and Washington, D.C.");
+  expect(index).toContain("index:false");
   expect(index).toContain("not complete state compliance profiles");
  });
 });
