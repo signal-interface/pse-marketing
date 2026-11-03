@@ -14,7 +14,16 @@ All items remain unapproved, noindex and outside public navigation.
 | PSE-PI-2026-007 | Fringe-benefit taxability | IRS Publication 15-B (2026) | Editorial draft; federal only | Candidate Q4 |
 | PSE-PI-2026-008 | Health FSA election and deduction assurance | IRS Publication 15-B (2026) | Editorial draft; plan-year specific | Candidate Q4 |
 
-**Scope note:** The entry count is eight because the first FICA overview is separate from the seven structured assurance briefings. Each is an editorial draft, and the site currently exposes no approved regulatory articles.
+**Scope note:** The entry count is sixteen because the first FICA overview is separate from fifteen structured assurance briefings. Each is an editorial draft, and the site currently exposes no approved regulatory articles.
+
+| PSE-PI-2026-009 | Pay frequency and final wage assurance | DOL state payday overview (historical) | Editorial draft, scope limited | Candidate Q4 |
+| PSE-PI-2026-010 | FUTA and state unemployment assurance | IRS Pub 15; state agency confirmation pending | Editorial draft, scope limited | Candidate Q4 |
+| PSE-PI-2026-011 | Wage garnishment protections | DOL CCPA garnishment guidance | Editorial draft, scope limited | Candidate Q4 |
+| PSE-PI-2026-012 | Payroll accounting reconciliation | IRS employment-tax recordkeeping; PSE controls | Editorial draft, scope limited | Candidate Q4 |
+| PSE-PI-2026-013 | Technology security and resilience | NIST CSF 2.0; PSE controls | Editorial draft, scope limited | Candidate Q4 |
+| PSE-PI-2026-014 | Payroll leadership and operating controls | DOL employer reference; PSE controls | Editorial draft, scope limited | Candidate Q4 |
+| PSE-PI-2026-015 | Cross-border payroll assessment | IRS Pub 54 (2025); country sources pending | Editorial draft, scope limited | Candidate Q4 |
+| PSE-PI-2026-016 | Professional competency and ethics | IRS employment-tax reference; PSE controls | Editorial draft, scope limited | Candidate Q4 |
 
 ## Review workflow for every entry
 1. Confirm source title/version, government authority, current URL, content validity, tax year and effective date.
