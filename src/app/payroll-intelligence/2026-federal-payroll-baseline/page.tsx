@@ -7,7 +7,7 @@ export default function FederalBaseline(){return <><Navbar/><main className="pt-
  <Link href="/payroll-intelligence" className="text-sm underline text-blue-accent">← Payroll Intelligence</Link>
  <p className="font-mono text-sm text-steel mt-9 mb-3">2026 FEDERAL REFERENCE · EDITORIAL PREVIEW · NOT APPROVED FOR PUBLICATION</p>
  <h1 className="text-4xl font-bold mb-6">2026 federal employment-tax baseline</h1>
- <p className="text-lg text-text-secondary mb-8">The IRS 2026 Employer's Tax Guide is a starting point for wage withholding, employer taxes, payroll deposits and recordkeeping. This briefing separates a current federal reference from the controls needed to apply it correctly.</p>
+ <p className="text-lg text-text-secondary mb-8">The IRS 2026 Employer&apos;s Tax Guide is a starting point for wage withholding, employer taxes, payroll deposits and recordkeeping. This briefing separates a current federal reference from the controls needed to apply it correctly.</p>
  <h2 className="text-2xl font-semibold mb-4">IRS-published 2026 figures</h2>
  <div className="overflow-x-auto mb-8"><table className="w-full text-left border-collapse"><thead><tr className="border-b"><th className="p-3">Measure</th><th className="p-3">2026 value</th></tr></thead><tbody>
  <tr className="border-b"><td className="p-3">Social Security wage base</td><td className="p-3">$184,500</td></tr>
