@@ -6,7 +6,7 @@ import { ComplianceEstimator } from '@/components/sections/ComplianceEstimator';
 export const metadata: Metadata = {
   title: 'Compliance Risk Estimator | Payroll Synergy Experts',
   description:
-    'Estimate your annual payroll compliance risk exposure based on IRS, DOL, and EY enforcement data.',
+    'Explore illustrative payroll compliance exposure scenarios using public benchmarks and disclosed modeling assumptions.',
 };
 
 export default function ComplianceRiskPage() {
@@ -22,16 +22,16 @@ export default function ComplianceRiskPage() {
               How much compliance risk is your payroll carrying right now?
             </h1>
             <p className="est-hero__sub">
-              Three inputs. Thirty seconds. An estimate of your annual
-              exposure based on IRS deposit penalty schedules, DOL wage
-              enforcement data, and EY payroll research.
+              Three inputs. Thirty seconds. Explore an illustrative annual
+              scenario combining public IRS and DOL references, payroll
+              research, and clearly disclosed PSE modeling assumptions.
             </p>
             <div className="est-hero__trust">
               <span className="est-trust-item">No email required to see results</span>
               <span className="est-trust-divider">&middot;</span>
               <span className="est-trust-item">Based on public enforcement data</span>
               <span className="est-trust-divider">&middot;</span>
-              <span className="est-trust-item">Sources cited on every figure</span>
+              <span className="est-trust-item">Public sources and model assumptions identified</span>
             </div>
           </div>
         </section>
@@ -46,13 +46,10 @@ export default function ComplianceRiskPage() {
           <div className="est-context__inner">
             <p className="est-eyebrow">Why this matters</p>
             <h2 className="est-context__headline">
-              These are industry benchmarks, not worst-case scenarios.
+              Published reference points used in the scenario.
             </h2>
             <div className="est-context__grid">
-              {/* 33% employer-error card struck 2026-07-30 (unverifiable
-                  citation). The estimator model itself still assumes the
-                  33% rate internally — deliberate calibration, see
-                  src/data/estimatorConstants.ts. */}
+              {/* The exposure calculation also uses separately disclosed internal assumptions. */}
               <div className="est-context__card">
                 <div className="est-context__stat">$291</div>
                 <div className="est-context__stat-label">
