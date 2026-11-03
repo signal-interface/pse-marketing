@@ -5,21 +5,23 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { stateSourceIntake } from "@/lib/payroll-intelligence-state-research";
 import { stateBriefings } from "@/lib/payroll-intelligence-state-briefings";
+import { additionalStateBriefings } from "@/lib/payroll-intelligence-state-expansion";
+const allBriefings = [...stateBriefings, ...additionalStateBriefings];
 
 type Props = { params: Promise<{state: string}> };
-export function generateStaticParams(){return stateBriefings.map(b=>({state:b.state.toLowerCase()}));}
+export function generateStaticParams(){return allBriefings.map(b=>({state:b.state.toLowerCase()}));}
 export async function generateMetadata({params}:Props):Promise<Metadata>{
  const {state}=await params;
- const b=stateBriefings.find(x=>x.state.toLowerCase()===state.toLowerCase());
- const s=stateSourceIntake.find(x=>x.state===b?.state);
+ const b=allBriefings.find(x=>x.state.toLowerCase()===state.toLowerCase());
+ const s=stateSourceIntake.find(x=>x.state===b?.state) ?? additionalStateBriefings.find(x=>x.state===b?.state);
  return {title:b&&s?`${s.stateName}: ${b.topic} | PSE Payroll Intelligence`:"Briefing not found",
  description:"Source-linked state payroll educational briefing; employer applicability and local exceptions require separate verification.",
  robots:{index:false,follow:false}};
 }
 export default async function StateBriefingPage({params}:Props){
  const {state}=await params;
- const b=stateBriefings.find(x=>x.state.toLowerCase()===state.toLowerCase());
- const s=stateSourceIntake.find(x=>x.state===b?.state);
+ const b=allBriefings.find(x=>x.state.toLowerCase()===state.toLowerCase());
+ const s=stateSourceIntake.find(x=>x.state===b?.state) ?? additionalStateBriefings.find(x=>x.state===b?.state);
  if(!b||!s)notFound();
  return <><Navbar/><main className="pt-24 pb-20 px-6 bg-ice-light min-h-screen"><article className="max-w-4xl mx-auto">
  <Link href="/payroll-intelligence/state-sources" className="text-sm text-blue-accent underline">← State source directory</Link>
