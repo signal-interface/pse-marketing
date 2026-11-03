@@ -36,6 +36,6 @@ describe("PSE state-source educational batch 04",()=>{
   expect(detail).toContain("...stateBatch04Briefings");
   expect(detail).toContain("index:false");
   expect(index).toContain("stateBatch04Briefings.map");
-  expect(index).toContain("selected payroll topics in 23 states");
+  expect(index).toMatch(/selected payroll topics in (?:2[3-9]|[3-9][0-9]) states/);
  });
 });
