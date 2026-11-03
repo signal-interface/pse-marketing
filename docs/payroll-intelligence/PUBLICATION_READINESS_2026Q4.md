@@ -23,6 +23,14 @@
 
 These checks are **not** full independent legal or tax review. Other cited sources across the catalog remain unverified at claim level.
 
+## Claim verification progress — 2026-11-03
+
+- Added `FEDERAL_CLAIM_REGISTER_2026Q4.md` containing **13 source-checked federal assertions**, linked to specific IRS/DOL sections and associated with article IDs.
+- This is an initial selected-claims sample only. It does **not** claim full coverage of the 16 candidate articles.
+- Federal facts have source-check status; **human payroll SME approval remains outstanding**. The registration and effective-date review do not approve editorial publication.
+- FLSA fact sheets and all statutory claims require a final source currency check before publication; each state and local rule requires current controlling jurisdictional authority.
+- Publication verdict remains **HOLD**.
+
 ## Gate matrix
 | Gate | Verdict | Required evidence before changing |
 |---|---|---|
