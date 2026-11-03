@@ -1,0 +1,92 @@
+import { domains } from "./payroll-intelligence";
+
+export type DomainControlPlan = {
+  id: string;
+  auditQuestion: string;
+  controls: readonly string[];
+  evidence: readonly string[];
+  source: { name: string; url: string };
+  caveat: string;
+  editorialStatus: "unverified-control-plan";
+};
+
+const plans: readonly Omit<DomainControlPlan, "editorialStatus">[] = [
+ { id:"01", auditQuestion:"Does the organization have consistent, documented decisions about worker status and reporting responsibility?",
+  controls:["Review worker classification decisions before onboarding.","Map employer, staffing-agency and third-party reporting responsibility.","Check consistency between HR records and tax classifications."],
+  evidence:["Classification rationale","Signed agreements and onboarding records","Change approval history"],
+  source:{name:"IRS Publication 15-A (2026), employee or independent contractor",url:"https://www.irs.gov/publications/p15a"},
+  caveat:"Common-law federal tax status is only one analysis; federal wage-hour and state tests can differ." },
+ { id:"02", auditQuestion:"Are wage-hour policies supported by jurisdiction-specific classification and time evidence?",
+  controls:["Compare overtime eligibility classifications with the applicable federal and state tests.","Review regular-rate inputs, reported worktime and exception approvals.","Verify applicable state and local minimum wages and meal/rest requirements."],
+  evidence:["Classification review","Time and earnings exception reports","Jurisdictional rule inventory"],
+  source:{name:"DOL Wage and Hour Division: overtime",url:"https://www.dol.gov/agencies/whd/overtime"},
+  caveat:"Federal rules are a baseline; state/local requirements and litigation or rule changes require separate verification." },
+ { id:"03", auditQuestion:"Are special earnings and benefits consistently classified by tax treatment?",
+  controls:["Maintain a category-level mapping for cash and noncash earnings.","Review benefit valuations and exclusion eligibility.","Reconcile taxable fringe-benefit additions to year-end wage reporting."],
+  evidence:["Earnings-to-tax matrix","Valuation support","Year-end reconciliation"],
+  source:{name:"IRS Publication 15-B (2026)",url:"https://www.irs.gov/publications/p15b"},
+  caveat:"Fringe-benefit exclusions and valuation methods depend on facts, recipient status and tax year." },
+ { id:"04", auditQuestion:"Can payroll evidence support benefit election, deduction and employer contribution treatment?",
+  controls:["Compare benefit elections with deduction configuration and change effective dates.","Review pretax treatment separately by benefit type and state.","Confirm retirement contribution reconciliations and approval ownership."],
+  evidence:["Election and deduction reconciliation","Plan documentation","Contribution exception history"],
+  source:{name:"IRS Publication 15-B (2026), health benefits",url:"https://www.irs.gov/publications/p15b"},
+  caveat:"ERISA, ACA, COBRA, state leave and plan-specific requirements need additional agencies and counsel review." },
+ { id:"05", auditQuestion:"Can employers demonstrate compliant timing, methods and wage-statement delivery?",
+  controls:["Maintain a state-by-state pay-frequency and final-pay matrix.","Validate payment-method consent and statement delivery rules.","Review unpaid or unclaimed wage investigations and escalations."],
+  evidence:["Payment calendar","Pay-statement samples","Termination and unclaimed-wage exception log"],
+  source:{name:"DOL Wage and Hour Division",url:"https://www.dol.gov/agencies/whd"},
+  caveat:"This source is a federal entry point, not authority for state final-pay deadlines; link each state rule before approval." },
+ { id:"06", auditQuestion:"Are withholding inputs, tax-year methods and jurisdictional changes independently verified?",
+  controls:["Match withholding elections with the right federal method and year.","Reconcile tax configuration changes to approved evidence.","Assess supplemental wages and multistate withholding as separate cases."],
+  evidence:["Tax configuration review","Form W-4 version mapping","Tax reconciliation and approval"],
+  source:{name:"IRS Publication 15-T (2026)",url:"https://www.irs.gov/publications/p15t"},
+  caveat:"State and local withholding is not established by the federal publication." },
+ { id:"07", auditQuestion:"Are unemployment wage bases and experience-rating settings reviewed for the correct entity and period?",
+  controls:["Check employer account registration and SUTA rate notices.","Validate FUTA and state unemployment taxable-wage mapping.","Reconcile tax calculation to notices and filings."],
+  evidence:["Agency rate notices","Taxable wage workpapers","Quarterly reconciliation"],
+  source:{name:"IRS Publication 15 (2026), FUTA guidance",url:"https://www.irs.gov/publications/p15"},
+  caveat:"Each state unemployment agency sets separate employer rules, notices and taxable wage bases." },
+ { id:"08", auditQuestion:"Is the federal deposit schedule correct and supported by liability and filing evidence?",
+  controls:["Reconfirm deposit schedule from the applicable lookback period.","Review next-day liability thresholds and exceptions.","Reconcile Forms 941/940, liabilities and deposit confirmations."],
+  evidence:["Lookback workpaper","Tax liability ledger","Agency filing and payment confirmations"],
+  source:{name:"Instructions for Form 941 (2026)",url:"https://www.irs.gov/instructions/i941"},
+  caveat:"Filing calendars, holiday adjustments and special employer rules require period-specific validation." },
+ { id:"09", auditQuestion:"Are involuntary and voluntary deductions documented, prioritized and reconciled?",
+  controls:["Review current deduction authorization or order.","Map limitations, priority and remittance obligations by jurisdiction.","Reconcile deduction balances and unresolved exceptions."],
+  evidence:["Order or authorization","Deduction calculation workpaper","Exception and remittance reconciliation"],
+  source:{name:"DOL Wage and Hour Division, garnishment",url:"https://www.dol.gov/agencies/whd/garnishment"},
+  caveat:"Child support, bankruptcy, tax levies and state garnishments may require distinct rules and specialist review." },
+ { id:"10", auditQuestion:"Can required records be retrieved intact for their full lawful retention period?",
+  controls:["Catalog wage, time, tax and employment records by category.","Compare applicable federal, state, local and legal-hold periods.","Verify access logging, retrieval, preservation and secure disposal."],
+  evidence:["Retention schedule","Access and retrieval test","Legal hold and disposal approvals"],
+  source:{name:"DOL Fact Sheet #21, FLSA recordkeeping",url:"https://www.dol.gov/agencies/whd/fact-sheets/21-flsa-recordkeeping"},
+  caveat:"The DOL source does not substitute for IRS, state privacy or litigation-hold requirements." },
+ { id:"11", auditQuestion:"Do payroll financial postings reconcile to payroll reports and cash movements?",
+  controls:["Define control-account ownership and approval thresholds.","Reconcile employer liabilities, deductions and net pay to the ledger.","Investigate unmatched cash and outstanding items."],
+  evidence:["General ledger reconciliation","Bank reconciliation","Exception approval and resolution"],
+  source:{name:"IRS Publication 15 (2026), employer tax obligations",url:"https://www.irs.gov/publications/p15"},
+  caveat:"Accounting workflow is an editorial control recommendation, not an IRS-prescribed financial reporting design." },
+ { id:"12", auditQuestion:"Are payroll technology changes, interfaces and access controls governed and auditable?",
+  controls:["Inventory integrations, system-of-record ownership and interface controls.","Review role access, segregation of duties and approved changes.","Exercise backup, recovery and incident procedures."],
+  evidence:["Access review","Change approvals","Interface exceptions and recovery exercise"],
+  source:{name:"NIST Cybersecurity Framework",url:"https://www.nist.gov/cyberframework"},
+  caveat:"NIST is general control guidance and does not establish payroll-specific legal compliance." },
+ { id:"13", auditQuestion:"Can leaders demonstrate reliable governance, escalation and quality assurance?",
+  controls:["Assign owners for calendars, reconciliations, exceptions and sign-off.","Track quality metrics and recurring root causes.","Document escalations, coverage and continuity reviews."],
+  evidence:["RACI and approvals","Quality review metrics","Incident retrospective"],
+  source:{name:"DOL Employer Resources",url:"https://www.dol.gov/agencies/whd/employers"},
+  caveat:"Management controls are PSE recommendations; no specific agency endorsement is implied." },
+ { id:"14", auditQuestion:"Are cross-border workers reviewed for the applicable tax, immigration and employment obligations?",
+  controls:["Document assignment location, residency and employing entity.","Seek country-specific tax, social-security and treaty assessment.","Reconcile expatriate compensation inputs and reporting responsibilities."],
+  evidence:["Assignment profile","Treaty and tax advice","Cross-border review sign-off"],
+  source:{name:"IRS Publication 54, U.S. citizens and resident aliens abroad",url:"https://www.irs.gov/publications/p54"},
+  caveat:"Publication 54 addresses individual U.S. tax issues and cannot establish foreign payroll requirements." },
+ { id:"15", auditQuestion:"Is payroll expertise supported by documented ethics, learning and competency reviews?",
+  controls:["Define payroll competency standards and role-specific training.","Use original practice scenarios and references to current sources.","Record ethics escalations and continuing education reviews."],
+  evidence:["Training matrix","Competency review","Education completion records"],
+  source:{name:"IRS Employment Taxes resource center",url:"https://www.irs.gov/businesses/small-businesses-self-employed/employment-taxes"},
+  caveat:"Professional certification policies belong to the relevant credential body; this is an educational planning framework." },
+];
+
+export const domainControlPlans: readonly DomainControlPlan[] = plans.map(p => ({ ...p, editorialStatus:"unverified-control-plan" }));
+export const controlPlanBySlug = Object.fromEntries(domains.map(d => [d.slug, domainControlPlans.find(p => p.id===d.id)])) as Record<string,DomainControlPlan | undefined>;

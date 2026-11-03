@@ -1,0 +1,34 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import { domains } from "@/lib/payroll-intelligence";
+import { controlPlanBySlug } from "@/lib/payroll-intelligence-controls";
+type Props={params:Promise<{slug:string}>};
+export function generateStaticParams(){return domains.map(d=>({slug:d.slug}));}
+export async function generateMetadata({params}:Props):Promise<Metadata>{
+ const {slug}=await params;const d=domains.find(v=>v.slug===slug);
+ return {title:d?`${d.name} | PSE Payroll Intelligence`:"Topic not found"};
+}
+export default async function DomainPage({params}:Props){
+ const {slug}=await params;const d=domains.find(v=>v.slug===slug);if(!d)notFound();
+ const plan=controlPlanBySlug[slug];if(!plan)notFound();
+ return <><Navbar/><main className="pt-24 min-h-screen bg-ice-light px-6 pb-20"><article className="max-w-4xl mx-auto">
+ <Link href="/payroll-intelligence" className="text-blue-accent underline text-sm">← All domains</Link>
+ <p className="font-mono text-sm text-steel mt-10 mb-3">DOMAIN {d.id} · EDUCATIONAL COVERAGE</p>
+ <h1 className="text-4xl font-bold text-navy mb-5">{d.name}</h1><p className="text-xl text-text-secondary mb-10">{d.summary}</p>
+ <div className="bg-white rounded-xl border border-border p-7 mb-8">
+ <h2 className="text-2xl font-semibold mb-5">Topics in this domain</h2>
+ <ul className="list-disc pl-6 space-y-3 text-text-secondary">{d.topics.map(t=><li key={t}>{t}</li>)}</ul></div>
+ <div className="bg-white rounded-xl border border-border p-7 mb-8">
+ <p className="font-mono text-sm text-steel mb-3">PSE SUGGESTED ASSURANCE CONTROLS · NOT STATUTORY MANDATES</p>
+ <h2 className="text-2xl font-semibold mb-4">Core review question</h2><p className="text-text-secondary mb-6">{plan.auditQuestion}</p>
+ <h3 className="text-xl font-semibold mb-3">Suggested checks</h3><ul className="list-disc pl-6 space-y-3 mb-6 text-text-secondary">{plan.controls.map(v=><li key={v}>{v}</li>)}</ul>
+ <h3 className="text-xl font-semibold mb-3">Example evidence</h3><ul className="list-disc pl-6 space-y-3 mb-6 text-text-secondary">{plan.evidence.map(v=><li key={v}>{v}</li>)}</ul>
+ <h3 className="text-xl font-semibold mb-3">Starting source or framework</h3><a href={plan.source.url} target="_blank" rel="noopener noreferrer" className="text-blue-accent underline">{plan.source.name}</a>
+ <p className="mt-4 text-sm text-text-secondary">{plan.caveat}</p></div>
+ <p className="text-text-secondary mb-6">This topic index is an educational planning aid; it does not represent complete statutory guidance for every jurisdiction or employer. Current primary legal authorities and effective dates govern.</p>
+ <Link href="/payroll-intelligence/briefings" className="text-blue-accent underline">Explore source-linked federal briefings</Link>
+ </article></main><Footer/></>;
+}
