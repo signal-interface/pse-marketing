@@ -29,6 +29,7 @@ const ISSUE_ELIGIBLE_STATES: readonly LeadStatus[] = [
   "VIDEO_SENT",
   "VIDEO_ENGAGED",
   "QUESTIONNAIRE_SENT",
+  "MEETING_SCHEDULED", // optional pre-call discovery does not undo a booking
   "NURTURE",
 ];
 

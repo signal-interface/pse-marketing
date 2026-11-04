@@ -208,7 +208,16 @@ export async function startQuestionnaireSession(
       ...ctx,
       metadata: { sessionId: started.sessionId },
     });
-    await transitionLead(started.leadId, "QUESTIONNAIRE_STARTED", ctx);
+    const transition = await transitionLead(started.leadId, "QUESTIONNAIRE_STARTED", ctx);
+    // After a booked-first invitation, the canonical lead stage remains
+    // MEETING_SCHEDULED. The append-only OPENED event and session hold
+    // questionnaire progress, without undoing the confirmed appointment.
+    if (!transition.ok && !(
+      transition.reason === "invalid_transition" &&
+      transition.from === "MEETING_SCHEDULED"
+    )) {
+      console.warn(`[questionnaire:${ctx.requestId ?? "?"}] unexpected start transition`, transition.reason);
+    }
   } catch (err) {
     console.error(
       `[questionnaire:${ctx.requestId ?? "?"}] post-start trail error:`,
@@ -387,7 +396,15 @@ export async function submitSession(
       ...ctx,
       metadata: { sessionId },
     });
-    await transitionLead(leadId, "QUESTIONNAIRE_COMPLETED", ctx);
+    const transition = await transitionLead(leadId, "QUESTIONNAIRE_COMPLETED", ctx);
+    // Preserve an already booked meeting instead of regressing the lead
+    // to QUESTIONNAIRE_COMPLETED; the submitted session + event are proof.
+    if (!transition.ok && !(
+      transition.reason === "invalid_transition" &&
+      transition.from === "MEETING_SCHEDULED"
+    )) {
+      console.warn(`[questionnaire:${ctx.requestId ?? "?"}] unexpected submit transition`, transition.reason);
+    }
   } catch (err) {
     console.error(`[questionnaire:${ctx.requestId ?? "?"}] submit trail:`, err);
   }

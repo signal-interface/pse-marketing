@@ -133,7 +133,7 @@ describe("issueQuestionnaireToken", () => {
     expect(texts[texts.length - 1]).toBe("COMMIT");
   });
 
-  it.each(["QUALIFIED", "DISQUALIFIED", "MEETING_SCHEDULED", "DISCOVERY_COMPLETE", "NEW"])(
+  it.each(["QUALIFIED", "DISQUALIFIED", "DISCOVERY_COMPLETE", "NEW"])(
     "rejects ineligible state %s without writing",
     async (status) => {
       state.leadStatus = status;
@@ -144,7 +144,7 @@ describe("issueQuestionnaireToken", () => {
     }
   );
 
-  it.each(["VIDEO_SENT", "VIDEO_ENGAGED", "QUESTIONNAIRE_SENT", "NURTURE"])(
+  it.each(["VIDEO_SENT", "VIDEO_ENGAGED", "QUESTIONNAIRE_SENT", "MEETING_SCHEDULED", "NURTURE"])(
     "issues for eligible state %s",
     async (status) => {
       state.leadStatus = status;
