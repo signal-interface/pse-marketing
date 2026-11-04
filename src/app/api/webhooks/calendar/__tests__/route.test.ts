@@ -20,11 +20,9 @@ vi.mock("@vercel/postgres", () => ({
   db: { connect: vi.fn() },
 }));
 
-const mockTransition = vi.fn();
-const mockRecordEvent = vi.fn();
+const mockApply = vi.fn();
 vi.mock("@/lib/commercial/lifecycle", () => ({
-  transitionLead: (...args: unknown[]) => mockTransition(...args),
-  recordLeadEvent: (...args: unknown[]) => mockRecordEvent(...args),
+  applyCalendarEvent: (...args: unknown[]) => mockApply(...args),
 }));
 
 import {
@@ -74,8 +72,7 @@ beforeEach(() => {
   process.env.CALCOM_WEBHOOK_SECRET = WEBHOOK_SECRET;
   process.env.CALCOM_EVENT_URL = "https://cal.com/pse/discovery";
   process.env.LINK_SIGNING_SECRET = LINK_SECRET;
-  mockRecordEvent.mockResolvedValue({ ok: true, eventId: 1 });
-  mockTransition.mockResolvedValue({ ok: true, noop: false });
+  mockApply.mockResolvedValue({ ok: true, duplicate: false });
 });
 
 afterEach(() => {
@@ -154,126 +151,93 @@ describe("parseCalcomEvent / externalIdFor", () => {
 // ---------------------------------------------------------------------------
 
 describe("POST /api/webhooks/calendar", () => {
-  it("rejects invalid signatures with 401 and no processing", async () => {
-    const res = await POST(
-      signedRequest(bookingPayload("BOOKING_CREATED"), { badSignature: true })
-    );
+  it("rejects invalid signatures without touching the lead", async () => {
+    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED"), { badSignature: true }));
     expect(res.status).toBe(401);
-    expect(mockRecordEvent).not.toHaveBeenCalled();
+    expect(mockApply).not.toHaveBeenCalled();
   });
 
-  it("BOOKING_CREATED: records MEETING_BOOKED, sets calendar_event_id, transitions to MEETING_SCHEDULED", async () => {
-    // resolveBookingLead via signed leadRef
-    const ref = new URL(
-      buildSchedulingUrl({ id: 42, email: "jane@acme.com", firstName: "Jane", lastName: null })!
-    ).searchParams.get("metadata[leadRef]")!;
-    state.poolRows = [[{ id: 42, email: "jane@acme.com" }], []]; // signed ref matches attendee; UPDATE
-
-    const res = await POST(
-      signedRequest(bookingPayload("BOOKING_CREATED", { metadata: { leadRef: ref } }))
-    );
-    expect(res.status).toBe(200);
-    expect(await res.json()).toMatchObject({ handled: true });
-
-    expect(mockRecordEvent).toHaveBeenCalledWith(
-      42,
-      "MEETING_BOOKED",
-      expect.objectContaining({
-        actorType: "CALENDAR_PROVIDER",
-        externalId: "bk_123",
-        metadata: expect.objectContaining({ bookingUid: "bk_123" }),
-      })
-    );
-    expect(state.calls.some((t) => t.includes("SET calendar_event_id"))).toBe(true);
-    expect(mockTransition).toHaveBeenCalledWith(
-      42,
-      "MEETING_SCHEDULED",
+  it("processes a signed and email-matched lead reference through the atomic lifecycle", async () => {
+    const ref = new URL(buildSchedulingUrl({ id: 42, email: "jane@acme.com" })!)
+      .searchParams.get("metadata[leadRef]")!;
+    state.poolRows = [[{ id: 42, email: "jane@acme.com" }]];
+    const res = await POST(signedRequest(
+      bookingPayload("BOOKING_CREATED", { metadata: { leadRef: ref } })
+    ));
+    expect(await res.json()).toEqual({ received: true, handled: true });
+    expect(mockApply).toHaveBeenCalledWith(
+      42, "MEETING_BOOKED", "bk_123", "bk_123",
       expect.objectContaining({ actorType: "CALENDAR_PROVIDER" })
     );
   });
 
-  it("falls back to attendee email when no leadRef is present", async () => {
-    state.poolRows = [[{ id: 7 }], []]; // email lookup, then UPDATE
+  it("falls back only when a unique email identifies a lead", async () => {
+    state.poolRows = [[{ id: 7 }]];
     const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED")));
     expect(res.status).toBe(200);
-    expect(mockRecordEvent).toHaveBeenCalledWith(7, "MEETING_BOOKED", expect.anything());
-  });
-
-  it("fails closed when a signed reference is invalid rather than guessing by email", async () => {
-    const res = await POST(signedRequest(
-      bookingPayload("BOOKING_CREATED", { metadata: { leadRef: "9999.invalid" } })
-    ));
-    expect(await res.json()).toMatchObject({ handled: false });
-    expect(state.calls).toHaveLength(0);
-    expect(mockRecordEvent).not.toHaveBeenCalled();
-  });
-
-  it("rejects forwarded signed booking URLs when attendee and lead email differ", async () => {
-    const ref = new URL(buildSchedulingUrl({
-      id: 42, email: "jane@acme.com", firstName: "Jane"
-    })!).searchParams.get("metadata[leadRef]")!;
-    state.poolRows = [[{ id: 42, email: "jane@acme.com" }]];
-    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED", {
-      metadata: { leadRef: ref },
-      attendees: [{ email: "someone-else@example.com" }],
-    })));
-    expect(await res.json()).toMatchObject({ handled: false });
-    expect(mockRecordEvent).not.toHaveBeenCalled();
-  });
-
-  it("rejects ambiguous same-email leads without signed attribution", async () => {
-    state.poolRows = [[{ id: 7 }, { id: 8 }]];
-    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED")));
-    expect(await res.json()).toMatchObject({ handled: false });
-    expect(mockRecordEvent).not.toHaveBeenCalled();
-  });
-
-  it("rejects fallback if booking has more than one distinct attendee email", async () => {
-    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED", {
-      attendees: [{ email: "jane@acme.com" }, { email: "someone@example.com" }]
-    })));
-    expect(await res.json()).toMatchObject({ handled: false });
-    expect(state.calls).toHaveLength(0);
-  });
-
-  it("duplicate delivery is acknowledged without reprocessing", async () => {
-    state.poolRows = [[{ id: 7 }]];
-    mockRecordEvent.mockResolvedValueOnce({ ok: false, reason: "duplicate_external_id" });
-    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED")));
-    expect(res.status).toBe(200);
-    expect(await res.json()).toMatchObject({ duplicate: true });
-    expect(mockTransition).not.toHaveBeenCalled();
-    expect(state.calls.some((t) => t.includes("SET calendar_event_id"))).toBe(false);
-  });
-
-  it("BOOKING_RESCHEDULED records the event without a status change", async () => {
-    state.poolRows = [[{ id: 7 }]];
-    const res = await POST(signedRequest(bookingPayload("BOOKING_RESCHEDULED")));
-    expect(res.status).toBe(200);
-    expect(mockRecordEvent).toHaveBeenCalledWith(7, "MEETING_RESCHEDULED", expect.anything());
-    expect(mockTransition).not.toHaveBeenCalled();
-  });
-
-  it("BOOKING_CANCELLED records the event and transitions to NURTURE", async () => {
-    state.poolRows = [[{ id: 7 }]];
-    const res = await POST(signedRequest(bookingPayload("BOOKING_CANCELLED")));
-    expect(res.status).toBe(200);
-    expect(mockRecordEvent).toHaveBeenCalledWith(7, "MEETING_CANCELLED", expect.anything());
-    expect(mockTransition).toHaveBeenCalledWith(
-      7,
-      "NURTURE",
-      expect.objectContaining({
-        metadata: expect.objectContaining({ reason: "booking_cancelled" }),
-      })
+    expect(mockApply).toHaveBeenCalledWith(
+      7, "MEETING_BOOKED", "bk_123", "bk_123", expect.anything()
     );
   });
 
-  it("unresolvable bookings acknowledge with 200 and record nothing", async () => {
-    state.poolRows = [[]]; // email lookup misses
+  it("reports a duplicate without applying the event twice", async () => {
+    state.poolRows = [[{ id: 7 }]];
+    mockApply.mockResolvedValueOnce({ ok: true, duplicate: true });
     const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED")));
-    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ duplicate: true });
+    expect(mockApply).toHaveBeenCalledTimes(1);
+  });
+
+  it("passes rescheduling through the lifecycle with time-scoped idempotency", async () => {
+    state.poolRows = [[{ id: 7 }]];
+    await POST(signedRequest(bookingPayload("BOOKING_RESCHEDULED")));
+    expect(mockApply).toHaveBeenCalledWith(
+      7, "MEETING_RESCHEDULED", "bk_123", "bk_123:2026-08-01T15:00:00Z",
+      expect.anything()
+    );
+  });
+
+  it("passes cancellation through the lifecycle", async () => {
+    state.poolRows = [[{ id: 7 }]];
+    await POST(signedRequest(bookingPayload("BOOKING_CANCELLED")));
+    expect(mockApply).toHaveBeenCalledWith(
+      7, "MEETING_CANCELLED", "bk_123", "bk_123", expect.anything()
+    );
+  });
+
+  it("does not apply ambiguous, forged or forwarded booking references", async () => {
+    const ref = new URL(buildSchedulingUrl({ id: 42, email: "jane@acme.com" })!)
+      .searchParams.get("metadata[leadRef]")!;
+    for (const [overrides, rows] of [
+      [{ metadata: { leadRef: "42.invalid" } }, []],
+      [{ metadata: { leadRef: ref }, attendees: [{ email: "other@acme.com" }] }, [{ id: 42, email: "jane@acme.com" }]],
+      [{ metadata: {} }, [{ id: 1 }, { id: 2 }]],
+    ] as const) {
+      state.poolRows = [Array.from(rows)];
+      const response = await POST(signedRequest(bookingPayload("BOOKING_CREATED", overrides)));
+      expect(await response.json()).toMatchObject({ handled: false });
+    }
+    expect(mockApply).not.toHaveBeenCalled();
+  });
+
+  it("keeps failed business-rule reconciliations visibly unhandled", async () => {
+    state.poolRows = [[{ id: 7 }]];
+    mockApply.mockResolvedValueOnce({ ok: false, reason: "invalid_transition" });
+    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED")));
+    expect(await res.json()).toEqual({ received: true, handled: false });
+  });
+
+  it("returns 500 on transaction failure so the provider can retry", async () => {
+    state.poolRows = [[{ id: 7 }]];
+    mockApply.mockRejectedValueOnce(new Error("db disconnected"));
+    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED")));
+    expect(res.status).toBe(500);
+  });
+
+  it("acknowledges an unmatched booking without mutating a lead", async () => {
+    state.poolRows = [[]];
+    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED")));
     expect(await res.json()).toMatchObject({ handled: false });
-    expect(mockRecordEvent).not.toHaveBeenCalled();
-    expect(mockTransition).not.toHaveBeenCalled();
+    expect(mockApply).not.toHaveBeenCalled();
   });
 });
