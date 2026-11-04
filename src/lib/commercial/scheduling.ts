@@ -151,21 +151,29 @@ export async function resolveBookingLead(
   event: CalcomBookingEvent
 ): Promise<number | null> {
   if (event.leadRef) {
+    // An explicitly supplied but invalid/unknown reference is never downgraded
+    // to email lookup. Otherwise a forged ref could target a different lead.
     const leadId = verifyLeadRef(event.leadRef);
-    if (leadId !== null) {
-      const { rows } = await sql`
-        SELECT id FROM demo_requests WHERE id = ${leadId}
-      `;
-      if (rows.length) return leadId;
-    }
-  }
-  for (const email of event.attendeeEmails) {
+    if (leadId === null) return null;
     const { rows } = await sql`
-      SELECT id FROM demo_requests
-      WHERE email = ${email}
-      ORDER BY created_at DESC LIMIT 1
+      SELECT id, email FROM demo_requests WHERE id = ${leadId}
     `;
-    if (rows.length) return rows[0].id as number;
+    if (rows.length !== 1) return null;
+    // A valid attribution reference must still belong to the attendee.
+    // Prevents accidental linking of a forwarded booking URL.
+    const leadEmail = String(rows[0].email).toLowerCase();
+    return event.attendeeEmails.includes(leadEmail) ? leadId : null;
   }
-  return null;
+
+  // Legacy/direct Cal.com bookings may contain no signed leadRef. Only
+  // reconcile automatically if exactly ONE lead matches exactly ONE distinct
+  // attendee; duplicate leads or multiple prospect emails require review.
+  const attendeeEmails = [...new Set(event.attendeeEmails)];
+  if (attendeeEmails.length !== 1) return null;
+  const { rows } = await sql`
+    SELECT id FROM demo_requests
+    WHERE lower(email) = ${attendeeEmails[0]}
+    ORDER BY created_at DESC LIMIT 2
+  `;
+  return rows.length === 1 ? (rows[0].id as number) : null;
 }
