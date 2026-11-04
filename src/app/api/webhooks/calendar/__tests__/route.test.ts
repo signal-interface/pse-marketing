@@ -167,7 +167,7 @@ describe("POST /api/webhooks/calendar", () => {
     const ref = new URL(
       buildSchedulingUrl({ id: 42, email: "jane@acme.com", firstName: "Jane", lastName: null })!
     ).searchParams.get("metadata[leadRef]")!;
-    state.poolRows = [[{ id: 42 }], []]; // lead exists; UPDATE calendar_event_id
+    state.poolRows = [[{ id: 42, email: "jane@acme.com" }], []]; // signed ref matches attendee; UPDATE
 
     const res = await POST(
       signedRequest(bookingPayload("BOOKING_CREATED", { metadata: { leadRef: ref } }))
@@ -197,6 +197,43 @@ describe("POST /api/webhooks/calendar", () => {
     const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED")));
     expect(res.status).toBe(200);
     expect(mockRecordEvent).toHaveBeenCalledWith(7, "MEETING_BOOKED", expect.anything());
+  });
+
+  it("fails closed when a signed reference is invalid rather than guessing by email", async () => {
+    const res = await POST(signedRequest(
+      bookingPayload("BOOKING_CREATED", { metadata: { leadRef: "9999.invalid" } })
+    ));
+    expect(await res.json()).toMatchObject({ handled: false });
+    expect(state.calls).toHaveLength(0);
+    expect(mockRecordEvent).not.toHaveBeenCalled();
+  });
+
+  it("rejects forwarded signed booking URLs when attendee and lead email differ", async () => {
+    const ref = new URL(buildSchedulingUrl({
+      id: 42, email: "jane@acme.com", firstName: "Jane"
+    })!).searchParams.get("metadata[leadRef]")!;
+    state.poolRows = [[{ id: 42, email: "jane@acme.com" }]];
+    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED", {
+      metadata: { leadRef: ref },
+      attendees: [{ email: "someone-else@example.com" }],
+    })));
+    expect(await res.json()).toMatchObject({ handled: false });
+    expect(mockRecordEvent).not.toHaveBeenCalled();
+  });
+
+  it("rejects ambiguous same-email leads without signed attribution", async () => {
+    state.poolRows = [[{ id: 7 }, { id: 8 }]];
+    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED")));
+    expect(await res.json()).toMatchObject({ handled: false });
+    expect(mockRecordEvent).not.toHaveBeenCalled();
+  });
+
+  it("rejects fallback if booking has more than one distinct attendee email", async () => {
+    const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED", {
+      attendees: [{ email: "jane@acme.com" }, { email: "someone@example.com" }]
+    })));
+    expect(await res.json()).toMatchObject({ handled: false });
+    expect(state.calls).toHaveLength(0);
   });
 
   it("duplicate delivery is acknowledged without reprocessing", async () => {
