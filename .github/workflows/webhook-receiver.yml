@@ -1,0 +1,48 @@
+name: Webhook receiver isolation
+
+on:
+  pull_request:
+    paths:
+      - "scripts/build-webhook-receiver.mjs"
+      - "scripts/__tests__/build-webhook-receiver.test.mjs"
+      - ".github/workflows/webhook-receiver.yml"
+      - "src/app/api/webhooks/calendar/route.ts"
+      - "src/lib/commercial/lifecycle.ts"
+      - "src/lib/commercial/scheduling.ts"
+      - "src/lib/commercial/links.ts"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  receiver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Unit-test receiver isolation contract
+        run: node --test scripts/__tests__/build-webhook-receiver.test.mjs
+      - name: Build minimal receiver using synthetic configuration only
+        run: node scripts/build-webhook-receiver.mjs
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          CI: "true"
+          PSE_CALHOOK_RECEIVER_BUILD: "receiver-only"
+          VERCEL_PROJECT_ID: "prj_ci_receiver_synthetic"
+          VERCEL_ENV: "preview"
+          POSTGRES_URL: "postgres://synthetic:synthetic@localhost:5432/receiver"
+          CALCOM_WEBHOOK_SECRET: "ci-synthetic-signature-only-not-a-secret"
+          LINK_SIGNING_SECRET: "ci-synthetic-link-only-not-a-secret"
+      - name: Ensure normal Marketing source tree is restored
+        run: |
+          test -f src/app/page.tsx
+          test -f src/app/api/demo-request/route.ts
+          test -f src/app/api/webhooks/calendar/route.ts
+          git diff --exit-code -- src next.config.ts tsconfig.json
