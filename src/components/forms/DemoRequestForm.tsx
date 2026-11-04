@@ -29,6 +29,7 @@ export default function DemoRequestForm({
     ref_120: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [schedulingUrl, setSchedulingUrl] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,6 +53,15 @@ export default function DemoRequestForm({
         }),
       });
       if (res.ok) {
+        const payload = (await res.json().catch(() => ({}))) as { schedulingUrl?: unknown };
+        // The server supplies this only for a new, validated lead and only
+        // when secure scheduling is configured. Do not invent a booking URL.
+        const candidate = payload.schedulingUrl;
+        setSchedulingUrl(
+          typeof candidate === "string" && candidate.startsWith("https://")
+            ? candidate
+            : null
+        );
         setSubmitted(true);
       } else {
         alert(
@@ -85,8 +95,20 @@ export default function DemoRequestForm({
                 {source.endsWith('-interest') ? 'You\u2019re on the list' : 'Demo request received'}
               </div>
               <div className="text-[15px] text-text-secondary">
-                {confirmationMessage}
+                {schedulingUrl
+                  ? "Your request is in. You can schedule your PSE demonstration now."
+                  : confirmationMessage}
               </div>
+              {schedulingUrl && (
+                <a
+                  href={schedulingUrl}
+                  rel="noopener noreferrer"
+                  className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-navy text-white font-semibold hover:bg-navy-dark"
+                >
+                  Schedule your PSE demonstration
+                  <ArrowRight size={17} aria-hidden="true" />
+                </a>
+              )}
             </div>
           </RevealOnScroll>
         ) : (
@@ -100,8 +122,8 @@ export default function DemoRequestForm({
                 {heading}
               </h2>
               <p className="text-[17px] text-text-secondary leading-[1.7] mb-8 max-w-[440px]">
-                See how CHAP AI catches compliance issues before they cost you —
-                in a personalized walkthrough of the platform.
+                Explore how PSE approaches payroll governance and validation
+                through a guided demonstration using fixed synthetic data.
               </p>
 
               <div className="flex flex-col gap-4">
@@ -116,10 +138,10 @@ export default function DemoRequestForm({
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-text">
-                      Personalized walkthrough
+                      Guided PSE demonstration
                     </div>
                     <div className="text-[13px] text-text-secondary">
-                      Tailored to your payroll workflow
+                      Predefined scenarios using synthetic payroll data
                     </div>
                   </div>
                 </div>
@@ -152,10 +174,10 @@ export default function DemoRequestForm({
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-text">
-                      By invitation only
+                      Governed demonstration
                     </div>
                     <div className="text-[13px] text-text-secondary">
-                      Platform access is limited
+                      No customer payroll records are required
                     </div>
                   </div>
                 </div>
