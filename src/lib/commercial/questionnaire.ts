@@ -19,6 +19,7 @@ import crypto from "node:crypto";
 import { db, sql } from "@vercel/postgres";
 import { transitionLead, recordLeadEvent, type EventContext } from "./lifecycle";
 import { consumeQuestionnaireToken, sha256Hex } from "./tokens";
+import { APPROVED_DEMO_SELECTIONS } from "./demo-selections";
 
 export const SESSION_TTL_DAYS = 14;
 
@@ -62,6 +63,7 @@ const ANSWER_FIELDS: Record<string, FieldSpec> = {
   governanceConfidence: { kind: "int", min: 1, max: 10 },
   desiredFutureState: { kind: "string", maxLen: 2000 },
   meetingPurpose: { kind: "string", maxLen: 1000 },
+  demoSelection: { kind: "enum", values: APPROVED_DEMO_SELECTIONS.map(s => s.id) },
 };
 
 const MAX_ANSWERS_BYTES = 16 * 1024;

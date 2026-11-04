@@ -62,6 +62,7 @@ beforeEach(() => {
   // Default test posture: a video exists, so the VIDEO_SENT ladder runs.
   // The unconfigured case is tested explicitly below.
   vi.stubEnv("PSE_OVERVIEW_VIDEO_URL", "https://video.example/pse-overview");
+  vi.stubEnv("CALCOM_EVENT_URL", "");
   mockLimit.mockResolvedValue({ allowed: true, count: 1 });
   mockCreateLead.mockResolvedValue({ id: 42 });
   mockTransition.mockResolvedValue({
@@ -138,6 +139,48 @@ describe("POST /api/demo-request", () => {
     expect(journeyHtml).not.toContain("Watch the PSE Overview");
     expect(journeyHtml).toContain("we&rsquo;ve received it");
     expect(mockRecordEvent).toHaveBeenCalledTimes(2);
+  });
+
+  it("offers immediate, attributable booking when Cal.com is configured", async () => {
+    vi.stubEnv("CALCOM_EVENT_URL", "https://cal.com/pse/demo");
+    vi.stubEnv("PSE_OVERVIEW_VIDEO_URL", "");
+    const res = await POST(makeRequest(VALID_BODY));
+    expect(res.status).toBe(200);
+    const result = await res.json();
+    expect(result.success).toBe(true);
+    expect(typeof result.schedulingUrl).toBe("string");
+    const url = new URL(result.schedulingUrl);
+    expect(url.origin).toBe("https://cal.com");
+    expect(url.pathname).toBe("/pse/demo");
+    expect(url.searchParams.get("email")).toBe("jane@acme.com");
+    expect(url.searchParams.get("metadata[leadRef]")).toBe("42.abc");
+    expect(mockTransition).not.toHaveBeenCalled(); // no video, no invented VIDEO_SENT
+    const html = mockSend.mock.calls[1][0].html as string;
+    expect(html).toContain("Schedule your PSE demonstration");
+    expect(html).not.toContain("Once it&rsquo;s complete");
+  });
+
+  it("does not return a booking link on honeypot or duplicate suppression", async () => {
+    vi.stubEnv("CALCOM_EVENT_URL", "https://cal.com/pse/demo");
+    const bot = await POST(makeRequest({ ...VALID_BODY, website: "filled" }));
+    expect(await bot.json()).toEqual({ success: true });
+    expect(mockSend).not.toHaveBeenCalled();
+
+    mockLimit
+      .mockResolvedValueOnce({ allowed: true, count: 1 })
+      .mockResolvedValueOnce({ allowed: false, count: 1 });
+    const duplicate = await POST(makeRequest(VALID_BODY));
+    expect(await duplicate.json()).toEqual({ success: true });
+    expect(mockCreateLead).not.toHaveBeenCalled();
+  });
+
+  it("fails softly for an invalid or insecure calendar configuration", async () => {
+    vi.stubEnv("CALCOM_EVENT_URL", "http://insecure.example/demo");
+    const res = await POST(makeRequest(VALID_BODY));
+    expect(await res.json()).toEqual({ success: true });
+    expect(mockCreateLead).toHaveBeenCalledTimes(1);
+    expect(mockSend).toHaveBeenCalledTimes(2);
+    expect(mockSend.mock.calls[1][0].html).not.toContain("Schedule your PSE demonstration");
   });
 
   it("response contains only success — no internal identifiers", async () => {
