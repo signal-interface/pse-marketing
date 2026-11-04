@@ -122,8 +122,8 @@ export default function DemoRequestForm({
                 {heading}
               </h2>
               <p className="text-[17px] text-text-secondary leading-[1.7] mb-8 max-w-[440px]">
-                See how CHAP AI catches compliance issues before they cost you —
-                in a personalized walkthrough of the platform.
+                Explore how PSE approaches payroll governance and validation
+                through a guided demonstration using fixed synthetic data.
               </p>
 
               <div className="flex flex-col gap-4">
@@ -138,10 +138,10 @@ export default function DemoRequestForm({
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-text">
-                      Personalized walkthrough
+                      Guided PSE demonstration
                     </div>
                     <div className="text-[13px] text-text-secondary">
-                      Tailored to your payroll workflow
+                      Predefined scenarios using synthetic payroll data
                     </div>
                   </div>
                 </div>
@@ -174,10 +174,10 @@ export default function DemoRequestForm({
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-text">
-                      By invitation only
+                      Governed demonstration
                     </div>
                     <div className="text-[13px] text-text-secondary">
-                      Platform access is limited
+                      No customer payroll records are required
                     </div>
                   </div>
                 </div>
