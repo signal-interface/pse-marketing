@@ -312,11 +312,6 @@ export async function applyCalendarEvent(
       await client.sql`ROLLBACK`;
       return { ok: false, reason: "booking_mismatch" };
     }
-    if (to !== null && to !== from && !canTransition(from, to)) {
-      await client.sql`ROLLBACK`;
-      return { ok: false, reason: "invalid_transition" };
-    }
-
     const { rows: inserted } = await client.sql`
       INSERT INTO lead_events
         (lead_id, event_type, actor_type, actor_id, source,
@@ -331,6 +326,14 @@ export async function applyCalendarEvent(
     if (inserted.length === 0) {
       await client.sql`ROLLBACK`;
       return { ok: true, duplicate: true };
+    }
+
+    // Check transitions AFTER duplicate detection. A replay of an already
+    // committed booking must remain idempotent even if subsequent legitimate
+    // steps moved the lead to DISCOVERY_COMPLETE or QUALIFIED.
+    if (to !== null && to !== from && !canTransition(from, to)) {
+      await client.sql`ROLLBACK`;
+      return { ok: false, reason: "invalid_transition" };
     }
 
     if (eventType === "MEETING_BOOKED") {
