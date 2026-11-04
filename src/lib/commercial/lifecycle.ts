@@ -3,8 +3,9 @@
 // Commercial lead lifecycle for the PSE discovery workflow.
 //
 // Ratified doctrine (do not violate):
-// - transitionLead() is the ONLY permitted writer of demo_requests.lead_status.
-//   No route may UPDATE lead_status directly.
+// - transitionLead() and the lifecycle-owned atomic applyCalendarEvent() are
+//   the ONLY permitted writers of demo_requests.lead_status.
+//   Routes may not UPDATE lead_status directly.
 // - Every lifecycle change appends a row to lead_events inside the same
 //   transaction as the status update. Status is current state; events are
 //   the evidence trail.
@@ -261,6 +262,118 @@ export async function transitionLead(
     } catch {
       // connection-level failure; original error is what matters
     }
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Cal.com webhook: one transaction for event + booking ref + lifecycle.
+// All status writes remain here, in the commercial lifecycle owner.
+// ---------------------------------------------------------------------------
+
+export type CalendarLifecycleEvent = "MEETING_BOOKED" | "MEETING_RESCHEDULED" | "MEETING_CANCELLED";
+
+export type CalendarApplyResult =
+  | { ok: true; duplicate: boolean }
+  | { ok: false; reason: "not_found" | "invalid_transition" | "booking_mismatch" };
+
+export async function applyCalendarEvent(
+  leadId: number,
+  eventType: CalendarLifecycleEvent,
+  bookingUid: string,
+  externalId: string,
+  ctx: EventContext
+): Promise<CalendarApplyResult> {
+  const client = await db.connect();
+  try {
+    await client.sql`BEGIN`;
+    // Serialize each webhook against the current lead, so conflicting events
+    // cannot interleave their side effects.
+    const { rows } = await client.sql`
+      SELECT lead_status, calendar_event_id
+      FROM demo_requests WHERE id = ${leadId} FOR UPDATE
+    `;
+    if (rows.length !== 1) {
+      await client.sql`ROLLBACK`;
+      return { ok: false, reason: "not_found" };
+    }
+    const from = rows[0].lead_status as LeadStatus;
+    const priorBooking = rows[0].calendar_event_id as string | null;
+    const to: LeadStatus | null =
+      eventType === "MEETING_BOOKED" ? "MEETING_SCHEDULED"
+      : eventType === "MEETING_CANCELLED" ? "NURTURE"
+      : null;
+
+    // Late cancellation/reschedule for an older booking must not mutate the
+    // newest calendar state. If the event is not yet matched, do not guess.
+    if (eventType !== "MEETING_BOOKED" && priorBooking !== bookingUid) {
+      await client.sql`ROLLBACK`;
+      return { ok: false, reason: "booking_mismatch" };
+    }
+    if (to !== null && to !== from && !canTransition(from, to)) {
+      await client.sql`ROLLBACK`;
+      return { ok: false, reason: "invalid_transition" };
+    }
+
+    const { rows: inserted } = await client.sql`
+      INSERT INTO lead_events
+        (lead_id, event_type, actor_type, actor_id, source,
+         request_id, external_id, metadata)
+      VALUES
+        (${leadId}, ${eventType}, ${ctx.actorType}, ${ctx.actorId ?? null},
+         ${ctx.source ?? null}, ${ctx.requestId ?? null},
+         ${externalId}, ${JSON.stringify(ctx.metadata ?? {})}::jsonb)
+      ON CONFLICT (event_type, external_id) WHERE external_id IS NOT NULL
+      DO NOTHING RETURNING id
+    `;
+    if (inserted.length === 0) {
+      await client.sql`ROLLBACK`;
+      return { ok: true, duplicate: true };
+    }
+
+    if (eventType === "MEETING_BOOKED") {
+      if (from !== "MEETING_SCHEDULED") {
+        await client.sql`
+          UPDATE demo_requests
+          SET calendar_event_id = ${bookingUid},
+              lead_status = 'MEETING_SCHEDULED',
+              meeting_scheduled_at = COALESCE(meeting_scheduled_at, NOW()),
+              updated_at = NOW()
+          WHERE id = ${leadId}
+        `;
+      } else {
+        await client.sql`
+          UPDATE demo_requests
+          SET calendar_event_id = ${bookingUid}, updated_at = NOW()
+          WHERE id = ${leadId}
+        `;
+      }
+    } else if (eventType === "MEETING_CANCELLED" && from !== "NURTURE") {
+      await client.sql`
+        UPDATE demo_requests
+        SET lead_status = 'NURTURE', updated_at = NOW()
+        WHERE id = ${leadId}
+      `;
+    }
+
+    if (to !== null && to !== from) {
+      await client.sql`
+        INSERT INTO lead_events
+          (lead_id, event_type, from_status, to_status, actor_type,
+           actor_id, source, request_id, metadata)
+        VALUES
+          (${leadId}, 'STATUS_TRANSITIONED', ${from}, ${to},
+           ${ctx.actorType}, ${ctx.actorId ?? null}, ${ctx.source ?? null},
+           ${ctx.requestId ?? null}, ${JSON.stringify(ctx.metadata ?? {})}::jsonb)
+      `;
+    }
+
+    await client.sql`COMMIT`;
+    return { ok: true, duplicate: false };
+  } catch (err) {
+    try { await client.sql`ROLLBACK`; } catch { /* retain original error */ }
     throw err;
   } finally {
     client.release();
