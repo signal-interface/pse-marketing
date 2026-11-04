@@ -9,6 +9,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, ShieldCheck } from "lucide-react";
+import { APPROVED_DEMO_SELECTIONS } from "@/lib/commercial/demo-selections";
 
 type LoadState =
   | "loading"
@@ -32,6 +33,7 @@ interface Answers {
   governanceConfidence: string;
   desiredFutureState: string;
   meetingPurpose: string;
+  demoSelection: string;
 }
 
 const EMPTY: Answers = {
@@ -48,6 +50,7 @@ const EMPTY: Answers = {
   governanceConfidence: "",
   desiredFutureState: "",
   meetingPurpose: "",
+  demoSelection: "general-overview",
 };
 
 const INPUT_CLS =
@@ -82,6 +85,7 @@ function toPayload(a: Answers): Record<string, unknown> {
   if (a.desiredFutureState.trim())
     out.desiredFutureState = a.desiredFutureState.trim();
   if (a.meetingPurpose.trim()) out.meetingPurpose = a.meetingPurpose.trim();
+  if (a.demoSelection) out.demoSelection = a.demoSelection;
   return out;
 }
 
@@ -109,6 +113,7 @@ function fromPayload(p: Record<string, unknown>): Answers {
     governanceConfidence: n(p.governanceConfidence),
     desiredFutureState: s(p.desiredFutureState),
     meetingPurpose: s(p.meetingPurpose),
+    demoSelection: s(p.demoSelection) || "general-overview",
   };
 }
 
@@ -473,6 +478,30 @@ export default function QuestionnaireClient() {
                     value={answers.governanceConfidence}
                     onChange={(v) => update({ governanceConfidence: v })}
                   />
+                </div>
+              </Section>
+
+              <Section title="Sales Demo presentation">
+                <div>
+                  <label htmlFor="demoSelection" className={LABEL_CLS}>
+                    Which PSE demonstration would you like to explore?
+                  </label>
+                  <select
+                    id="demoSelection"
+                    value={answers.demoSelection}
+                    onChange={(e) => update({ demoSelection: e.target.value })}
+                    className={SELECT_CLS(true)}
+                  >
+                    {APPROVED_DEMO_SELECTIONS.map((selection) => (
+                      <option key={selection.id} value={selection.id}>
+                        {selection.label}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-[13px] text-text-secondary mt-2">
+                    Demonstrations use fixed synthetic data and approved PSE Sales Demo workflows.
+                    Additional areas will appear only after they are verified.
+                  </p>
                 </div>
               </Section>
 
