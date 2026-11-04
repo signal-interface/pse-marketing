@@ -23,6 +23,7 @@ import {
   classifyEmailDomain,
 } from "@/lib/commercial/lifecycle";
 import { signLeadRef } from "@/lib/commercial/links";
+import { buildSchedulingUrl } from "@/lib/commercial/scheduling";
 import { checkAndIncrementScopedLimit } from "@/lib/rateLimiter";
 import { hashIp, extractIp, ipHashingConfigured } from "@/lib/ipHash";
 import { internalNotificationHtml, journeyEmailHtml } from "@/lib/emails";
@@ -202,6 +203,24 @@ export async function POST(request: NextRequest) {
     );
 
     const videoUrl = journeyVideoUrl(lead.id);
+    // Booking is available immediately after lead capture. It does not
+    // depend on video engagement or questionnaire completion. Fail softly
+    // on missing/malformed calendar configuration: the durable lead and
+    // the existing commercial notification must still succeed.
+    let schedulingUrl: string | null = null;
+    try {
+      const candidate = buildSchedulingUrl({
+        id: lead.id,
+        email: input.email,
+        firstName: input.firstName,
+        lastName: input.lastName,
+      });
+      if (candidate && new URL(candidate).protocol === "https:") {
+        schedulingUrl = candidate;
+      }
+    } catch (err) {
+      console.error(`[demo-request:${requestId}] invalid scheduling configuration`);
+    }
 
     // Journey initiation — not delivery — and only when there is a video
     // to send. With PSE_OVERVIEW_VIDEO_URL unset, a VIDEO_SENT status
@@ -251,7 +270,7 @@ export async function POST(request: NextRequest) {
             replyTo: "info@payrollsynergyexperts.com",
             to: input.email,
             subject: "Your PSE overview and next steps",
-            html: journeyEmailHtml({ firstName: input.firstName, videoUrl }),
+            html: journeyEmailHtml({ firstName: input.firstName, videoUrl, schedulingUrl }),
           }),
         },
       ];
@@ -308,7 +327,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json(GENERIC_SUCCESS);
+    // Only a newly persisted, validated lead can receive the booking link.
+    // Honeypots and duplicate submissions retain the generic response.
+    // Never expose lead IDs, authorization tokens or internal state.
+    return NextResponse.json(schedulingUrl
+      ? { success: true, schedulingUrl }
+      : GENERIC_SUCCESS);
   } catch (error) {
     console.error(`[demo-request:${requestId}] error:`, error);
     return NextResponse.json({ error: "server_error" }, { status: 500 });
