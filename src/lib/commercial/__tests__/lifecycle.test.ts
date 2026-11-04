@@ -147,7 +147,17 @@ describe("applyCalendarEvent atomicity and recovery", () => {
     state.selectRows = [{ lead_status: "DISQUALIFIED", calendar_event_id: null }];
     expect(await applyCalendarEvent(1, "MEETING_BOOKED", "bk_123", "bk_123", ctx))
       .toEqual({ ok: false, reason: "invalid_transition" });
-    expect(statements().some(x => x.includes("INSERT INTO lead_events"))).toBe(false);
+    expect(statements()).toContain("ROLLBACK");
+    expect(statements()).not.toContain("COMMIT");
+  });
+
+  it("recognizes a duplicate booking even after the lead progressed", async () => {
+    state.selectRows = [{ lead_status: "DISCOVERY_COMPLETE", calendar_event_id: "bk_123" }];
+    state.duplicateCalendarEvent = true;
+    expect(await applyCalendarEvent(1, "MEETING_BOOKED", "bk_123", "bk_123", ctx))
+      .toEqual({ ok: true, duplicate: true });
+    expect(statements()).toContain("ROLLBACK");
+    expect(statements()).not.toContain("COMMIT");
   });
 
   it("rejects cancellation for an older booking without regressing the current meeting", async () => {
