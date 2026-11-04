@@ -213,7 +213,7 @@ describe("POST /api/webhooks/calendar", () => {
       [{ metadata: { leadRef: ref }, attendees: [{ email: "other@acme.com" }] }, [{ id: 42, email: "jane@acme.com" }]],
       [{ metadata: {} }, [{ id: 1 }, { id: 2 }]],
     ] as const) {
-      state.poolRows = [Array.from(rows)];
+      state.poolRows = [[...rows]];
       const response = await POST(signedRequest(bookingPayload("BOOKING_CREATED", overrides)));
       expect(await response.json()).toMatchObject({ handled: false });
     }
