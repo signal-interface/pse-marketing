@@ -151,10 +151,21 @@ interface JourneyEmailData {
   firstName: string;
   /** Tracked redirect URL when link signing is configured, else direct URL, else absent. */
   videoUrl?: string;
+  /** Optional direct booking link, generated only when Cal.com is configured. */
+  schedulingUrl?: string | null;
 }
 
 export function journeyEmailHtml(data: JourneyEmailData): string {
   const firstName = escapeHtml(data.firstName);
+  const schedulingBlock = data.schedulingUrl
+    ? `
+        <div style="text-align: center; margin: 24px 0;">
+          <a href="${escapeHtml(data.schedulingUrl)}"
+             style="display: inline-block; background: #0b1d3a; color: #ffffff; font-size: 15px; font-weight: 600; padding: 14px 28px; border-radius: 8px; text-decoration: none;">
+            Schedule your PSE demonstration
+          </a>
+        </div>`
+    : "";
   const videoBlock = data.videoUrl
     ? `
         <div style="text-align: center; margin: 24px 0;">
@@ -184,6 +195,7 @@ export function journeyEmailHtml(data: JourneyEmailData): string {
           }
         </p>
         ${videoBlock}
+        ${schedulingBlock}
         <p style="color: #1c1c2e; font-size: 16px; line-height: 1.6; margin: 0 0 16px;">
           PSE is a governance and validation layer that sits above your payroll
           system of record. Your payroll system executes &mdash; PSE governs:
@@ -194,10 +206,9 @@ export function journeyEmailHtml(data: JourneyEmailData): string {
         <div style="background: #f5f0eb; border-radius: 8px; padding: 16px 20px; margin: 20px 0;">
           <p style="color: #6b7280; font-size: 13px; margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.5px;">What happens next</p>
           <p style="color: #1c1c2e; font-size: 15px; margin: 0; line-height: 1.7;">
-            You&rsquo;ll receive a short governance discovery questionnaire
-            (about five minutes) so we can tailor the session to your payroll
-            environment. Once it&rsquo;s complete, you&rsquo;ll get direct
-            access to schedule your discovery call.
+            ${data.schedulingUrl
+              ? "You can schedule your PSE demonstration now. We may also send a short pre-call questionnaire to help choose which existing synthetic-data workflow to show. The questionnaire is not required to book."
+              : "We&rsquo;ve received your request. A member of our team will follow up with scheduling details. Any discovery questionnaire is optional and does not require payroll or employee-level data."}
           </p>
         </div>
 
