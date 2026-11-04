@@ -16,12 +16,14 @@ const state: {
   selectRows: Record<string, unknown>[];
   failOn: string | null;
   poolRows: Record<string, unknown>[][];
+  duplicateCalendarEvent: boolean;
 } = {
   calls: [],
   queryCalls: [],
   selectRows: [],
   failOn: null,
   poolRows: [],
+  duplicateCalendarEvent: false,
 };
 
 function tagText(strings: TemplateStringsArray): string {
@@ -36,6 +38,7 @@ const clientSql = vi.fn(
       throw new Error(`forced failure on: ${state.failOn}`);
     }
     if (text.startsWith("SELECT")) return { rows: state.selectRows };
+    if (state.duplicateCalendarEvent && text.includes("ON CONFLICT (event_type, external_id)")) return { rows: [] };
     if (text.startsWith("INSERT") && text.includes("RETURNING id")) {
       return { rows: [{ id: 42 }] };
     }
@@ -82,6 +85,7 @@ import {
   TRANSITIONS,
   LEAD_STATUSES,
   type LeadStatus,
+  applyCalendarEvent,
 } from "../lifecycle";
 
 const CTX = { actorType: "SYSTEM" as const, source: "test" };
@@ -96,7 +100,70 @@ beforeEach(() => {
   state.selectRows = [];
   state.failOn = null;
   state.poolRows = [];
+  state.duplicateCalendarEvent = false;
   vi.clearAllMocks();
+});
+
+describe("applyCalendarEvent atomicity and recovery", () => {
+  const ctx = {
+    actorType: "CALENDAR_PROVIDER" as const,
+    source: "test-webhook",
+    requestId: "req-calendar-1",
+    metadata: { bookingUid: "bk_123" },
+  };
+  it("commits booking event, calendar reference, transition and evidence together", async () => {
+    state.selectRows = [{ lead_status: "NEW", calendar_event_id: null }];
+    const result = await applyCalendarEvent(1, "MEETING_BOOKED", "bk_123", "bk_123", ctx);
+    expect(result).toEqual({ ok: true, duplicate: false });
+    const text = statements().join(" ");
+    expect(text).toContain("FOR UPDATE");
+    expect(text).toContain("ON CONFLICT (event_type, external_id)");
+    expect(text).toContain("SET calendar_event_id");
+    expect(text).toContain("lead_status = 'MEETING_SCHEDULED'");
+    expect(text).toContain("STATUS_TRANSITIONED");
+    expect(statements().at(-1)).toBe("COMMIT");
+    expect(release).toHaveBeenCalledOnce();
+  });
+
+  it("rolls back the event if the lead update fails, allowing safe retry", async () => {
+    state.selectRows = [{ lead_status: "VIDEO_SENT", calendar_event_id: null }];
+    state.failOn = "UPDATE demo_requests";
+    await expect(applyCalendarEvent(1, "MEETING_BOOKED", "bk_123", "bk_123", ctx)).rejects.toThrow();
+    expect(statements()).toContain("ROLLBACK");
+    expect(statements()).not.toContain("COMMIT");
+    expect(release).toHaveBeenCalledOnce();
+  });
+
+  it("discards the entire transaction for duplicate deliveries", async () => {
+    state.selectRows = [{ lead_status: "NEW", calendar_event_id: null }];
+    state.duplicateCalendarEvent = true;
+    expect(await applyCalendarEvent(1, "MEETING_BOOKED", "bk_123", "bk_123", ctx))
+      .toEqual({ ok: true, duplicate: true });
+    expect(statements()).toContain("ROLLBACK");
+    expect(statements().some(x => x.includes("UPDATE demo_requests"))).toBe(false);
+  });
+
+  it("rejects forbidden states before inserting a booking event", async () => {
+    state.selectRows = [{ lead_status: "DISQUALIFIED", calendar_event_id: null }];
+    expect(await applyCalendarEvent(1, "MEETING_BOOKED", "bk_123", "bk_123", ctx))
+      .toEqual({ ok: false, reason: "invalid_transition" });
+    expect(statements().some(x => x.includes("INSERT INTO lead_events"))).toBe(false);
+  });
+
+  it("rejects cancellation for an older booking without regressing the current meeting", async () => {
+    state.selectRows = [{ lead_status: "MEETING_SCHEDULED", calendar_event_id: "bk_current" }];
+    expect(await applyCalendarEvent(1, "MEETING_CANCELLED", "bk_old", "bk_old", ctx))
+      .toEqual({ ok: false, reason: "booking_mismatch" });
+    expect(statements().some(x => x.includes("UPDATE demo_requests"))).toBe(false);
+  });
+
+  it("cancellation changes the lead and writes the event in one commit", async () => {
+    state.selectRows = [{ lead_status: "MEETING_SCHEDULED", calendar_event_id: "bk_123" }];
+    expect(await applyCalendarEvent(1, "MEETING_CANCELLED", "bk_123", "bk_123", ctx))
+      .toEqual({ ok: true, duplicate: false });
+    expect(statements().some(x => x.includes("lead_status = 'NURTURE'"))).toBe(true);
+    expect(statements()).toContain("COMMIT");
+  });
 });
 
 // ---------------------------------------------------------------------------
