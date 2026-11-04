@@ -15,43 +15,13 @@
 // status — nothing else.
 
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@vercel/postgres";
 import {
   verifyCalcomSignature,
   parseCalcomEvent,
   externalIdFor,
   resolveBookingLead,
 } from "@/lib/commercial/scheduling";
-import {
-  transitionLead,
-  recordLeadEvent,
-  type TransitionResult,
-} from "@/lib/commercial/lifecycle";
-
-// Cal.com is the one external system that drives lifecycle state, and a
-// rejected transition here is the one place calendar reality and
-// lead_status can diverge invisibly: the booking event is recorded and
-// calendar_event_id is set, but the status stays behind. Surface every
-// rejection; do not force the transition.
-function logDroppedTransition(
-  requestId: string,
-  bookingUid: string,
-  result: TransitionResult
-): void {
-  if (result.ok) return;
-  if (result.reason === "invalid_transition") {
-    console.warn(
-      `[calendar-webhook:${requestId}] dropped transition for lead ${result.leadId}: ` +
-        `${result.from} -> ${result.to} not permitted (booking ${bookingUid}); ` +
-        `lead_status now disagrees with the calendar`
-    );
-  } else {
-    console.warn(
-      `[calendar-webhook:${requestId}] dropped transition for lead ${result.leadId}: ` +
-        `lead not found (booking ${bookingUid})`
-    );
-  }
-}
+import { applyCalendarEvent } from "@/lib/commercial/lifecycle";
 
 export async function POST(request: NextRequest) {
   const requestId = crypto.randomUUID();
@@ -103,41 +73,24 @@ export async function POST(request: NextRequest) {
           ? ("MEETING_RESCHEDULED" as const)
           : ("MEETING_CANCELLED" as const);
 
-    const recorded = await recordLeadEvent(leadId, eventType, ctx);
-    if (!recorded.ok) {
-      // Duplicate delivery — already processed. Idempotent success.
+    // Booking event, calendar reference and any status transition commit in
+    // one DB transaction. A failed write cannot poison subsequent retries.
+    const applied = await applyCalendarEvent(
+      leadId, eventType, event.bookingUid, externalIdFor(event), ctx
+    );
+    if (!applied.ok) {
+      console.warn(`[calendar-webhook:${requestId}] reconciliation required: ${applied.reason}`);
+      // Invalid transitions / stale booking are not automatically recoverable.
+      // Acknowledge but leave explicitly unresolved for operator follow-up.
+      return NextResponse.json({ received: true, handled: false });
+    }
+    if (applied.duplicate) {
       return NextResponse.json({ received: true, duplicate: true });
     }
-
-    if (event.trigger === "BOOKING_CREATED") {
-      // calendar_event_id is reference data, not lifecycle state.
-      await sql`
-        UPDATE demo_requests
-        SET calendar_event_id = ${event.bookingUid}, updated_at = NOW()
-        WHERE id = ${leadId}
-      `;
-      const transition = await transitionLead(leadId, "MEETING_SCHEDULED", {
-        actorType: "CALENDAR_PROVIDER",
-        source: "api/webhooks/calendar",
-        requestId,
-        metadata: { bookingUid: event.bookingUid },
-      });
-      logDroppedTransition(requestId, event.bookingUid, transition);
-    } else if (event.trigger === "BOOKING_CANCELLED") {
-      const transition = await transitionLead(leadId, "NURTURE", {
-        actorType: "CALENDAR_PROVIDER",
-        source: "api/webhooks/calendar",
-        requestId,
-        metadata: { bookingUid: event.bookingUid, reason: "booking_cancelled" },
-      });
-      logDroppedTransition(requestId, event.bookingUid, transition);
-    }
-    // RESCHEDULED: event recorded; status stays MEETING_SCHEDULED.
-
     return NextResponse.json({ received: true, handled: true });
   } catch (error) {
     console.error(`[calendar-webhook:${requestId}] error:`, error);
-    // 500 → Cal.com retries; safe because processing is idempotent.
+    // 500 requests provider retry. The transactional handler is idempotent.
     return NextResponse.json({ error: "server_error" }, { status: 500 });
   }
 }
