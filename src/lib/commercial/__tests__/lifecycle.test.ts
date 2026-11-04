@@ -176,6 +176,22 @@ describe("transition map", () => {
     expect(canTransition("NEW", "QUALIFIED")).toBe(false);
   });
 
+  it("accepts a calendar booking from every approved pre-meeting stage", () => {
+    for (const from of [
+      "NEW",
+      "VIDEO_SENT",
+      "VIDEO_ENGAGED",
+      "QUESTIONNAIRE_SENT",
+      "QUESTIONNAIRE_STARTED",
+      "QUESTIONNAIRE_COMPLETED",
+      "NURTURE",
+    ] as const) {
+      expect(canTransition(from, "MEETING_SCHEDULED")).toBe(true);
+    }
+    expect(canTransition("DISQUALIFIED", "MEETING_SCHEDULED")).toBe(false);
+    expect(canTransition("QUALIFIED", "MEETING_SCHEDULED")).toBe(false);
+  });
+
   it("QUALIFIED is reachable only through DISCOVERY_COMPLETE", () => {
     for (const from of LEAD_STATUSES) {
       expect(canTransition(from, "QUALIFIED")).toBe(
@@ -196,18 +212,21 @@ describe("transition map", () => {
       VIDEO_SENT: [
         "VIDEO_ENGAGED",
         "QUESTIONNAIRE_SENT",
+        "MEETING_SCHEDULED",
         "NURTURE",
         "DISQUALIFIED",
       ],
-      VIDEO_ENGAGED: ["QUESTIONNAIRE_SENT", "NURTURE", "DISQUALIFIED"],
+      VIDEO_ENGAGED: ["QUESTIONNAIRE_SENT", "MEETING_SCHEDULED", "NURTURE", "DISQUALIFIED"],
       QUESTIONNAIRE_SENT: [
         "QUESTIONNAIRE_STARTED",
         "QUESTIONNAIRE_COMPLETED",
+        "MEETING_SCHEDULED",
         "NURTURE",
         "DISQUALIFIED",
       ],
       QUESTIONNAIRE_STARTED: [
         "QUESTIONNAIRE_COMPLETED",
+        "MEETING_SCHEDULED",
         "NURTURE",
         "DISQUALIFIED",
       ],
