@@ -19,6 +19,7 @@ import crypto from "node:crypto";
 import { db, sql } from "@vercel/postgres";
 import { transitionLead, recordLeadEvent, type EventContext } from "./lifecycle";
 import { consumeQuestionnaireToken, sha256Hex } from "./tokens";
+import { isApprovedDemoSelection } from "./demo-selections";
 
 export const SESSION_TTL_DAYS = 14;
 
@@ -62,6 +63,8 @@ const ANSWER_FIELDS: Record<string, FieldSpec> = {
   governanceConfidence: { kind: "int", min: 1, max: 10 },
   desiredFutureState: { kind: "string", maxLen: 2000 },
   meetingPurpose: { kind: "string", maxLen: 1000 },
+  // Independent sales presentation preference, not a runtime capability flag.
+  demoSelection: { kind: "enum", values: ["general-overview"] },
 };
 
 const MAX_ANSWERS_BYTES = 16 * 1024;
