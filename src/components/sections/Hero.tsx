@@ -20,8 +20,7 @@ export default function Hero() {
           style={{ animation: "fadeInUp 0.6s ease-out" }}
         >
           <span
-            className="w-2 h-2 rounded-full bg-green"
-            style={{ animation: "pulse-green 2s infinite" }}
+            className="pse-pulse-green w-2 h-2 rounded-full bg-green"
           />
           Powered by CHAP AI&trade;
         </div>

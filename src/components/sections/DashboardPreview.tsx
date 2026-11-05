@@ -13,8 +13,7 @@ export default function DashboardPreview() {
         {/* Header */}
         <div className="flex items-center gap-2.5 mb-6 pb-4 border-b border-border-light">
           <span
-            className="w-2 h-2 rounded-full bg-green"
-            style={{ animation: "pulse-green 2s infinite" }}
+            className="pse-pulse-green w-2 h-2 rounded-full bg-green"
           />
           <span className="text-sm font-semibold text-text">
             CHAP AI &mdash; Pre-Run Compliance
