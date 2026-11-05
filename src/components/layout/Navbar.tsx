@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { DEMO_ANCHOR, NAV_LINKS } from "@/lib/constants";
+import { nextInFocusCycle, visibleFocusables } from "@/lib/ui/focusCycle";
 
 export const MOBILE_MENU_ID = "mobile-navigation-menu";
 
@@ -12,6 +13,8 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -20,21 +23,49 @@ export default function Navbar() {
   }, []);
 
   // MOB-02: Escape closes the open mobile menu and returns focus to the toggle.
+  // While the menu overlay is showing, Tab/Shift+Tab cycle through the visible
+  // header controls and menu links only, so focus never lands on a control
+  // hidden behind the overlay. Containment ends when the menu closes.
   useEffect(() => {
     if (!menuOpen) return;
+    const overlayShowing = () => (menuRef.current?.getClientRects().length ?? 0) > 0;
+    const insideMenuOrHeader = (node: EventTarget | null) =>
+      node instanceof Node &&
+      (!!navRef.current?.contains(node) || !!menuRef.current?.contains(node));
+
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setMenuOpen(false);
         toggleRef.current?.focus();
+        return;
+      }
+      if (event.key !== "Tab" || !overlayShowing()) return;
+      const items = visibleFocusables([navRef.current, menuRef.current]);
+      const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      const target = nextInFocusCycle(items, active, event.shiftKey);
+      if (target) {
+        event.preventDefault();
+        target.focus();
+      }
+    };
+    // Backstop for focus moved by other means (e.g. assistive technology).
+    const onFocusIn = (event: FocusEvent) => {
+      if (overlayShowing() && !insideMenuOrHeader(event.target)) {
+        toggleRef.current?.focus();
       }
     };
     document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("focusin", onFocusIn);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("focusin", onFocusIn);
+    };
   }, [menuOpen]);
 
   return (
     <>
       <nav
+        ref={navRef}
         className={`fixed top-0 left-0 right-0 z-50 bg-[rgba(255,255,255,0.92)] backdrop-blur-[20px] border-b border-border transition-shadow duration-300 ${
           scrolled ? "shadow-sm" : ""
         }`}
@@ -97,6 +128,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div
+          ref={menuRef}
           id={MOBILE_MENU_ID}
           className="fixed top-16 left-0 right-0 bottom-0 md:hidden bg-white px-8 py-6 z-[99] flex flex-col gap-2"
         >
