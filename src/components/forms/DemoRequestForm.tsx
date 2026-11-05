@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, Calendar, Clock, Lock } from "lucide-react";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
+import { revealSuccessPanel } from "@/lib/ui/revealSuccessPanel";
 
 interface DemoRequestFormProps {
   source?: string;
@@ -31,6 +32,19 @@ export default function DemoRequestForm({
   const [submitted, setSubmitted] = useState(false);
   const [schedulingUrl, setSchedulingUrl] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const successPanelRef = useRef<HTMLDivElement>(null);
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  // MOB-01: once the confirmation replaces the (much taller) form, bring it
+  // and the scheduling CTA into view and move focus to its heading.
+  useEffect(() => {
+    if (!submitted) return;
+    revealSuccessPanel(
+      successPanelRef.current,
+      successHeadingRef.current,
+      typeof window !== "undefined" ? window.matchMedia?.bind(window) : undefined,
+    );
+  }, [submitted]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,36 +95,46 @@ export default function DemoRequestForm({
     <section id={anchorId} className="py-28 px-8 bg-ice">
       <div className="max-w-[1100px] mx-auto">
         {submitted ? (
-          <RevealOnScroll>
-            <div className="max-w-[640px] mx-auto px-8 py-10 bg-white rounded-2xl border-2 border-green text-center shadow-md">
-              <div className="w-[52px] h-[52px] rounded-full bg-green-bg flex items-center justify-center mx-auto mb-4">
-                <Check
-                  size={24}
-                  strokeWidth={3}
-                  className="text-green"
-                  aria-hidden="true"
-                />
-              </div>
-              <div className="text-xl font-bold text-text mb-1.5">
-                {source.endsWith('-interest') ? 'You\u2019re on the list' : 'Demo request received'}
-              </div>
-              <div className="text-[15px] text-text-secondary">
-                {schedulingUrl
-                  ? "Your request is in. You can schedule your PSE demonstration now."
-                  : confirmationMessage}
-              </div>
-              {schedulingUrl && (
-                <a
-                  href={schedulingUrl}
-                  rel="noopener noreferrer"
-                  className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-navy text-white font-semibold hover:bg-navy-dark"
+          <div
+            ref={successPanelRef}
+            data-testid="demo-success-panel"
+            className="scroll-mt-24"
+          >
+            <RevealOnScroll>
+              <div className="max-w-[640px] mx-auto px-8 py-10 bg-white rounded-2xl border-2 border-green text-center shadow-md">
+                <div className="w-[52px] h-[52px] rounded-full bg-green-bg flex items-center justify-center mx-auto mb-4">
+                  <Check
+                    size={24}
+                    strokeWidth={3}
+                    className="text-green"
+                    aria-hidden="true"
+                  />
+                </div>
+                <h2
+                  ref={successHeadingRef}
+                  tabIndex={-1}
+                  className="text-xl font-bold text-text mb-1.5 outline-none"
                 >
-                  Schedule your PSE demonstration
-                  <ArrowRight size={17} aria-hidden="true" />
-                </a>
-              )}
-            </div>
-          </RevealOnScroll>
+                  {source.endsWith('-interest') ? 'You\u2019re on the list' : 'Demo request received'}
+                </h2>
+                <div className="text-[15px] text-text-secondary">
+                  {schedulingUrl
+                    ? "Your request is in. You can schedule your PSE demonstration now."
+                    : confirmationMessage}
+                </div>
+                {schedulingUrl && (
+                  <a
+                    href={schedulingUrl}
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-navy text-white font-semibold hover:bg-navy-dark"
+                  >
+                    Schedule your PSE demonstration
+                    <ArrowRight size={17} aria-hidden="true" />
+                  </a>
+                )}
+              </div>
+            </RevealOnScroll>
+          </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             {/* Left: Feature bullets */}

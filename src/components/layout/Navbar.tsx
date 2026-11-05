@@ -1,19 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { DEMO_ANCHOR, NAV_LINKS } from "@/lib/constants";
 
+export const MOBILE_MENU_ID = "mobile-navigation-menu";
+
 export default function Navbar() {
+  // menuOpen must remain the first useState call (see investorLinks test).
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // MOB-02: Escape closes the open mobile menu and returns focus to the toggle.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
 
   return (
     <>
@@ -57,20 +74,32 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Mobile toggle */}
+          {/* Mobile toggle: 44x44 target; -mr-3 keeps the 20px icon on the
+              same visual edge as before. */}
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden text-text hover:text-text-secondary"
-            aria-label="Toggle menu"
+            ref={toggleRef}
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            className="md:hidden -mr-3 inline-flex items-center justify-center w-11 h-11 rounded-md text-text hover:text-text-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls={MOBILE_MENU_ID}
           >
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            {menuOpen ? (
+              <X size={20} aria-hidden="true" />
+            ) : (
+              <Menu size={20} aria-hidden="true" />
+            )}
           </button>
         </div>
       </nav>
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="fixed top-16 left-0 right-0 bottom-0 md:hidden bg-white px-8 py-6 z-[99] flex flex-col gap-2">
+        <div
+          id={MOBILE_MENU_ID}
+          className="fixed top-16 left-0 right-0 bottom-0 md:hidden bg-white px-8 py-6 z-[99] flex flex-col gap-2"
+        >
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
