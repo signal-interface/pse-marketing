@@ -62,3 +62,54 @@ describe("reduced motion: nonessential repeating animations", () => {
     }
   });
 });
+
+/**
+ * Vega live recheck of production a224c71 (Issue #55, 2026-11-05 13:12 UTC):
+ * menu → Request a Demo still animated via `html { scroll-behavior: smooth }`,
+ * and two 600ms `fadeInUp` hero entrance animations ran under reduced motion.
+ */
+describe("reduced motion: anchor navigation", () => {
+  const reduced = reducedMotionBlocks(css);
+  const outside = css.replace(/@media\s*\(prefers-reduced-motion[\s\S]*?\n\}/g, "");
+
+  it("jumps to in-page anchors immediately (scroll-behavior: auto)", () => {
+    expect(ruleBody(reduced, "html")).toMatch(/scroll-behavior:\s*auto/);
+  });
+
+  it("keeps smooth anchor scrolling when no reduced-motion preference is set", () => {
+    expect(ruleBody(outside, "html")).toMatch(/scroll-behavior:\s*smooth/);
+  });
+
+  it("keeps the PR #63 success-panel reveal on an explicit instant jump", () => {
+    const source = read("src/lib/ui/revealSuccessPanel.ts");
+    expect(source).toMatch(/prefersReducedMotion\(matchMedia\)\s*\?\s*"instant"\s*:\s*"smooth"/);
+  });
+});
+
+describe("reduced motion: entrance animations", () => {
+  const reduced = reducedMotionBlocks(css);
+  const outside = css.replace(/@media\s*\(prefers-reduced-motion[\s\S]*?\n\}/g, "");
+  const hero = read("src/components/sections/Hero.tsx");
+
+  it("does not set hero entrance animations inline, which a media query cannot override", () => {
+    expect(hero).not.toMatch(/animation:\s*["']fadeInUp/);
+    expect(hero.match(/pse-hero-enter(?![-\w])/g)?.length).toBe(2);
+    expect(hero).toContain("pse-hero-enter-late");
+  });
+
+  it("keeps the 600ms and delayed hero entrances for normal motion", () => {
+    expect(ruleBody(outside, ".pse-hero-enter")).toMatch(/animation:\s*fadeInUp 0\.6s ease-out/);
+    expect(ruleBody(outside, ".pse-hero-enter-late")).toMatch(/animation:\s*fadeInUp 0\.8s ease-out 0\.1s both/);
+  });
+
+  it("disables hero entrance animations under reduced motion", () => {
+    expect(reduced).toMatch(/\.pse-hero-enter,\s*\.pse-hero-enter-late\s*\{[^}]*animation:\s*none/);
+  });
+
+  it("shows scroll-reveal content immediately, without a transition, under reduced motion", () => {
+    const reveal = ruleBody(reduced, ".reveal");
+    expect(reveal).toMatch(/opacity:\s*1/);
+    expect(reveal).toMatch(/transform:\s*none/);
+    expect(reveal).toMatch(/transition:\s*none/);
+  });
+});

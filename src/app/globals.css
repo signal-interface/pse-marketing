@@ -89,6 +89,11 @@ section[id] {
   }
 }
 
+/* Hero entrance (one-shot). Classes, not inline styles, so the
+   reduced-motion block below can switch them off. */
+.pse-hero-enter { animation: fadeInUp 0.6s ease-out; }
+.pse-hero-enter-late { animation: fadeInUp 0.8s ease-out 0.1s both; }
+
 .reveal {
   opacity: 0;
   transform: translateY(20px);
@@ -128,10 +133,15 @@ section[id] {
 /* Live-status indicator dot (Hero badge, dashboard preview header). */
 .pse-pulse-green { animation: pulse-green 2s infinite; }
 
-/* Reduced motion: stop nonessential repeating motion only. The industry
+/* Reduced motion: stop nonessential repeating and entrance motion. The industry
    strip becomes a static wrapped list so every industry stays visible
    (the duplicate set exists only for the seamless loop and is hidden). */
 @media (prefers-reduced-motion: reduce) {
+  /* In-page anchors (e.g. menu → Request a Demo) jump instead of gliding. */
+  html { scroll-behavior: auto; }
+  /* Entrance motion is decorative: show content in its final state. */
+  .pse-hero-enter, .pse-hero-enter-late { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
   .pse-pulse-green { animation: none; }
   .pse-logo-bar__track { animation: none; width: auto; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.5rem; }
   .pse-logo-bar__track > [aria-hidden="true"] { display: none; }
