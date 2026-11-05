@@ -16,8 +16,7 @@ export default function Hero() {
       <div className="max-w-[1200px] mx-auto relative">
         {/* Badge */}
         <div
-          className="inline-flex items-center gap-2 bg-white border border-border px-3.5 py-1.5 rounded-full text-[13px] font-medium text-text-secondary mb-7 shadow-sm"
-          style={{ animation: "fadeInUp 0.6s ease-out" }}
+          className="inline-flex items-center gap-2 bg-white border border-border px-3.5 py-1.5 rounded-full text-[13px] font-medium text-text-secondary mb-7 shadow-sm pse-hero-enter"
         >
           <span
             className="pse-pulse-green w-2 h-2 rounded-full bg-green"
@@ -27,7 +26,7 @@ export default function Hero() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
-          <div style={{ animation: "fadeInUp 0.6s ease-out" }}>
+          <div className="pse-hero-enter">
             <h1 className="text-[clamp(2.2rem,4vw,3.2rem)] font-bold leading-[1.15] tracking-[-0.03em] text-text mb-5">
               Payroll has no governance layer.{" "}
               <em className="not-italic relative inline-block">
@@ -63,10 +62,7 @@ export default function Hero() {
           </div>
 
           {/* Dashboard */}
-          <div
-            className="hidden lg:block"
-            style={{ animation: "fadeInUp 0.8s ease-out 0.1s both" }}
-          >
+          <div className="hidden lg:block pse-hero-enter-late">
             <DashboardPreview />
           </div>
         </div>
