@@ -43,7 +43,7 @@ export default function ChapAI() {
               The CHAP AI marketing experience provides limited, reference-backed
               educational responses about IRC §6656. It does not connect to
               live payroll data, CHAP Production, or customer systems, and
-              it does not approve or execute payroll actions.
+              it cannot alter customer payroll records or initiate operational workflows.
             </div>
           </div>
         </RevealOnScroll>
