@@ -606,15 +606,15 @@ export const CLAIMS: readonly Claim[] = [
     id: "chap-regulatory-log-sample",
     statement:
       "Regulatory update log entries on the CHAP AI page illustrating how rule changes would be tracked and documented.",
-    status: "illustrative",
+    status: "planned",
     evidence: [
-      { kind: "shipped_surface", path: "src/app/chap-ai/page.tsx" },
+      { kind: "founder_attested", note: "Illustrative regulatory log removed from marketing on 2026-11-07; not a live source or shipped monitoring feature." },
       {
         kind: "founder_attested",
         note: "Invented log entries (dates, statutes, APPLIED states); the log carries a visible 'Sample data' marker. A fabricated audit trail without a marker is the highest-cost illustration on the site.",
       },
     ],
-    surfaces: ["/chap-ai"],
+    surfaces: [],
     owner: OWNER,
     lastReviewed: "2026-07-30",
   },
