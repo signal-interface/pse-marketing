@@ -442,7 +442,7 @@ section[id] {
 .chap-interface { background: var(--chap-bg-mid, #0a1628); border: 1px solid var(--chap-border, rgba(46,127,216,0.15)); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 540px; }
 .chap-interface__header { background: var(--chap-bg-card, #0d1e35); padding: 0.85rem 1.1rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--chap-border, rgba(46,127,216,0.15)); flex-shrink: 0; }
 .chap-interface__header-left { display: flex; align-items: center; gap: 0.65rem; }
-.chap-interface__icon { width: 28px; height: 28px; background: rgba(46,127,216,0.15); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--chap-accent, #2e7fd8); flex-shrink: 0; }
+.chap-interface__icon { width: 42px; height: 42px; background: rgba(46,127,216,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--chap-accent, #2e7fd8); flex-shrink: 0; }
 .chap-interface__name { font-size: 0.82rem; font-weight: 600; color: #ffffff; }
 .chap-interface__sub { font-size: 0.65rem; color: var(--chap-text-muted, #4a6580); }
 .chap-interface__header-right { display: flex; gap: 0.4rem; flex-wrap: wrap; }

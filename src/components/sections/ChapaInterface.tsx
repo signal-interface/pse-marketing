@@ -295,30 +295,32 @@ export function ChapaInterface() {
       {/* Header */}
       <div className="chap-interface__header">
         <div className="chap-interface__header-left">
-          <div className="chap-interface__icon">
+          <div className="chap-interface__icon" aria-label="CHAP AI assistant" role="img">
             <svg
-              viewBox="0 0 24 24"
+              viewBox="0 0 32 32"
               fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              width="14"
-              height="14"
+              width="30"
+              height="30"
+              aria-hidden="true"
             >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <rect x="5" y="8" width="22" height="20" rx="8" fill="currentColor" fillOpacity="0.14" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M16 4v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <circle cx="16" cy="4" r="2" fill="currentColor" />
+              <circle cx="12" cy="17" r="2" fill="currentColor" />
+              <circle cx="20" cy="17" r="2" fill="currentColor" />
+              <path d="M12 23c2.5 2 5.5 2 8 0" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
           </div>
           <div>
             <div className="chap-interface__name">CHAP AI</div>
             <div className="chap-interface__sub">
-              Compliance &amp; Payroll Intelligence
+              Compliance, Helpdesk &amp; Automation Platform
             </div>
           </div>
         </div>
         <div className="chap-interface__header-right">
           <span className="chap-interface__badge chap-interface__badge--live">
-            AI: Live
+            Educational AI
           </span>
           <span className="chap-interface__badge chap-interface__badge--kb">
             Corpus: IRC §6656
