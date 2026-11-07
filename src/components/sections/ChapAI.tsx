@@ -36,14 +36,14 @@ export default function ChapAI() {
             Compliance, Helpdesk &amp; Automation Platform
           </p>
           <h2 className="text-[clamp(2rem,4vw,2.75rem)] mt-4 text-white tracking-[-0.02em] leading-[1.12] font-bold">
-            The compliance brain behind every payroll run.
+            Explore federal payroll deposit penalty questions with CHAP AI.
           </h2>
           <div className="chap-definition-block">
             <div className="chap-definition-block__body">
-              An AI intelligence layer that analyzes payroll scenarios against
-              federal and state regulations, surfaces findings for human review,
-              and produces audit-ready determinations. Every determination
-              requires a named human approver before any action is taken.
+              The CHAP AI marketing experience provides limited, reference-backed
+              educational responses about IRC §6656. It does not connect to
+              live payroll data, CHAP Production, or customer systems, and
+              it does not approve or execute payroll actions.
             </div>
           </div>
         </RevealOnScroll>
