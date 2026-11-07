@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     await ensureChapTables();
     const limited = await checkAndIncrementScopedLimit(
       "chap-lead-capture-ip",
-      hashIp(extractIp(request), "chap-capture"),
+      hashIp(extractIp(request), "chap"),
       10
     );
     if (!limited.allowed) {
