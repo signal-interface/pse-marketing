@@ -122,8 +122,13 @@ export async function POST(request: NextRequest): Promise<Response> {
   if (!sessionId || typeof sessionId !== "string") {
     return jsonResponse({ error: "invalid_session_id" }, 400);
   }
+  // Client-supplied email is an untrusted hint, never an entitlement.
+  // A matching persisted CHAP marketing capture for this session is required
+  // to unlock questions beyond the three free ones.
   const emailStr =
-    typeof email === "string" && email.length > 0 ? email : null;
+    typeof email === "string" && email.trim().length > 0
+      ? email.trim().toLowerCase()
+      : null;
 
   // 2. IP hash
   const ipHash = hashIp(extractIp(request), "chap");
@@ -131,13 +136,39 @@ export async function POST(request: NextRequest): Promise<Response> {
   // 3. Ensure tables exist (idempotent, safe to call per-request)
   await ensureChapTables();
 
-  // 4. Injection pre-filter — synthesize out_of_scope, log, short-circuit.
+  // 4. Resolve email eligibility on the server from marketing lead storage.
+  // Never accept hasEmail on the strength of a request-body string.
+  let capturedEmail: string | null = null;
+  if (emailStr !== null) {
+    const matched = await sql<{ email: string }>`
+      SELECT email FROM chap_leads
+      WHERE session_id = ${sessionId}
+        AND lower(email) = ${emailStr}
+      LIMIT 1
+    `;
+    capturedEmail = matched.rows[0]?.email ?? null;
+  }
+
+  // Gate and account for every question, including obvious injections.
+  const rl = await checkAndIncrementRateLimit({
+    sessionId,
+    ipHash,
+    hasEmail: capturedEmail !== null,
+  });
+  if (!rl.allowed) {
+    return jsonResponse(
+      { error: rl.requiresEmail ? "email_required" : "rate_limit" },
+      429
+    );
+  }
+
+  // 5. Injection pre-filter — synthesize out_of_scope, log, short-circuit.
   if (containsInjectionPattern(question)) {
     const synthetic = syntheticInjectionOutOfScope();
     await logInteraction({
       sessionId,
       ipHash,
-      email: emailStr,
+      email: capturedEmail,
       question,
       response: synthetic,
       latencyMs: 0,
@@ -152,19 +183,6 @@ export async function POST(request: NextRequest): Promise<Response> {
       },
     });
     return sseResponse(stream);
-  }
-
-  // 5. Rate limit (only counts toward the cap on allowed requests)
-  const rl = await checkAndIncrementRateLimit({
-    sessionId,
-    ipHash,
-    hasEmail: emailStr !== null,
-  });
-  if (!rl.allowed) {
-    return jsonResponse(
-      { error: rl.requiresEmail ? "email_required" : "rate_limit" },
-      429
-    );
   }
 
   // 6. Retrieve corpus (top 5 by keyword score, or all entries if zero signal)
@@ -210,7 +228,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         await logInteraction({
           sessionId,
           ipHash,
-          email: emailStr,
+          email: capturedEmail,
           question,
           response: validated,
           latencyMs: Date.now() - startedAt,
@@ -226,7 +244,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         await logInteraction({
           sessionId,
           ipHash,
-          email: emailStr,
+          email: capturedEmail,
           question,
           response: null,
           latencyMs: Date.now() - startedAt,

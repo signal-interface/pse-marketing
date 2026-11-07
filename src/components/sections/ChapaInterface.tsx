@@ -256,10 +256,10 @@ export function ChapaInterface() {
     }
   };
 
-  const submitEmailGate = async (gateEmail: string, pendingQuestion: string) => {
-    if (!gateEmail.trim()) return;
+  const submitEmailGate = async (gateEmail: string, pendingQuestion: string): Promise<boolean> => {
+    if (!gateEmail.trim()) return false;
     try {
-      await fetch('/api/lead-capture', {
+      const res = await fetch('/api/lead-capture', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -268,16 +268,18 @@ export function ChapaInterface() {
           firstQuestion: pendingQuestion,
         }),
       });
-    } catch (err) {
-      console.error('[ChapaInterface] lead capture failed:', err);
-      // Not fatal — we still let the visitor through. Retrying the
-      // question with the email attached will re-trigger storage.
+      if (!res.ok) return false;
+      const result = (await res.json()) as { success?: boolean; captured?: boolean };
+      if (result.success !== true || result.captured !== true) return false;
+    } catch {
+      // Fail closed; do not unlock extended questions on a failed capture.
+      return false;
     }
     writeStoredEmail(gateEmail);
     setEmail(gateEmail);
-    // Drop the email_gate message and re-fire the pending question.
     setMessages((prev) => prev.filter((m) => !(m.role === 'assistant' && m.status === 'email_gate')));
     void askQuestion(pendingQuestion, gateEmail);
+    return true;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -478,10 +480,11 @@ export function ChapaInterface() {
 
 function EmailGate(props: {
   pendingQuestion: string;
-  onSubmit: (email: string, pendingQuestion: string) => void;
+  onSubmit: (email: string, pendingQuestion: string) => Promise<boolean>;
 }) {
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   return (
     <div className="chap-interface__msg chap-interface__msg--chap">
@@ -500,7 +503,13 @@ function EmailGate(props: {
               return;
             }
             setError(null);
-            props.onSubmit(v, props.pendingQuestion);
+            setBusy(true);
+            void props.onSubmit(v, props.pendingQuestion)
+              .then((ok) => {
+                if (!ok) setError('We could not save your email. Please try again later.');
+              })
+              .catch(() => setError('We could not save your email. Please try again later.'))
+              .finally(() => setBusy(false));
           }}
           style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}
         >
@@ -514,7 +523,7 @@ function EmailGate(props: {
             autoFocus
             required
           />
-          <button type="submit" className="chap-interface__send">
+          <button type="submit" className="chap-interface__send" disabled={busy}>
             Continue
           </button>
         </form>

@@ -27,9 +27,9 @@ interface ChapLeadData {
 
 export function chapLeadNotificationHtml(data: ChapLeadData): string {
   const rows: [string, string][] = [
-    ["Email", data.email],
-    ["Session", data.sessionId],
-    ["First question", data.firstQuestion || "—"],
+    ["Email", escapeHtml(data.email)],
+    ["Session", escapeHtml(data.sessionId)],
+    ["First question", data.firstQuestion ? escapeHtml(data.firstQuestion) : "—"],
     [
       "Captured",
       new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
