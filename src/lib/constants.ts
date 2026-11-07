@@ -88,25 +88,25 @@ export const CHAP_STEPS = [
   {
     step: "Detect",
     claimId: CHAP_PIPELINE_CLAIM_ID,
-    desc: "Scans timecard and payroll data for statutory violations, policy exceptions, and anomalies.",
+    desc: "Introduces IRC §6656 federal deposit penalty questions using statutory references.",
     color: "blue-accent",
   },
   {
     step: "Flag",
     claimId: CHAP_PIPELINE_CLAIM_ID,
-    desc: "Surfaces issues with severity levels and the specific regulation or policy that triggered the flag.",
+    desc: "Identifies relevant statutory references and topics for independent human review.",
     color: "amber",
   },
   {
     step: "Explain",
     claimId: CHAP_PIPELINE_CLAIM_ID,
-    desc: "Plain-language rationale for every flag — what’s wrong, why it matters, and what clears it.",
+    desc: "Provides an AI-generated educational explanation with source citations where supported.",
     color: "purple",
   },
   {
     step: "Document",
     claimId: CHAP_PIPELINE_CLAIM_ID,
-    desc: "Timestamped evidence of what was checked, what passed, and what was flagged. Audit-ready by default.",
+    desc: "Points to the underlying authorities. It does not generate payroll audit records or operational determinations.",
     color: "green",
   },
 ] as const;

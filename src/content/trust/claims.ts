@@ -542,16 +542,16 @@ export const CLAIMS: readonly Claim[] = [
   {
     id: "chap-pipeline-validation",
     statement:
-      "CHAP AI scans timecard and payroll data for statutory violations, policy exceptions, and anomalies, then flags, explains, and documents each finding.",
-    status: "pilot",
+      "The public CHAP Marketing homepage illustrates how bounded IRC §6656 educational questions can be explored using statutory references; it is not connected to a payroll scan.",
+    status: "illustrative",
     evidence: [
-      { kind: "shipped_surface", path: "src/app/chap-ai/page.tsx" },
+      { kind: "shipped_surface", path: "src/components/sections/ChapAI.tsx" },
       {
         kind: "founder_attested",
-        note: "Pipeline demonstrated at demo scale behind the CHAP gate; present-tense capability for a system behind a 503 gate is pilot, not current, until PR #4 merges and the widget answers.",
+        note: "2026-11-07: Homepage stage cards represent an educational marketing illustration, not payroll-record processing, operational scanning, or live audit evidence.",
       },
     ],
-    surfaces: ["/", "/chap-ai"],
+    surfaces: ["/"],
     owner: OWNER,
     lastReviewed: "2026-07-30",
   },
@@ -606,15 +606,15 @@ export const CLAIMS: readonly Claim[] = [
     id: "chap-regulatory-log-sample",
     statement:
       "Regulatory update log entries on the CHAP AI page illustrating how rule changes would be tracked and documented.",
-    status: "illustrative",
+    status: "planned",
     evidence: [
-      { kind: "shipped_surface", path: "src/app/chap-ai/page.tsx" },
+      { kind: "founder_attested", note: "Illustrative regulatory log removed from marketing on 2026-11-07; not a live source or shipped monitoring feature." },
       {
         kind: "founder_attested",
         note: "Invented log entries (dates, statutes, APPLIED states); the log carries a visible 'Sample data' marker. A fabricated audit trail without a marker is the highest-cost illustration on the site.",
       },
     ],
-    surfaces: ["/chap-ai"],
+    surfaces: [],
     owner: OWNER,
     lastReviewed: "2026-07-30",
   },

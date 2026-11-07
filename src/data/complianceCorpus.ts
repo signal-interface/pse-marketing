@@ -316,7 +316,7 @@ Pattern 4 — Shortfalls beyond the safe harbor. Deposits that come in slightly 
 
 Pattern 5 — Undesignated late deposits cascading. A late deposit is applied to the most recent period unless the depositor designates otherwise within the 90-day window after a penalty notice (26 U.S.C. §6656(e)). Left undesignated, one late deposit can cascade shortfalls backward across periods and multiply the penalty tiers applied.
 
-Governance note: PSE validates deposit timing, depositor status, and shortfall exposure against these authorities on every run — the employer's payroll processor or financial institution executes the deposits. CHAP AI advises; humans decide.`,
+Educational note: this marketing corpus describes how IRC §6656 and related federal deposit authorities may apply. The public CHAP widget does not inspect actual payroll runs, validate deposits, connect to CHAP Production, or authorize actions. Consult current primary sources and qualified payroll or tax professionals before relying on an answer.`,
     tags: [
       "pse analysis",
       "deposit timing error",
