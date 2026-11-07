@@ -542,16 +542,16 @@ export const CLAIMS: readonly Claim[] = [
   {
     id: "chap-pipeline-validation",
     statement:
-      "CHAP AI scans timecard and payroll data for statutory violations, policy exceptions, and anomalies, then flags, explains, and documents each finding.",
-    status: "pilot",
+      "The public CHAP Marketing homepage illustrates how bounded IRC §6656 educational questions can be explored using statutory references; it is not connected to a payroll scan.",
+    status: "illustrative",
     evidence: [
-      { kind: "shipped_surface", path: "src/app/chap-ai/page.tsx" },
+      { kind: "shipped_surface", path: "src/components/sections/ChapAI.tsx" },
       {
         kind: "founder_attested",
-        note: "Pipeline demonstrated at demo scale behind the CHAP gate; present-tense capability for a system behind a 503 gate is pilot, not current, until PR #4 merges and the widget answers.",
+        note: "2026-11-07: Homepage stage cards represent an educational marketing illustration, not payroll-record processing, operational scanning, or live audit evidence.",
       },
     ],
-    surfaces: ["/", "/chap-ai"],
+    surfaces: ["/"],
     owner: OWNER,
     lastReviewed: "2026-07-30",
   },
