@@ -31,11 +31,12 @@ export default function ChapAIPage() {
                 it does not make operational compliance decisions.
               </p>
               <div className="chap-hero__actions">
-                <Link href="/#demo" className="chap-btn-primary">Request a Demo</Link>
+                <a href="#try-chap-ai" className="chap-btn-primary">Try CHAP AI</a>
+                <Link href="/#demo" className="chap-btn-ghost">Request a Demo</Link>
                 <a href="#how-it-works" className="chap-btn-ghost">See how it works</a>
               </div>
             </div>
-            <div className="chap-hero__terminal">
+            <div id="try-chap-ai" className="chap-hero__terminal" style={{ scrollMarginTop: "96px" }}>
               <ChapaInterface />
             </div>
           </div>
