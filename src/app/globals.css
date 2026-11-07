@@ -891,7 +891,21 @@ section[id] {
     font-size: clamp(1.5rem, 5.5vw, 2rem);
   }
   .chap-hero__terminal {
-    display: none;
+    display: block;
+    order: 0;
+    min-width: 0;
+    width: 100%;
+  }
+  .chap-interface {
+    height: min(540px, 75dvh);
+    min-height: 420px;
+  }
+  .chap-interface__header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chap-interface__input {
+    min-width: 0;
   }
 
   /* Steps grid */
@@ -964,7 +978,14 @@ section[id] {
     grid-template-columns: 1fr;
   }
   .chap-hero__terminal {
-    display: none;
+    display: block;
+    order: 0;
+    min-width: 0;
+    width: 100%;
+  }
+  .chap-interface {
+    height: min(540px, 75dvh);
+    min-height: 420px;
   }
   .svc-chap-callout__inner {
     grid-template-columns: 1fr;
