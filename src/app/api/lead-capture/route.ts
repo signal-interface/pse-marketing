@@ -71,6 +71,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "rate_limited" }, { status: 429 });
     }
 
+    // The capture endpoint must not be an unrestricted shortcut around
+    // the three-question educational gate. The same server-owned session
+    // counter used by /api/chap/ask proves the gate was reached.
+    const sessionState = await sql<{ count: number }>`
+      SELECT count FROM chap_rate_limits
+      WHERE scope = 'session'
+        AND identifier = ${sessionId}
+        AND window_start >= NOW() - INTERVAL '24 hours'
+      LIMIT 1
+    `;
+    if (Number(sessionState.rows[0]?.count ?? 0) < 3) {
+      return NextResponse.json({ error: "gate_not_reached" }, { status: 403 });
+    }
+
     const inserted = await sql<{ id: number }>`
       INSERT INTO chap_leads (email, session_id, first_question, source)
       VALUES (${normalizedEmail}, ${sessionId}, ${firstQuestionStr}, 'chap-widget')
