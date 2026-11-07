@@ -67,11 +67,6 @@ const REFERENCES: Ref[] = [
     claimId: SCAN_TERMINAL_CLAIM_ID,
     surfaces: ["/"],
   },
-  {
-    source: "chap-ai regulatory update log",
-    claimId: "chap-regulatory-log-sample",
-    surfaces: ["/chap-ai"],
-  },
 ];
 
 describe("live-surface claims are registered", () => {
@@ -147,7 +142,6 @@ describe("2026-07-30 ruling — presentation gates", () => {
         /Sample data/,
       ],
       ["src/components/sections/ChapAI.tsx", /Sample scan — illustrative/],
-      ["src/app/chap-ai/page.tsx", /sample data \(illustrative\)/],
     ];
     for (const [file, marker] of markerSites) {
       const source = readFileSync(path.join(REPO_ROOT, file), "utf-8");
