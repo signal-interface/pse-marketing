@@ -88,7 +88,7 @@ export const CHAP_STEPS = [
   {
     step: "Detect",
     claimId: CHAP_PIPELINE_CLAIM_ID,
-    desc: "Introduces IRC §6656 federal payroll tax deposit questions without accessing payroll records.",
+    desc: "Introduces IRC §6656 federal deposit penalty questions using statutory references.",
     color: "blue-accent",
   },
   {
