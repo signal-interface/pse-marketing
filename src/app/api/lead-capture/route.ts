@@ -13,6 +13,8 @@ import { sql } from "@vercel/postgres";
 import { Resend } from "resend";
 import { ensureChapTables } from "@/lib/db";
 import { chapLeadNotificationHtml } from "@/lib/emails";
+import { extractIp, hashIp, ipHashingConfigured } from "@/lib/ipHash";
+import { checkAndIncrementScopedLimit } from "@/lib/rateLimiter";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -30,16 +32,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
 
-  const { email, sessionId, firstQuestion } = body as {
+  const { email, sessionId, firstQuestion, website } = body as {
     email?: unknown;
     sessionId?: unknown;
     firstQuestion?: unknown;
+    website?: unknown;
   };
 
-  if (!email || typeof email !== "string" || !EMAIL_RE.test(email)) {
+  // Honeypot bots get an inert generic result; never create an entitlement.
+  if (website) return NextResponse.json({ success: true });
+  if (!email || typeof email !== "string" || !EMAIL_RE.test(email.trim()) || email.length > 254) {
     return NextResponse.json({ error: "invalid_email" }, { status: 400 });
   }
-  if (!sessionId || typeof sessionId !== "string") {
+  if (!sessionId || typeof sessionId !== "string" || sessionId.length > 128) {
     return NextResponse.json(
       { error: "invalid_session_id" },
       { status: 400 }
@@ -50,40 +55,63 @@ export async function POST(request: NextRequest) {
       ? firstQuestion.slice(0, 500)
       : null;
 
+  if (!ipHashingConfigured()) {
+    return NextResponse.json({ error: "service_unavailable" }, { status: 503 });
+  }
+  const normalizedEmail = email.trim().toLowerCase();
+
   try {
     await ensureChapTables();
-    await sql`
-      INSERT INTO chap_leads (email, session_id, first_question, source)
-      VALUES (${email}, ${sessionId}, ${firstQuestionStr}, 'chap-widget')
-      ON CONFLICT (email, session_id) DO NOTHING
-    `;
+    const limited = await checkAndIncrementScopedLimit(
+      "chap-lead-capture-ip",
+      hashIp(extractIp(request), "chap-capture"),
+      10
+    );
+    if (!limited.allowed) {
+      return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+    }
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const emailResults = await Promise.allSettled([
-      resend.emails.send({
+    const inserted = await sql<{ id: number }>`
+      INSERT INTO chap_leads (email, session_id, first_question, source)
+      VALUES (${normalizedEmail}, ${sessionId}, ${firstQuestionStr}, 'chap-widget')
+      ON CONFLICT (email, session_id) DO NOTHING
+      RETURNING id
+    `;
+    // A prior successful capture is already an entitlement. Never send
+    // duplicate notifications for replays.
+    if (inserted.rows.length === 0) {
+      return NextResponse.json({ success: true, captured: true });
+    }
+
+    // Notification delivery is independent of persistence. A provider
+    // failure must be visible in server logs, not erase the saved lead.
+    let notificationSent = false;
+    try {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      const result = await resend.emails.send({
         from: "PSE Marketing <info@payrollsynergyexperts.com>",
         replyTo: "info@payrollsynergyexperts.com",
         to: NOTIFICATION_EMAIL,
-        subject: `New CHAP Widget Lead: ${email}`,
+        subject: "New CHAP Widget Lead",
         html: chapLeadNotificationHtml({
-          email,
+          email: normalizedEmail,
           sessionId,
           firstQuestion: firstQuestionStr || undefined,
         }),
-      }),
-    ]);
-
-    const emailErrors = emailResults.filter((r) => r.status === "rejected");
-    if (emailErrors.length > 0) {
-      console.error(
-        "[lead-capture] email errors:",
-        emailErrors.map((r) => (r as PromiseRejectedResult).reason)
-      );
+      });
+      if (result.error) {
+        console.error("[lead-capture] internal notification provider error");
+      } else {
+        notificationSent = true;
+      }
+    } catch {
+      console.error("[lead-capture] internal notification transport error");
     }
-
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error("[lead-capture] error:", err);
+    // The client needs only persisted capture status, never provider details.
+    // A separate operational review should reconcile notification failures.
+    return NextResponse.json({ success: true, captured: true, notificationSent });
+  } catch {
+    console.error("[lead-capture] persistence error");
     return NextResponse.json({ error: "server_error" }, { status: 500 });
   }
 }
