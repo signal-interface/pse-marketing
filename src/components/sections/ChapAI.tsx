@@ -144,11 +144,11 @@ export default function ChapAI() {
           </RevealOnScroll>
         </div>
 
-        {/* Learn more link */}
+        {/* Clear marketing entry point: the interactive experience stays on /chap-ai */}
         <RevealOnScroll delay="reveal-d2" className="mt-6 text-center">
-          <Link href="/chap-ai" className="chap-learn-more">
-            Full CHAP AI documentation
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <Link href="/chap-ai#try-chap-ai" className="chap-learn-more">
+            Try CHAP AI — Ask an IRC §6656 question
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </Link>
         </RevealOnScroll>
 
