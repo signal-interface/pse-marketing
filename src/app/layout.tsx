@@ -69,7 +69,6 @@ const jsonLdSoftware = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   name: "CHAP AI",
-  alternateName: "CHAP Guard",
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
   description:

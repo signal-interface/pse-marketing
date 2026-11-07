@@ -17,6 +17,12 @@ describe("CHAP Guard deferred / PSE synthetic-only demonstration", () => {
     }
   });
 
+  it("does not advertise deferred Guard in site-wide structured metadata", () => {
+    const layout = read("src/app/layout.tsx");
+    expect(layout).not.toContain('alternateName: "CHAP Guard"');
+    expect(layout).toContain('name: "CHAP AI"');
+  });
+
   it("uses synthetic data and does not request actual payroll files", () => {
     expect(chapPage).toContain("fixed synthetic payroll data");
     expect(chapPage).toContain("No customer payroll files are required");
