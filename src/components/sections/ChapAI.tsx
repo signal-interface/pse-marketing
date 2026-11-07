@@ -12,10 +12,8 @@ const STEP_COLORS: Record<string, string> = {
 
 // The scan rows and their result are invented (registered as
 // chap-scan-terminal-sample, status illustrative) — the visible "Sample
-// scan" marker is required by the 2026-07-30 ruling. The Guard banner's
-// extension is a registered planned claim: no shipped extension exists.
+// scan" marker is required by the 2026-07-30 ruling.
 export const SCAN_TERMINAL_CLAIM_ID = "chap-scan-terminal-sample" as const;
-export const CHAP_GUARD_CLAIM_ID = "chap-guard-extension" as const;
 
 const SCAN_ROWS = [
   { status: "pass", label: "Overtime", cite: "FLSA §207" },
@@ -154,30 +152,6 @@ export default function ChapAI() {
           </Link>
         </RevealOnScroll>
 
-        {/* CHAP Guard banner */}
-        <RevealOnScroll delay="reveal-d3" className="mt-8">
-          <div className="bg-navy-light border border-white/[0.06] rounded-2xl p-7 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="flex-1">
-              
-              <div className="text-lg font-bold text-white mb-1">
-                CHAP Guard — Chrome Extension
-              </div>
-              <div className="text-sm text-steel-muted leading-[1.6] max-w-[560px]">
-                CHAP AI delivered directly into your payroll system. Real-time
-                compliance badges, inline violation alerts, and contextual
-                explanations — right where you work.
-              </div>
-            </div>
-            <div className="flex gap-2 shrink-0">
-              <span className="px-3 py-1.5 rounded-full bg-white/[0.06] text-xs font-semibold text-steel-light">
-                UKG
-              </span>
-              <span className="px-3 py-1.5 rounded-full bg-white/[0.06] text-xs font-semibold text-steel-light">
-                ADP
-              </span>
-            </div>
-          </div>
-        </RevealOnScroll>
       </div>
     </section>
   );

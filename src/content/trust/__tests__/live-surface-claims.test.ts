@@ -22,7 +22,6 @@ import {
 } from "@/components/sections/TrustBar";
 import {
   SCAN_TERMINAL_CLAIM_ID,
-  CHAP_GUARD_CLAIM_ID,
 } from "@/components/sections/ChapAI";
 
 const REPO_ROOT = process.cwd();
@@ -66,11 +65,6 @@ const REFERENCES: Ref[] = [
   {
     source: "ChapAI scan terminal",
     claimId: SCAN_TERMINAL_CLAIM_ID,
-    surfaces: ["/"],
-  },
-  {
-    source: "ChapAI CHAP Guard banner",
-    claimId: CHAP_GUARD_CLAIM_ID,
     surfaces: ["/"],
   },
   {

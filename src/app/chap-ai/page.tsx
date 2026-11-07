@@ -242,29 +242,6 @@ export default function ChapAIPage() {
           </div>
         </section>
 
-        {/* Section 4 — CHAP Guard */}
-        <section className="chap-guard-section">
-          <div className="chap-guard__inner">
-            <div className="chap-guard__badge">
-              <span className="chap-badge-label">CHAP Guard</span>
-            </div>
-            <h2>CHAP Guard — Compliance in your payroll system</h2>
-            <p>
-              CHAP Guard is a Chrome extension that brings CHAP AI compliance intelligence
-              directly into UKG, ADP, and other payroll platforms — surfacing inline violation
-              indicators and statute context without leaving your existing workflow.
-              Connect with PSE for a walkthrough of the integration experience.
-            </p>
-            <div className="chap-guard__platforms">
-              <span className="chap-platform-badge">UKG</span>
-              <span className="chap-platform-badge">ADP</span>
-              <span className="chap-platform-badge">Dayforce</span>
-              <span className="chap-platform-badge">More coming</span>
-            </div>
-            <Link href="/#demo" className="chap-btn-primary">Request Access</Link>
-          </div>
-        </section>
-
         {/* Section 5 — Proof */}
         <section className="chap-proof-section">
           <div className="chap-section__inner">
@@ -286,8 +263,8 @@ export default function ChapAIPage() {
 
         {/* Section 6 — CTA */}
         <section className="chap-cta-section">
-          <h2>See CHAP AI analyze your payroll compliance posture.</h2>
-          <p>30-minute personalized walkthrough. Bring your last payroll file.</p>
+          <h2>Explore PSE payroll governance through a guided demonstration.</h2>
+          <p>30-minute PSE demonstration using fixed synthetic payroll data. No customer payroll files are required.</p>
           <Link href="/#demo" className="chap-btn-primary chap-btn-lg">Request a Demo</Link>
         </section>
 
