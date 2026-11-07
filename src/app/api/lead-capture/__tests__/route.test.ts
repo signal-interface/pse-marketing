@@ -31,7 +31,9 @@ describe("CHAP marketing lead capture reliability", () => {
     vi.stubEnv("COMMERCIAL_IP_HASH_SALT", "synthetic-test-salt");
     vi.stubEnv("RESEND_API_KEY", "re_synthetic_test_only");
     scopedLimitMock.mockResolvedValue({ allowed: true, count: 1 });
+    sqlMock.mockReset();
     sqlMock.mockResolvedValue({ rows: [{ id: 12 }] });
+    sqlMock.mockResolvedValueOnce({ rows: [{ count: 3 }] });
     sendMock.mockResolvedValue({ data: { id: "synthetic" }, error: null });
   });
 
@@ -53,6 +55,16 @@ describe("CHAP marketing lead capture reliability", () => {
     const res = await POST(req(valid));
     expect(res.status).toBe(429);
     expect(sqlMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects direct capture before a session reaches the three-question gate", async () => {
+    sqlMock.mockReset();
+    sqlMock.mockResolvedValue({ rows: [{ count: 2 }] });
+    const res = await POST(req(valid));
+    expect(res.status).toBe(403);
+    expect((await res.json()).error).toBe("gate_not_reached");
+    expect(sendMock).not.toHaveBeenCalled();
+    expect(sqlMock).toHaveBeenCalledTimes(1);
   });
 
   it("reports persistence success and sends a single notification", async () => {
