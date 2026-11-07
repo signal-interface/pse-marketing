@@ -563,10 +563,10 @@ export const CLAIMS: readonly Claim[] = [
     evidence: [
       {
         kind: "founder_attested",
-        note: "No shipped extension exists; 'Early Access' framing denotes a waitlist, which is honest but does not make the capability current.",
+        note: "Founder decision 2026-11-07: CHAP Guard is not functional and its public marketing promotion is removed pending separate scope review. Preserve this planned claim for historical governance only; it authorizes no website placement, access funnel, extension availability, or integration promise.",
       },
     ],
-    surfaces: ["/", "/chap-ai"],
+    surfaces: [],
     owner: OWNER,
     lastReviewed: "2026-07-30",
   },
