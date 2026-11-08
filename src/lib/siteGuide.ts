@@ -1,7 +1,7 @@
 // Public PSE Marketing site guide. Static, bounded, client-side information only.
 // No model calls, network fetch, visitor tracking, customer data, or subscription.
 // Source links point only to already-published PSE Marketing pages.
-export type SiteGuideTopic = "about" | "services" | "demo" | "estimator" | "chap" | "privacy";
+export type SiteGuideTopic = "about" | "services" | "demo" | "estimator" | "chap" | "privacy" | "payroll-intelligence";
 export interface SiteGuideAnswer {
   topic: SiteGuideTopic | null;
   text: string;
@@ -22,6 +22,7 @@ const FOLLOW_UPS: Record<SiteGuideTopic, readonly string[]> = {
   estimator: ["What services does PSE offer?", "How do I request a demonstration?"],
   chap: ["How do I request a demonstration?", "Where is the risk estimator?"],
   privacy: ["What is PSE?", "How do I request a demonstration?"],
+  "payroll-intelligence": ["What services does PSE offer?", "How do I request a demonstration?"],
 };
 
 export function websiteGuideFollowUps(topic: SiteGuideTopic | null): readonly string[] {
@@ -58,6 +59,15 @@ const TOPICS: Record<SiteGuideTopic, SiteGuideAnswer> = {
     text: "The CHAP AI marketing experience offers bounded educational information about IRC §6656 federal employment tax deposit penalties. It uses a reference corpus and has no access to live payroll records or CHAP Production. Compliance questions belong in the separate Compliance Education tab.",
     links: [{ label: "CHAP educational page", href: "/chap-ai#try-chap-ai" }],
   },
+  "payroll-intelligence": {
+    topic: "payroll-intelligence",
+    text: "PSE's public Payroll Intelligence Framework 2026–2027 organizes educational payroll guidance into 15 knowledge domains, with source-linked briefings, a methodology page, and a quarterly review programme. It is a public research and governance reference, not a live CHAP data feed or a guarantee of complete jurisdictional coverage.",
+    links: [
+      { label: "Payroll Intelligence Framework", href: "/payroll-intelligence" },
+      { label: "Source methodology", href: "/payroll-intelligence/methodology" },
+      { label: "Source-linked briefings", href: "/payroll-intelligence/briefings" },
+    ],
+  },
   privacy: {
     topic: "privacy",
     text: "PSE publishes its privacy and terms information on the website. Please review those pages before sharing contact information. Use general, nonsensitive questions in this marketing chat. Keep personal identifiers, credentials and confidential documents out of the conversation.",
@@ -78,6 +88,7 @@ export function answerWebsiteQuestion(question: string, previousTopic: SiteGuide
   }
   // Narrowly allow deterministic routing to approved public page descriptions.
   if (/privacy|terms|data handling|confidential|personal information/.test(q)) return TOPICS.privacy;
+  if (/payroll intelligence|knowledge domain|knowledge framework|payroll framework|source linked briefing|payroll topics|regulatory research|payroll research/.test(q)) return TOPICS["payroll-intelligence"];
   if (/book|schedule|meeting|demo|walkthrough|consultation|call|appointment/.test(q)) return TOPICS.demo;
   if (/estimate|estimator|risk|calculator|exposure/.test(q)) return TOPICS.estimator;
   if (/chap|6656|deposit penalty|statut|question limit|ai widget/.test(q)) return TOPICS.chap;
@@ -85,7 +96,7 @@ export function answerWebsiteQuestion(question: string, previousTopic: SiteGuide
   if (/pse|payroll synergy|who are|what is|about|company|business|help/.test(q)) return TOPICS.about;
   return {
     topic: null,
-    text: "I can guide you through PSE's published website pages, not answer arbitrary questions or access customer records. Ask about PSE, services, CHAP education, the risk estimator, or scheduling a demo.",
+    text: "I can guide you through PSE's published website pages, not answer arbitrary questions or access customer records. Ask about PSE, services, Payroll Intelligence, CHAP education, the risk estimator, or scheduling a demo.",
     links: [
       { label: "Explore PSE services", href: "/services" },
       { label: "Request a demo", href: "/#demo" },
