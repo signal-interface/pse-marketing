@@ -449,6 +449,14 @@ section[id] {
 .chap-interface__badge { font-family: var(--font-mono, monospace); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 4px; }
 .chap-interface__badge--live { background: rgba(13,122,85,0.2); color: #5ecba1; border: 1px solid rgba(13,122,85,0.3); }
 .chap-interface__badge--kb { background: rgba(46,127,216,0.12); color: #2e7fd8; border: 1px solid rgba(46,127,216,0.2); }
+/* CHAP Marketing information modes: Website Guide never calls the compliance model. */
+.chap-interface__mode-switch { display: flex; gap: 0.5rem; padding: 0.55rem 0.75rem; background: var(--chap-bg-card, #0d1e35); border-bottom: 1px solid var(--chap-border, rgba(46,127,216,0.15)); }
+.chap-interface__mode-button { flex: 1; min-width: 0; min-height: 44px; border: 1px solid rgba(46,127,216,0.25); background: transparent; border-radius: 6px; color: var(--chap-text, #c8daf0); padding: 0.5rem 0.4rem; font-size: clamp(0.68rem, 2.6vw, 0.8rem); font-weight: 600; cursor: pointer; }
+.chap-interface__mode-button[aria-pressed="true"] { background: rgba(46,127,216,0.25); color: #fff; border-color: var(--chap-accent, #2e7fd8); }
+.chap-interface__mode-button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.chap-interface__guide-links { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 0.85rem; }
+.chap-interface__guide-links a { color: #7bb9ff; text-decoration: underline; text-underline-offset: 3px; font-size: 0.78rem; }
+.chap-interface__guide-links a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .chap-interface__statusbar { background: var(--chap-bg, #060e18); padding: 0.4rem 1.1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; border-bottom: 1px solid var(--chap-border, rgba(46,127,216,0.15)); flex-shrink: 0; }
 .chap-interface__status-pill { font-family: var(--font-mono, monospace); font-size: 0.6rem; color: var(--chap-text-muted, #4a6580); }
 .chap-interface__status-pill--warn { color: var(--chap-warn-light, #fbbf60); }
