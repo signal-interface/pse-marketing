@@ -93,18 +93,23 @@ function parseSseLine(line: string): SseEvent | '[DONE]' | null {
   }
 }
 
+function initialGuideMessages(): Msg[] {
+  return [{ role: 'assistant', status: 'guide',
+    text: "Welcome to PSE. Ask about our published services, Payroll Intelligence, risk estimator, or how to request a demonstration. The Website Guide uses curated public information and is free to explore.",
+    links: [{ label: 'Explore services', href: '/services' }] }];
+}
+function initialComplianceMessages(): Msg[] {
+  return [{ role: 'assistant', status: 'greeting', text: INITIAL_GREETING }];
+}
+
 export function ChapaInterface() {
   const [mode, setMode] = useState<'guide' | 'compliance'>('guide');
-  const [guideMessages, setGuideMessages] = useState<Msg[]>([
-    { role: 'assistant', status: 'guide', text: "Welcome to PSE. Ask about our published services, risk estimator, or how to request a demonstration. The Website Guide uses curated public information and is free to explore.", links: [{ label: 'Explore services', href: '/services' }] },
-  ]);
+  const [guideMessages, setGuideMessages] = useState<Msg[]>(initialGuideMessages);
   const [guideTopic, setGuideTopic] = useState<SiteGuideTopic | null>(null);
   const lastComplianceQuestionRef = useRef<string | null>(null);
   const [sessionId, setSessionId] = useState<string>('');
   const [email, setEmail] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Msg[]>([
-    { role: 'assistant', status: 'greeting', text: INITIAL_GREETING },
-  ]);
+  const [messages, setMessages] = useState<Msg[]>(initialComplianceMessages);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -300,6 +305,19 @@ export function ChapaInterface() {
     return true;
   };
 
+  // Reset only the visible conversation. Deliberately preserve sessionStorage,
+  // server-side session/IP allowance, captured email and persisted lead records.
+  // Disable while compliance is streaming so late responses cannot repopulate the UI.
+  const newConversation = () => {
+    if (isStreaming) return;
+    setMode('guide');
+    setGuideMessages(initialGuideMessages());
+    setGuideTopic(null);
+    setMessages(initialComplianceMessages());
+    lastComplianceQuestionRef.current = null;
+    setInput('');
+  };
+
   const guideQuestion = (question: string) => {
     const text = question.trim();
     if (!text || text.length > 250) return;
@@ -368,6 +386,10 @@ export function ChapaInterface() {
         <span className="chap-interface__status-pill">
           Informational — not legal or tax advice
         </span>
+        <button type="button" className="chap-interface__reset" onClick={newConversation}
+          disabled={isStreaming} aria-label="New Conversation — clear visible messages">
+          New Conversation
+        </button>
       </div>
 
       {/* Chat */}
