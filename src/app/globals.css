@@ -483,6 +483,17 @@ section[id] {
 .chap-interface__suggestions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
 .chap-interface__suggestion { font-size: 0.72rem; color: var(--chap-text, #c8daf0); background: rgba(46,127,216,0.06); border: 1px solid var(--chap-border, rgba(46,127,216,0.15)); border-radius: 6px; padding: 0.5rem 0.65rem; text-align: left; cursor: pointer; line-height: 1.4; transition: all 0.15s; }
 .chap-interface__suggestion:hover { background: rgba(46,127,216,0.12); border-color: var(--chap-border-hi, rgba(46,127,216,0.30)); }
+/* CHAP-MKT-UX-01: visible, readable and keyboard-operable next steps. */
+.chap-interface__next-steps { display: flex; flex-direction: column; gap: 0.55rem; border-top: 1px solid rgba(123,185,255,0.24); padding: 0.85rem 0.25rem 0.3rem; }
+.chap-interface__demo-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0.65rem 0.85rem; border: 1px solid rgba(123,185,255,0.48); border-radius: 7px; color: #b7dcff; text-decoration: underline; text-underline-offset: 3px; font-size: 0.83rem; font-weight: 600; }
+.chap-interface__suggestion:focus-visible, .chap-interface__demo-cta:focus-visible, .chap-interface__send:focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; }
+.chap-interface__suggestion { min-height: 44px; }
+.chap-interface__status-pill, .chap-interface__footer-note, .chap-interface__sub { color: #a8bed8; }
+@media (max-width: 480px) {
+  .chap-interface__input { font-size: 16px; min-width: 0; }
+  .chap-interface__messages { padding: 0.75rem; }
+  .chap-interface__msg-bubble { max-width: 100%; font-size: 0.86rem; }
+}
 .chap-interface__input-row { display: flex; gap: 0.5rem; padding: 0.75rem; border-top: 1px solid var(--chap-border, rgba(46,127,216,0.15)); flex-shrink: 0; }
 .chap-interface__input { flex: 1; background: var(--chap-bg, #060e18); border: 1px solid var(--chap-border, rgba(46,127,216,0.15)); border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 0.75rem; color: var(--chap-text, #c8daf0); font-family: var(--font-sans, sans-serif); outline: none; }
 .chap-interface__input:focus { border-color: var(--chap-accent, #2e7fd8); }
