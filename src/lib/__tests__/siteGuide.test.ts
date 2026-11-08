@@ -30,7 +30,7 @@ describe("CHAP Marketing Website Guide", () => {
   it("does not fabricate answers for unsupported questions", () => {
     const answer = answerWebsiteQuestion("Who is the PSE CEO?");
     expect(answer.topic).toBe(null);
-    expect(answer.text).toContain("published website pages");
+    expect(answer.text).toContain("not verified");
   });
   it("keeps the guide separate from compliance gate and lead capture", () => {
     const widget = readFileSync("src/components/sections/ChapaInterface.tsx", "utf8");
