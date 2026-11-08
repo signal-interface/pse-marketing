@@ -14,6 +14,24 @@ export const WEBSITE_SUGGESTIONS = [
   "Where is the risk estimator?",
 ] as const;
 
+// Curated next questions remain deterministic and use only the public site guide.
+const FOLLOW_UPS: Record<SiteGuideTopic, readonly string[]> = {
+  about: ["What services does PSE offer?", "How do I request a demonstration?"],
+  services: ["Where is the risk estimator?", "How do I request a demonstration?"],
+  demo: ["What services does PSE offer?", "What is PSE?"],
+  estimator: ["What services does PSE offer?", "How do I request a demonstration?"],
+  chap: ["How do I request a demonstration?", "Where is the risk estimator?"],
+  privacy: ["What is PSE?", "How do I request a demonstration?"],
+};
+
+export function websiteGuideFollowUps(topic: SiteGuideTopic | null): readonly string[] {
+  return topic ? FOLLOW_UPS[topic] : WEBSITE_SUGGESTIONS.slice(0, 2);
+}
+
+export function websiteGuideDemoCta(topic: SiteGuideTopic | null): boolean {
+  return topic === "services" || topic === "chap" || topic === "demo";
+}
+
 const TOPICS: Record<SiteGuideTopic, SiteGuideAnswer> = {
   about: {
     topic: "about",
