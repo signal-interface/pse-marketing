@@ -395,7 +395,7 @@ export function ChapaInterface() {
                       {m.links.map((link) => <Link key={link.href} href={link.href}>{link.label}</Link>)}
                     </div>}
                   </div>
-                  {i === 0 && mode === 'guide' && (
+                  {i === 0 && mode === 'guide' && guideMessages.length === 1 && (
                     <div className="chap-interface__suggestions">
                       <div className="chap-interface__suggestions-label">Explore this website</div>
                       <div className="chap-interface__suggestions-grid">
