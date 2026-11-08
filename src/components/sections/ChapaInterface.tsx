@@ -26,7 +26,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { ValidatedResponse } from '@/lib/chapValidation';
 import { ChapDetermination } from './ChapDetermination';
-import { answerWebsiteQuestion, WEBSITE_SUGGESTIONS, type SiteGuideTopic } from '@/lib/siteGuide';
+import { answerWebsiteQuestion, WEBSITE_SUGGESTIONS, websiteGuideDemoCta, websiteGuideFollowUps, type SiteGuideTopic } from '@/lib/siteGuide';
 
 type Msg =
   | { role: 'user'; text: string }
@@ -372,7 +372,7 @@ export function ChapaInterface() {
 
       {/* Chat */}
       <div className="chap-interface__chat">
-        <div className="chap-interface__messages">
+        <div className="chap-interface__messages" role="log" aria-label="CHAP Marketing conversation" aria-live="off">
           {activeMessages.map((m, i) => {
             if (m.role === 'user') {
               return (
@@ -389,7 +389,7 @@ export function ChapaInterface() {
               return (
                 <div key={i} className="chap-interface__msg chap-interface__msg--chap">
                   <div className="chap-interface__msg-label">PSE Website Guide</div>
-                  <div className="chap-interface__msg-bubble">
+                  <div className="chap-interface__msg-bubble" role={i === activeMessages.length - 1 ? "status" : undefined}>
                     {m.text}
                     {m.links.length > 0 && <div className="chap-interface__guide-links">
                       {m.links.map((link) => <Link key={link.href} href={link.href}>{link.label}</Link>)}
@@ -507,6 +507,24 @@ export function ChapaInterface() {
 
             return null;
           })}
+          {mode === 'guide' && guideMessages.length > 1 && (
+            <div className="chap-interface__next-steps" aria-label="Suggested next questions">
+              <div className="chap-interface__suggestions-label">Continue exploring</div>
+              <div className="chap-interface__suggestions-grid">
+                {websiteGuideFollowUps(guideTopic).map((question) => (
+                  <button key={question} type="button" className="chap-interface__suggestion"
+                    onClick={() => guideQuestion(question)}>
+                    {question}
+                  </button>
+                ))}
+              </div>
+              {websiteGuideDemoCta(guideTopic) && (
+                <Link className="chap-interface__demo-cta" href="/#demo">
+                  Explore a guided PSE demonstration
+                </Link>
+              )}
+            </div>
+          )}
           <div ref={bottomRef} />
         </div>
 
