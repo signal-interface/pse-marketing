@@ -26,6 +26,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { ValidatedResponse } from '@/lib/chapValidation';
 import { ChapDetermination } from './ChapDetermination';
+import { answerWebsiteQuestion, WEBSITE_SUGGESTIONS, type SiteGuideTopic } from '@/lib/siteGuide';
 
 type Msg =
   | { role: 'user'; text: string }
@@ -39,7 +40,8 @@ type Msg =
     }
   | { role: 'assistant'; status: 'error'; text: string }
   | { role: 'assistant'; status: 'rate_limited'; text: string }
-  | { role: 'assistant'; status: 'email_gate'; pendingQuestion: string };
+  | { role: 'assistant'; status: 'email_gate'; pendingQuestion: string }
+  | { role: 'assistant'; status: 'guide'; text: string; links: ReadonlyArray<{ label: string; href: string }> };
 
 const INITIAL_GREETING =
   'Hi — I can help with IRC §6656 (failure-to-deposit penalty) questions. Describe your situation and I’ll return a determination with citations to the primary source.';
@@ -92,6 +94,12 @@ function parseSseLine(line: string): SseEvent | '[DONE]' | null {
 }
 
 export function ChapaInterface() {
+  const [mode, setMode] = useState<'guide' | 'compliance'>('guide');
+  const [guideMessages, setGuideMessages] = useState<Msg[]>([
+    { role: 'assistant', status: 'guide', text: "Welcome to PSE. Ask about our published services, risk estimator, or how to request a demonstration. The Website Guide uses curated public information and is free to explore.", links: [{ label: 'Explore services', href: '/services' }] },
+  ]);
+  const [guideTopic, setGuideTopic] = useState<SiteGuideTopic | null>(null);
+  const lastComplianceQuestionRef = useRef<string | null>(null);
   const [sessionId, setSessionId] = useState<string>('');
   const [email, setEmail] = useState<string | null>(null);
   const [messages, setMessages] = useState<Msg[]>([
@@ -107,12 +115,22 @@ export function ChapaInterface() {
   }, []);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    bottomRef.current?.scrollIntoView({ behavior: reduce ? 'instant' : 'smooth', block: 'nearest' });
+  }, [messages, guideMessages, mode]);
 
   const askQuestion = async (question: string, overrideEmail?: string) => {
     if (!question.trim() || isStreaming || !sessionId) return;
-
+    const rawQuestion = question.trim();
+    const explain = /^(explain|elaborate|more|tell me more|details)$/i.test(rawQuestion);
+    if (rawQuestion.length < 10 && (!explain || !lastComplianceQuestionRef.current)) {
+      setMessages((prev) => [...prev, { role: 'assistant', status: 'error', text: 'Please enter a fuller IRC §6656 question, or ask “Explain” after an earlier question.' }]);
+      return;
+    }
+    const requestQuestion = explain
+      ? `Please explain this prior IRC §6656 topic in more detail: ${lastComplianceQuestionRef.current}`
+      : rawQuestion;
+    if (!explain) lastComplianceQuestionRef.current = requestQuestion;
     const effectiveEmail = overrideEmail ?? email;
 
     setMessages((prev) => [
@@ -128,7 +146,7 @@ export function ChapaInterface() {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          question,
+          question: requestQuestion,
           sessionId,
           email: effectiveEmail ?? undefined,
         }),
@@ -282,13 +300,24 @@ export function ChapaInterface() {
     return true;
   };
 
+  const guideQuestion = (question: string) => {
+    const text = question.trim();
+    if (!text || text.length > 250) return;
+    const answer = answerWebsiteQuestion(text, guideTopic);
+    setGuideTopic(answer.topic);
+    setGuideMessages((prev) => [...prev,
+      { role: 'user', text },
+      { role: 'assistant', status: 'guide', text: answer.text, links: answer.links },
+    ]);
+    setInput('');
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    void askQuestion(input);
+    if (mode === 'guide') guideQuestion(input);
+    else void askQuestion(input);
   };
-
-  const showSuggestions =
-    messages.length === 1 && messages[0].role === 'assistant' && messages[0].status === 'greeting';
+  const activeMessages = mode === 'guide' ? guideMessages : messages;
+  const showSuggestions = mode === 'compliance' && messages.length === 1 && messages[0].role === 'assistant' && messages[0].status === 'greeting';
 
   return (
     <div className="chap-interface">
@@ -328,9 +357,14 @@ export function ChapaInterface() {
         </div>
       </div>
 
+      {/* Site guide runs locally; compliance mode preserves the existing gate. */}
+      <div className="chap-interface__mode-switch" role="group" aria-label="CHAP Marketing information modes">
+        <button type="button" aria-pressed={mode === 'guide'} className="chap-interface__mode-button" onClick={() => { setMode('guide'); setInput(''); }}>Website Guide</button>
+        <button type="button" aria-pressed={mode === 'compliance'} className="chap-interface__mode-button" onClick={() => { setMode('compliance'); setInput(''); }}>Compliance Education</button>
+      </div>
       {/* Status bar */}
       <div className="chap-interface__statusbar">
-        <span className="chap-interface__status-pill">Demo Environment</span>
+        <span className="chap-interface__status-pill">{mode === 'guide' ? 'Public website information' : 'Educational demo environment'}</span>
         <span className="chap-interface__status-pill">
           Informational — not legal or tax advice
         </span>
@@ -339,7 +373,7 @@ export function ChapaInterface() {
       {/* Chat */}
       <div className="chap-interface__chat">
         <div className="chap-interface__messages">
-          {messages.map((m, i) => {
+          {activeMessages.map((m, i) => {
             if (m.role === 'user') {
               return (
                 <div
@@ -351,6 +385,27 @@ export function ChapaInterface() {
               );
             }
 
+            if (m.status === 'guide') {
+              return (
+                <div key={i} className="chap-interface__msg chap-interface__msg--chap">
+                  <div className="chap-interface__msg-label">PSE Website Guide</div>
+                  <div className="chap-interface__msg-bubble">
+                    {m.text}
+                    {m.links.length > 0 && <div className="chap-interface__guide-links">
+                      {m.links.map((link) => <Link key={link.href} href={link.href}>{link.label}</Link>)}
+                    </div>}
+                  </div>
+                  {i === 0 && mode === 'guide' && (
+                    <div className="chap-interface__suggestions">
+                      <div className="chap-interface__suggestions-label">Explore this website</div>
+                      <div className="chap-interface__suggestions-grid">
+                        {WEBSITE_SUGGESTIONS.map(q => <button key={q} type="button" className="chap-interface__suggestion" onClick={() => guideQuestion(q)}>{q}</button>)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            }
             if (m.status === 'greeting') {
               return (
                 <div
@@ -460,20 +515,23 @@ export function ChapaInterface() {
             className="chap-interface__input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask CHAP about an IRC §6656 scenario…"
-            disabled={isStreaming}
-            maxLength={500}
+            aria-label={mode === 'guide' ? 'Ask about PSE website information' : 'Ask a question about IRC §6656'}
+            placeholder={mode === 'guide' ? 'Ask about PSE services or demos…' : 'Ask CHAP about an IRC §6656 scenario…'}
+            disabled={mode === 'compliance' && isStreaming}
+            maxLength={mode === 'guide' ? 250 : 500}
           />
           <button
             className="chap-interface__send"
             type="submit"
-            disabled={isStreaming || input.trim().length < 10}
+            disabled={!input.trim() || (mode === 'compliance' && isStreaming)}
           >
             Send
           </button>
         </form>
         <div className="chap-interface__footer-note">
-          CHAP assists. You stay in control. Informational only — not legal or tax advice.
+          {mode === 'guide'
+            ? 'Public website information only. No AI request, email gate, or subscriber enrollment.'
+            : 'IRC §6656 education only. Three free questions, then a marketing email gate. Not legal or tax advice.'}
         </div>
       </div>
     </div>
