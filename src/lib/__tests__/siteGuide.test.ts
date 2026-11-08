@@ -11,6 +11,7 @@ describe("CHAP Marketing Website Guide", () => {
       ["Where is the risk estimator?", "estimator"],
       ["What can CHAP AI help with?", "chap"],
       ["Where is your privacy policy?", "privacy"],
+      ["What is Payroll Intelligence?", "payroll-intelligence"],
     ] as const;
     for (const [question, expectedTopic] of examples) {
       const answer = answerWebsiteQuestion(question);
@@ -24,7 +25,7 @@ describe("CHAP Marketing Website Guide", () => {
     }
   });
   it("offers only relevant approved follow-up questions", () => {
-    for (const topic of ["about", "services", "demo", "estimator", "chap", "privacy"] as const) {
+    for (const topic of ["about", "services", "demo", "estimator", "chap", "privacy", "payroll-intelligence"] as const) {
       const followups = websiteGuideFollowUps(topic);
       expect(followups.length).toBeGreaterThan(0);
       expect(followups.length).toBeLessThanOrEqual(3);
@@ -50,6 +51,31 @@ describe("CHAP Marketing Website Guide", () => {
     expect(widget).toContain('aria-label="Suggested next questions"');
     expect(css).toContain(".chap-interface__suggestion:focus-visible");
     expect(css).toContain("font-size: 16px");
+  });
+
+  it("offers Payroll Intelligence as public navigation, never live data access", () => {
+    const result = answerWebsiteQuestion("What is Payroll Intelligence?");
+    expect(result.topic).toBe("payroll-intelligence");
+    expect(result.text).toContain("15 knowledge domains");
+    expect(result.text).toContain("not a live CHAP data feed");
+    expect(result.links.map(l => l.href)).toContain("/payroll-intelligence");
+    expect(result.links.map(l => l.href)).toContain("/payroll-intelligence/methodology");
+    expect(answerWebsiteQuestion("Explain", "payroll-intelligence").topic).toBe("payroll-intelligence");
+  });
+
+  it("reset clears visible state only, retaining marketing session and quota", () => {
+    const widget = readFileSync("src/components/sections/ChapaInterface.tsx", "utf8");
+    expect(widget).toContain("New Conversation");
+    expect(widget).toContain("setGuideMessages(initialGuideMessages())");
+    expect(widget).toContain("setMessages(initialComplianceMessages())");
+    expect(widget).toContain("setGuideTopic(null)");
+    expect(widget).toContain("setMode('guide')");
+    expect(widget).toContain("if (isStreaming) return");
+    const fn = widget.slice(widget.indexOf("const newConversation ="), widget.indexOf("const guideQuestion ="));
+    expect(fn).not.toContain("sessionStorage.removeItem");
+    expect(fn).not.toContain("setSessionId(");
+    expect(fn).not.toContain("setEmail(");
+    expect(fn).not.toContain("fetch(");
   });
 
   it("supports short follow-ups without a new AI request", () => {

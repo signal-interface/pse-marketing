@@ -458,6 +458,9 @@ section[id] {
 .chap-interface__guide-links a { color: #7bb9ff; text-decoration: underline; text-underline-offset: 3px; font-size: 0.78rem; }
 .chap-interface__guide-links a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .chap-interface__statusbar { background: var(--chap-bg, #060e18); padding: 0.4rem 1.1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; border-bottom: 1px solid var(--chap-border, rgba(46,127,216,0.15)); flex-shrink: 0; }
+.chap-interface__reset { margin-left: auto; min-height: 44px; border: 1px solid rgba(123,185,255,0.52); border-radius: 7px; background: rgba(46,127,216,0.12); color: #d2e8ff; padding: 0.45rem 0.75rem; font-size: 0.73rem; font-weight: 600; cursor: pointer; }
+.chap-interface__reset:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.chap-interface__reset:disabled { opacity: 0.5; cursor: not-allowed; }
 .chap-interface__status-pill { font-family: var(--font-mono, monospace); font-size: 0.6rem; color: var(--chap-text-muted, #4a6580); }
 .chap-interface__status-pill--warn { color: var(--chap-warn-light, #fbbf60); }
 .chap-interface__tabs { display: flex; border-bottom: 1px solid var(--chap-border, rgba(46,127,216,0.15)); flex-shrink: 0; }
