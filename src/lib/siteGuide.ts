@@ -42,13 +42,17 @@ const TOPICS: Record<SiteGuideTopic, SiteGuideAnswer> = {
   },
   privacy: {
     topic: "privacy",
-    text: "PSE publishes its privacy and terms information on the website. Please review those pages before sharing contact information. Do not submit payroll files, employee information, credentials, or confidential records in the marketing chat.",
+    text: "PSE publishes its privacy and terms information on the website. Please review those pages before sharing contact information. Use general, nonsensitive questions in this marketing chat. Keep personal identifiers, credentials and confidential documents out of the conversation.",
     links: [{ label: "Privacy policy", href: "/privacy" }, { label: "Terms", href: "/terms" }],
   },
 };
 export function answerWebsiteQuestion(question: string, previousTopic: SiteGuideTopic | null = null): SiteGuideAnswer {
   const q = question.trim().toLowerCase().replace(/[^\p{L}\p{N}\s§]/gu, " ");
   if (q.length === 0) return { topic: null, text: "Ask about PSE, services, the risk estimator, CHAP education, or how to schedule a demonstration.", links: [] };
+  // Personal or executive identity is not a verified fact in this approved site collection.
+  if (/\b(ceo|founder|owner|president|executive|leadership|salary|price|pricing|cost)\b/.test(q)) {
+    return { topic: null, text: "That detail is not verified in this Website Guide. Please use PSE's published website or request a demonstration for current information.", links: [{ label: "Request a demo", href: "/#demo" }] };
+  }
   if (/^(explain|more|tell me more|details|why|how so|elaborate)$/.test(q)) {
     if (!previousTopic) return { topic: null, text: "What would you like explained? Try PSE services, the Risk Estimator, or how to request a demo.", links: [] };
     const previous = TOPICS[previousTopic];
