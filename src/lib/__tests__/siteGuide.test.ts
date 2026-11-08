@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { answerWebsiteQuestion, WEBSITE_SUGGESTIONS } from "@/lib/siteGuide";
+import { answerWebsiteQuestion, WEBSITE_SUGGESTIONS, websiteGuideFollowUps, websiteGuideDemoCta } from "@/lib/siteGuide";
 import { readFileSync } from "node:fs";
 
 describe("CHAP Marketing Website Guide", () => {
@@ -23,6 +23,35 @@ describe("CHAP Marketing Website Guide", () => {
       }
     }
   });
+  it("offers only relevant approved follow-up questions", () => {
+    for (const topic of ["about", "services", "demo", "estimator", "chap", "privacy"] as const) {
+      const followups = websiteGuideFollowUps(topic);
+      expect(followups.length).toBeGreaterThan(0);
+      expect(followups.length).toBeLessThanOrEqual(3);
+      for (const question of followups) {
+        const answer = answerWebsiteQuestion(question);
+        expect(answer.topic).not.toBe(null);
+        expect(answer.links.every(link => link.href.startsWith("/"))).toBe(true);
+      }
+    }
+    expect(websiteGuideFollowUps(null)).toHaveLength(2);
+    expect(websiteGuideDemoCta("services")).toBe(true);
+    expect(websiteGuideDemoCta("demo")).toBe(true);
+    expect(websiteGuideDemoCta("privacy")).toBe(false);
+    expect(websiteGuideDemoCta(null)).toBe(false);
+  });
+
+  it("places contextual suggestions and the existing demo link only in the guide", () => {
+    const widget = readFileSync("src/components/sections/ChapaInterface.tsx", "utf8");
+    const css = readFileSync("src/app/globals.css", "utf8");
+    expect(widget).toContain("mode === 'guide' && guideMessages.length > 1");
+    expect(widget).toContain('href="/#demo"');
+    expect(widget).toContain('className="chap-interface__demo-cta"');
+    expect(widget).toContain('aria-label="Suggested next questions"');
+    expect(css).toContain(".chap-interface__suggestion:focus-visible");
+    expect(css).toContain("font-size: 16px");
+  });
+
   it("supports short follow-ups without a new AI request", () => {
     expect(answerWebsiteQuestion("Explain", "services").topic).toBe("services");
     expect(answerWebsiteQuestion("Explain").topic).toBe(null);
