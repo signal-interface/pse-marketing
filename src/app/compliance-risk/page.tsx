@@ -61,7 +61,7 @@ export default function ComplianceRiskPage() {
                 <div className="est-context__stat-label">
                   Statutory maximum deposit penalty rate under specific IRS notice conditions
                 </div>
-                <div className="est-context__source">IRS Notice 746, 2024</div>
+                <div className="est-context__source">IRS Notice 746, 2026</div>
               </div>
               <div className="est-context__card">
                 <div className="est-context__stat">$1,296</div>
