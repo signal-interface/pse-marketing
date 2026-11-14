@@ -67,6 +67,20 @@ describe("CHAP §6656 bounded educational answer policy", () => {
     expect(response.analysis).toContain("not the only potential source of relief");
   });
 
+  it("rejects unrelated bank/estate questions and routes specific §6656 queries", () => {
+    const examples = [
+      ["What is the interest rate on a bank deposit?", "limited_education", ""],
+      ["What is the federal estate tax threshold?", "limited_education", ""],
+      ["What is the shortfall safe harbor threshold for an employment tax deposit?", "education", "deposit-shortfall-safe-harbor"],
+      ["What is the IRC §6656 2 percent penalty tier?", "education", "deposit-rate-tiers"],
+    ] as const;
+    for (const [question, kind, topic] of examples) {
+      const response = educationalMarketingResponse(question);
+      expect(response.kind, question).toBe(kind);
+      if (response.kind === "education") expect(response.topicId, question).toBe(topic);
+    }
+  });
+
   it("limits unknown questions without invented determinations", () => {
     const reply = educationalMarketingResponse("How do I knit mittens?");
     expect(reply.kind).toBe("limited_education");
