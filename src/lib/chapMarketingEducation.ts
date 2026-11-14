@@ -97,12 +97,12 @@ function selectCase(question: string): Case | null {
 
   // Procedural help (appeals, extensions, filing, payment plans) is outside
   // this finite statutory education catalog even when penalty terms appear.
-  if (/\\b(?:appeal|appeals|appealing|extension|extensions|apply\\s+for|file\\s+(?:a|an)|payment\\s+plan|request\\s+(?:a|an))\\b/.test(q)) return null;
+  if (/\b(?:appeal|appeals|appealing|extension|extensions|apply\s+for|file\s+(?:a|an)|payment\s+plan|request\s+(?:a|an))\b/.test(q)) return null;
 
   // A §6656(d) initial deposit inadvertently paid to the Secretary is a
   // different abatement case from reasonable-cause relief under §6656(a).
-  if (/(?:6656\\s*\\(?d\\)?|initial\\s+(?:payment|deposit).{0,70}(?:secretary|irs)|(?:secretary|irs).{0,70}initial\\s+(?:payment|deposit))/.test(q) &&
-      /abatement|first|inadvertent|sent\\s+to/.test(q)) return CASES.firsttime;
+  if (/(?:6656\s*\(?d\)?|initial\s+(?:payment|deposit).{0,70}(?:secretary|irs)|(?:secretary|irs).{0,70}initial\s+(?:payment|deposit))/.test(q) &&
+      /abatement|first|inadvertent|sent\s+to/.test(q)) return CASES.firsttime;
 
   // Specific topics precede general numeric threshold and trigger matches.
   if (/reconcil|discrepan|cascade|deposit gap/.test(q)) return CASES.reconciliation;
