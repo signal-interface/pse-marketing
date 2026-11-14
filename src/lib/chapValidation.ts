@@ -9,6 +9,8 @@
 // from fabricating citation slugs. Every id must be in the retrieved
 // corpus passed in.
 
+import type { CorpusEntry } from "@/data/complianceCorpus";
+
 export type DeterminationValue = "FLAGGED" | "CLEAR" | "NEEDS_HUMAN_REVIEW";
 export type ConfidenceValue = "high" | "medium" | "low";
 export type OutOfScopeCategory =
@@ -162,7 +164,7 @@ function validateOutOfScope(
 
 export function validateChapResponse(
   raw: unknown,
-  corpusIds: string[]
+  corpus: readonly CorpusEntry[]
 ): ValidatedResponse | null {
   let parsed: unknown = raw;
 
@@ -184,7 +186,30 @@ export function validateChapResponse(
   if (!isRecord(parsed)) return null;
 
   if (parsed.kind === "determination") {
-    return validateDetermination(parsed, corpusIds);
+    const corpusIds = corpus.map(entry => entry.id);
+    const validated = validateDetermination(parsed, corpusIds);
+    if (!validated) return null;
+    // Production route supplies trusted corpus entries. Never render model-supplied
+    // citation URLs, citation labels, or primary authority metadata.
+    const byId = new Map(corpus.map(entry => [entry.id, entry]));
+    const citations = validated.citations.map(citation => byId.get(citation.id));
+    if (citations.some(entry => !entry || entry.sourceType === "pse_written")) return null;
+    const trusted = citations as CorpusEntry[];
+    const source = trusted[0];
+    return {
+      ...validated,
+      applicableRegulation: {
+        reference: source.citation,
+        name: source.title,
+        jurisdiction: source.jurisdiction,
+        primarySourceUrl: source.sourceUrl,
+      },
+      citations: trusted.map(entry => ({
+        id: entry.id,
+        citation: entry.citation,
+        sourceUrl: entry.sourceUrl,
+      })),
+    };
   }
   if (parsed.kind === "out_of_scope") {
     return validateOutOfScope(parsed);

@@ -48,6 +48,8 @@ vi.mock("@anthropic-ai/sdk", () => ({
 }));
 
 import { POST } from "../route";
+import { retrieveRelevantCorpus } from "@/lib/corpusRetrieval";
+import { COMPLIANCE_CORPUS } from "@/data/complianceCorpus";
 
 function makeRequest(body: Record<string, unknown> | string): NextRequest {
   const req = new Request("http://localhost/api/chap/ask", {
@@ -188,6 +190,62 @@ describe("POST /api/chap/ask", () => {
     expect(body).toContain('"detectedCategory":"injection"');
     expect(body).toContain("[DONE]");
     expect(mockStreamDetermination).not.toHaveBeenCalled();
+  });
+
+  it("does not stream unvalidated model chunks to the browser", async () => {
+    const untrusted = '{"kind":"determination","analysis":"unvalidated text","citations":[]}';
+    mockStreamDetermination.mockReturnValue((async function* () {
+      yield { type: "content_block_delta", delta: { type: "text_delta", text: untrusted } };
+    })());
+    const res = await POST(makeRequest({
+      question: "What triggers an IRC 6656 deposit penalty?",
+      sessionId: "sess-guard",
+    }));
+    expect(res.status).toBe(200);
+    const body = await readSseBody(res);
+    expect(body).not.toContain("unvalidated text");
+    expect(body).not.toContain('"type":"chunk"');
+    expect(body).toContain('"type":"error"');
+    expect(body).toContain('"code":"validation_failed"');
+  });
+
+  it("uses the same authoritative entries in the model prompt and validator", async () => {
+    const statute = COMPLIANCE_CORPUS.find(entry => entry.id === "irc-6656-a");
+    const note = COMPLIANCE_CORPUS.find(entry => entry.sourceType === "pse_written");
+    expect(statute).toBeDefined();
+    expect(note).toBeDefined();
+    if (!statute || !note) return;
+    vi.mocked(retrieveRelevantCorpus).mockReturnValueOnce([statute]);
+    mockStreamDetermination.mockReturnValue((async function* () {
+      const answer = {
+        kind: "determination",
+        applicableRegulation: {
+          reference: "untrusted",
+          name: "untrusted",
+          jurisdiction: "federal",
+          primarySourceUrl: "https://attacker.example",
+        },
+        analysis: "Section 6656 addresses federal failure-to-deposit penalties.",
+        determination: "NEEDS_HUMAN_REVIEW",
+        rationale: "Verify the facts against official authority.",
+        citations: [{ id: statute.id, citation: "invented", sourceUrl: "https://attacker.example" }],
+        confidence: "medium",
+      };
+      yield { type: "content_block_delta", delta: { type: "text_delta", text: JSON.stringify(answer) } };
+    })());
+    const res = await POST(makeRequest({
+      question: "What triggers an IRC 6656 deposit penalty?",
+      sessionId: "sess-real-corpus",
+    }));
+    const body = await readSseBody(res);
+    expect(mockStreamDetermination).toHaveBeenCalledWith({
+      question: "What triggers an IRC 6656 deposit penalty?",
+      retrievedCorpus: [statute],
+    });
+    expect(body).toContain('"kind":"determination"');
+    expect(body).toContain(statute.sourceUrl);
+    expect(body).not.toContain("attacker.example");
+    expect(body).not.toContain(note.id);
   });
 
   it("returns 429 when the rate limiter blocks", async () => {
