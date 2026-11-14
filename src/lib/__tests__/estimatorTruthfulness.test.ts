@@ -27,7 +27,7 @@ describe("Compliance Risk Estimator truthfulness contracts", () => {
     expect(component).toContain("33% employer-error calibration");
     expect(component).toContain("categories may overlap");
     expect(component).toContain("not an actual employer loss estimate");
-    expect(component).toContain("statutory notice conditions");
+    expect(page).toContain("specific IRS notice conditions");
   });
 
   it("does not claim the public CHAP widget validates every payroll run", () => {
