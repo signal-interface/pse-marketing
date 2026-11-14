@@ -72,19 +72,30 @@ const CASES: Record<string, Case> = {
 function selectCase(question: string): Case | null {
   const q = question.toLowerCase().replace(/\s+/g, " ").trim();
 
-  // Explicitly require an employment-tax deposit context. Single terms such
-  // as "tax", "deposit", "rate", or "threshold" must not route bank interest,
-  // estate-tax, or unrelated questions into statutory payroll advice.
-  const explicitStatute = /(?:§|section|irc|usc|u\\.s\\.c\\.)?\\s*6656\\b/.test(q);
-  const employmentDeposit = /(?:employment|federal|payroll)\\s+(?:tax\\s+)?deposits?\\b|(?:employment|federal|payroll)\\s+tax(?:es)?\\s+deposits?\\b|deposits?\\s+of\\s+(?:federal\\s+)?(?:employment|payroll)\\s+tax/.test(q);
-  const failureToDeposit = /failure[- ]to[- ]deposit|deposit\\s+penalt|penalt(?:y|ies)\\s+(?:for|on)\\s+(?:late\\s+)?(?:tax\\s+)?deposits?/.test(q);
-  const depositSafeHarbor = /deposit\\s+shortfall\\s+safe.harbor/.test(q);
-  const qualifiedRelief = /(?:reasonable cause|willful neglect)\\s+(?:for|in|under)?\\s*(?:a\\s+)?(?:tax\\s+)?penalt|penalt(?:y|ies)\\s+abatement/.test(q);
-  if (!(explicitStatute || employmentDeposit || failureToDeposit || qualifiedRelief || depositSafeHarbor)) return null;
+  // Require explicit federal employment-tax deposit context. A bare word
+  // such as "tax", "deposit", "rate", or "threshold" is not sufficient.
+  const explicitStatute =
+    q.includes("6656") && /irc|§|penalt|tax|deposit/.test(q);
+  const depositPhrases = [
+    "employment tax deposit",
+    "federal tax deposit",
+    "payroll tax deposit",
+    "payroll deposit",
+    "employment taxes deposit",
+    "deposit of employment tax",
+    "deposit of federal tax",
+    "deposit shortfall safe harbor",
+  ];
+  const employmentDeposit = depositPhrases.some(phrase => q.includes(phrase));
+  const depositFailure =
+    q.includes("failure-to-deposit") ||
+    q.includes("failure to deposit") ||
+    q.includes("deposit penalty") ||
+    q.includes("penalty for deposits");
+  const qualifiedRelief = q.includes("penalty abatement");
+  if (!(explicitStatute || employmentDeposit || depositFailure || qualifiedRelief)) return null;
 
-  // Only choose a topic when the request explicitly signals that topic.
-  // Prefer a regulatory shortfall safe harbor over the generic threshold
-  // question, and a penalty-rate question over the 2% shortfall rule.
+  // Specific topics precede general numeric threshold and trigger matches.
   if (/reconcil|discrepan|cascade|deposit gap/.test(q)) return CASES.reconciliation;
   if (/reasonable cause|willful neglect|abatement/.test(q)) return CASES.reasonable;
   if (/first.time|first quarter|first deposit|frequency change|waiver/.test(q)) return CASES.firsttime;
@@ -93,7 +104,7 @@ function selectCase(question: string): Case | null {
   if (/(?:penalt|6656).{0,45}(?:rate|tier|percentage|percent|2%|5%|10%|15%|notice)|(?:rate|tier|percentage|percent|2%|5%|10%|15%|notice).{0,45}(?:penalt|6656)|four.tier/.test(q)) return CASES.rates;
   if (/100,?000|one.day|next.day|accumulat/.test(q)) return CASES.threshold;
   if (/trigger|appl|failure.to.deposit|late deposit|deposit penalty/.test(q)) return CASES.trigger;
-  return null; // Unclear intent is a limitation, never an invented answer.
+  return null; // Ambiguous intent gets a limitation, never a legal conclusion.
 }
 
 export function educationalMarketingResponse(question: string): ValidatedResponse {
