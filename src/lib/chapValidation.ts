@@ -47,7 +47,24 @@ export interface OutOfScopeResponse {
   suggestedAction: "request_demo";
 }
 
-export type ValidatedResponse = DeterminationResponse | OutOfScopeResponse;
+export interface EducationalResponse {
+  kind: "education";
+  topicId: string;
+  title: string;
+  analysis: string;
+  citations: Citation[];
+}
+
+export interface LimitedEducationalResponse {
+  kind: "limited_education";
+  message: string;
+}
+
+export type ValidatedResponse =
+  | DeterminationResponse
+  | OutOfScopeResponse
+  | EducationalResponse
+  | LimitedEducationalResponse;
 
 const DETERMINATION_VALUES: ReadonlyArray<DeterminationValue> = [
   "FLAGGED",
