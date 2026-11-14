@@ -264,6 +264,22 @@ describe("saveSessionAnswers / submitSession", () => {
     );
   });
 
+  it("booked-first questionnaire completion keeps meeting status and records answers", async () => {
+    state.poolRows = [[{ id: 11, demo_request_id: 1 }]];
+    mockTransition.mockResolvedValueOnce({
+      ok: false, reason: "invalid_transition",
+      leadId: 1, from: "MEETING_SCHEDULED", to: "QUESTIONNAIRE_COMPLETED"
+    });
+    const result = await submitSession("resume-raw", { meetingPurpose: "View PSE demo" }, CTX);
+    expect(result).toEqual({ ok: true, leadId: 1 });
+    expect(mockRecordEvent).toHaveBeenCalledWith(
+      1, "QUESTIONNAIRE_SUBMITTED", expect.anything()
+    );
+    expect(mockTransition).toHaveBeenCalledWith(
+      1, "QUESTIONNAIRE_COMPLETED", expect.anything()
+    );
+  });
+
   it("completed sessions reject re-submission", async () => {
     state.poolRows = [[], [{ completed_at: new Date().toISOString() }]];
     const result = await submitSession("resume-raw", {}, CTX);
