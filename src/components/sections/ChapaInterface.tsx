@@ -322,7 +322,7 @@ export function ChapaInterface() {
         </div>
         <div className="chap-interface__header-right">
           <span className="chap-interface__badge chap-interface__badge--live">
-            Educational AI
+            Source-linked education
           </span>
           <span className="chap-interface__badge chap-interface__badge--kb">
             Corpus: IRC §6656
@@ -526,7 +526,7 @@ export function ChapaInterface() {
         <div className="chap-interface__footer-note">
           {mode === 'guide'
             ? 'Public website information only. No AI request, email gate, or subscriber enrollment.'
-            : 'IRC §6656 education only. Three free questions, then a marketing email gate. Not legal or tax advice.'}
+            : 'Curated IRC §6656 educational topics only. Three free questions, then a marketing email gate. Not legal or tax advice.'}
         </div>
       </div>
     </div>
