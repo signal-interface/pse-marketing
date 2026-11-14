@@ -76,8 +76,9 @@ describe("CHAP Marketing terminal stream safety", () => {
     expect(widget).toContain("if (terminalReceived) return;");
   });
 
-  it("keeps invalid model output distinct from out-of-scope determinations", () => {
-    expect(route).toContain('code: "validation_failed"');
+  it("uses bounded public education without exposing generative legal answers", () => {
+    expect(route).toContain("educationalMarketingResponse(question)");
+    expect(route).not.toContain("streamDetermination({");
     expect(route).not.toContain('type: "chunk", text');
   });
 });
