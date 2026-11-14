@@ -269,6 +269,9 @@ describe("POST /api/chap/ask", () => {
     ["What are mortgage deposit interest rates?", "limited_education", ""],
     ["What is the income tax rate for 2026?", "limited_education", ""],
     ["How do I apply for an employment tax deposit extension?", "limited_education", ""],
+    ["How do I apply for an extension to pay an employment tax deposit penalty?","limited_education",""],
+    ["How do I appeal an employment tax deposit penalty?","limited_education",""],
+    ["What is the abatement for an initial deposit sent to the Secretary under IRC §6656(d)?","education","first-time-depositor-relief"],
     ["What is the monthly employment tax deposit schedule that applies to my business?", "limited_education", ""],
 
 
