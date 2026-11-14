@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { validateChapResponse } from "../chapValidation";
+import { retrieveRelevantCorpus } from "../corpusRetrieval";
 
 const TEST_CORPUS = ["irc-6656-a", "irc-6656-b"].map(id => ({
   id,
@@ -94,6 +95,43 @@ describe("validateChapResponse markdown-fence stripping", () => {
     expect(result.applicableRegulation.reference).toBe(fakeCorpus[0].citation);
     expect(result.citations[0].sourceUrl).toBe(fakeCorpus[0].sourceUrl);
     expect(result.citations[0].citation).toBe(fakeCorpus[0].citation);
+  });
+
+  it("accepts an in-scope response using the real retrieved statutory corpus", () => {
+    const retrieved = retrieveRelevantCorpus("What triggers an IRC §6656 deposit penalty?", 5);
+    const official = retrieved.filter(entry => entry.sourceType !== "pse_written");
+    expect(official.length).toBeGreaterThan(0);
+    expect(official.every(entry => entry.sourceType !== "pse_written")).toBe(true);
+    const primary = official[0];
+    const answer = {
+      ...determination,
+      citations: [{
+        id: primary.id,
+        citation: primary.citation,
+        sourceUrl: primary.sourceUrl,
+      }],
+    };
+    const validated = validateChapResponse(JSON.stringify(answer), official);
+    expect(validated?.kind).toBe("determination");
+    if (validated?.kind === "determination") {
+      expect(validated.citations[0].id).toBe(primary.id);
+      expect(validated.citations[0].sourceUrl).toBe(primary.sourceUrl);
+    }
+  });
+
+  it("rejects PSE-authored notes as authority even when included in retrieval", () => {
+    const retrieved = retrieveRelevantCorpus("What triggers an IRC §6656 deposit penalty?", 5);
+    const authored = retrieved.find(entry => entry.sourceType === "pse_written");
+    expect(authored).toBeDefined();
+    if (!authored) return;
+    const answer = {
+      ...determination,
+      citations: [
+        ...determination.citations,
+        { id: authored.id, citation: authored.citation, sourceUrl: authored.sourceUrl },
+      ],
+    };
+    expect(validateChapResponse(JSON.stringify(answer), retrieved)).toBeNull();
   });
 
   it("still rejects citations outside the corpus", () => {
