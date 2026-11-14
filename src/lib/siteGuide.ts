@@ -79,7 +79,7 @@ const TOPICS: Record<SiteGuideTopic, SiteGuideAnswer> = {
 // Only routes visitors to the public, source-controlled domain index.
 // It does not generate jurisdiction-specific conclusions or search draft briefings.
 function approvedDomainNavigation(question: string): SiteGuideAnswer | null {
-  const q = question.toLowerCase().replace(/[^\\p{L}\\p{N}\\s]/gu, " ");
+  const q = question.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, " ");
   const domainAliases: ReadonlyArray<readonly [string, string]> = [
     ["wage-hour", "overtime|minimum wage|wage and hour"],
     ["withholding", "withholding|w 4|federal income tax"],
