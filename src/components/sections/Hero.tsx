@@ -33,14 +33,15 @@ export default function Hero() {
                 That
                 <span className="absolute left-0 right-0 bottom-1 h-[3px] bg-steel-light rounded-sm opacity-50" />
               </em>{" "}
-              is the layer PSE is building.
+              PSE is building that layer.
             </h1>
 
             <p className="text-[17px] leading-[1.7] text-text-secondary max-w-[480px] mb-8">
-              ADP and UKG help run payroll. Your team validates the results.
-              PSE brings those controls together in an independent governance
-              layer &mdash; helping teams identify risks before payroll closes,
-              document decisions, and demonstrate how outcomes were reviewed.
+              Your payroll platform processes transactions. Your payroll team validates
+              the results. PSE brings governance, compliance intelligence, and
+              audit evidence together in an independent control layer &mdash;
+              designed to make payroll decisions easier to validate, explain,
+              and defend.
             </p>
 
             <div className="flex flex-wrap gap-3">
