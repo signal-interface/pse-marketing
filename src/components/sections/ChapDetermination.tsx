@@ -25,6 +25,40 @@ export function ChapDetermination(props: {
   if (response.kind === 'out_of_scope') {
     return <OutOfScopeBlock category={response.detectedCategory} />;
   }
+  if (response.kind === 'limited_education') {
+    return (
+      <div className="chap-determination">
+        <div className="chap-determination__label">Educational scope limitation</div>
+        <p className="chap-determination__analysis">{response.message}</p>
+        <div className="chap-determination__disclaimer">No employer-specific determination was made.</div>
+      </div>
+    );
+  }
+  if (response.kind === 'education') {
+    return (
+      <div className="chap-determination">
+        <div className="chap-determination__label">Source-linked educational overview</div>
+        <div className="chap-determination__reg-name">{response.title}</div>
+        <p className="chap-determination__analysis">{response.analysis}</p>
+        <div className="chap-determination__section">
+          <div className="chap-determination__label">Official sources — verify before relying</div>
+          <ol className="chap-determination__citations">
+            {response.citations.map(c => (
+              <li key={c.id} className="chap-determination__citation">
+                <a className="chap-determination__citation-link" href={c.sourceUrl}
+                  target="_blank" rel="noopener noreferrer">{c.citation}</a>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <div className="chap-determination__disclaimer">
+          Educational explanation only; not a legal opinion or employer-specific determination.
+          No AI confidence score or automatic professional review is provided.
+          Have a qualified payroll or tax professional verify the applicable rules.
+        </div>
+      </div>
+    );
+  }
 
   const severity =
     response.determination === 'FLAGGED'
