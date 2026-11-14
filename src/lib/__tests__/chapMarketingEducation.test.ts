@@ -75,6 +75,9 @@ describe("CHAP §6656 bounded educational answer policy", () => {
       ["What does the 2 percent penalty rate mean under IRC 6656?", "education", "deposit-rate-tiers"],
       ["What are mortgage deposit interest rates?", "limited_education", ""],
       ["What is the income tax rate for 2026?", "limited_education", ""],
+      ["How do I apply for an employment tax deposit extension?", "limited_education", ""],
+      ["What is the monthly employment tax deposit schedule that applies to my business?", "limited_education", ""],
+
 
       ["What is the federal estate tax threshold?", "limited_education", ""],
       ["What is the shortfall safe harbor threshold for an employment tax deposit?", "education", "deposit-shortfall-safe-harbor"],
