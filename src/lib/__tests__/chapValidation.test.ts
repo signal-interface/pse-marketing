@@ -1,7 +1,18 @@
 import { describe, it, expect } from "vitest";
 import { validateChapResponse } from "../chapValidation";
+import { retrieveRelevantCorpus } from "../corpusRetrieval";
+import { COMPLIANCE_CORPUS } from "@/data/complianceCorpus";
 
-const CORPUS_IDS = ["irc-6656-a", "irc-6656-b"];
+const TEST_CORPUS = ["irc-6656-a", "irc-6656-b"].map(id => ({
+  id,
+  title: "Trusted IRC §6656",
+  citation: id === "irc-6656-b" ? "26 U.S.C. §6656(b)" : "26 U.S.C. §6656(a)",
+  sourceType: "usc" as const,
+  jurisdiction: "federal",
+  sourceUrl: `https://www.law.cornell.edu/uscode/text/26/6656#${id.endsWith("-b") ? "b" : "a"}`,
+  content: "Fixture statutory excerpt",
+  tags: ["deposit"],
+}));
 
 const determination = {
   kind: "determination",
@@ -32,25 +43,97 @@ const outOfScope = {
 
 describe("validateChapResponse markdown-fence stripping", () => {
   it("accepts plain JSON", () => {
-    const v = validateChapResponse(JSON.stringify(determination), CORPUS_IDS);
+    const v = validateChapResponse(JSON.stringify(determination), TEST_CORPUS);
     expect(v?.kind).toBe("determination");
   });
 
   it("accepts ```json-fenced output (the model's observed framing)", () => {
     const raw = "```json\n" + JSON.stringify(determination, null, 2) + "\n```";
-    const v = validateChapResponse(raw, CORPUS_IDS);
+    const v = validateChapResponse(raw, TEST_CORPUS);
     expect(v?.kind).toBe("determination");
   });
 
   it("accepts bare ```-fenced output", () => {
     const raw = "```\n" + JSON.stringify(outOfScope) + "\n```";
-    const v = validateChapResponse(raw, CORPUS_IDS);
+    const v = validateChapResponse(raw, TEST_CORPUS);
     expect(v?.kind).toBe("out_of_scope");
   });
 
   it("still rejects non-JSON garbage", () => {
-    expect(validateChapResponse("```json\nnot json at all\n```", CORPUS_IDS)).toBeNull();
-    expect(validateChapResponse("plain prose answer", CORPUS_IDS)).toBeNull();
+    expect(validateChapResponse("```json\nnot json at all\n```", TEST_CORPUS)).toBeNull();
+    expect(validateChapResponse("plain prose answer", TEST_CORPUS)).toBeNull();
+  });
+
+  it("uses trusted corpus metadata instead of model-generated citation links", () => {
+    const fakeCorpus = [{
+      id: "irc-6656-b",
+      title: "Trusted IRC §6656(b)",
+      citation: "26 U.S.C. §6656(b)",
+      sourceType: "usc" as const,
+      jurisdiction: "federal",
+      sourceUrl: "https://www.law.cornell.edu/uscode/text/26/6656#b",
+      content: "Fixture excerpt",
+      tags: ["deposit"],
+    }];
+    const tainted = {
+      ...determination,
+      applicableRegulation: {
+        reference: "Fake statute",
+        name: "Fake authority",
+        jurisdiction: "other",
+        primarySourceUrl: "https://attacker.example/fake",
+      },
+      citations: [{
+        id: "irc-6656-b",
+        citation: "Fake citation",
+        sourceUrl: "https://attacker.example/fake",
+      }],
+    };
+    const result = validateChapResponse(JSON.stringify(tainted), fakeCorpus);
+    expect(result?.kind).toBe("determination");
+    if (result?.kind !== "determination") return;
+    expect(result.applicableRegulation.primarySourceUrl).toBe(fakeCorpus[0].sourceUrl);
+    expect(result.applicableRegulation.reference).toBe(fakeCorpus[0].citation);
+    expect(result.citations[0].sourceUrl).toBe(fakeCorpus[0].sourceUrl);
+    expect(result.citations[0].citation).toBe(fakeCorpus[0].citation);
+  });
+
+  it("accepts an in-scope response using the real retrieved statutory corpus", () => {
+    const retrieved = retrieveRelevantCorpus("What triggers an IRC §6656 deposit penalty?", 5);
+    const official = retrieved;
+    expect(official.length).toBeGreaterThan(0);
+    expect(official.every(entry => entry.sourceType !== "pse_written")).toBe(true);
+    const primary = official[0];
+    const answer = {
+      ...determination,
+      citations: [{
+        id: primary.id,
+        citation: primary.citation,
+        sourceUrl: primary.sourceUrl,
+      }],
+    };
+    const validated = validateChapResponse(JSON.stringify(answer), official);
+    expect(validated?.kind).toBe("determination");
+    if (validated?.kind === "determination") {
+      expect(validated.citations[0].id).toBe(primary.id);
+      expect(validated.citations[0].sourceUrl).toBe(primary.sourceUrl);
+    }
+  });
+
+  it("rejects PSE-authored notes as authority even when included in retrieval", () => {
+    const retrieved = retrieveRelevantCorpus("What triggers an IRC §6656 deposit penalty?", 5);
+    const authored = COMPLIANCE_CORPUS.find(entry => entry.sourceType === "pse_written");
+    expect(retrieved.some(entry => entry.sourceType === "pse_written")).toBe(false);
+    expect(authored).toBeDefined();
+    if (!authored) return;
+    const answer = {
+      ...determination,
+      citations: [
+        ...determination.citations,
+        { id: authored.id, citation: authored.citation, sourceUrl: authored.sourceUrl },
+      ],
+    };
+    expect(validateChapResponse(JSON.stringify(answer), [...retrieved, authored])).toBeNull();
   });
 
   it("still rejects citations outside the corpus", () => {
@@ -65,6 +148,6 @@ describe("validateChapResponse markdown-fence stripping", () => {
       ],
     };
     const raw = "```json\n" + JSON.stringify(bad) + "\n```";
-    expect(validateChapResponse(raw, CORPUS_IDS)).toBeNull();
+    expect(validateChapResponse(raw, TEST_CORPUS)).toBeNull();
   });
 });

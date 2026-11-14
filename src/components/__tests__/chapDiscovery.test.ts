@@ -25,7 +25,7 @@ describe("CHAP Marketing discovery and static identity", () => {
   it("adds only static, labelled CHAP branding while retaining the existing input", () => {
     expect(widget).toContain('aria-label="CHAP AI assistant"');
     expect(widget).toContain("Compliance, Helpdesk &amp; Automation Platform");
-    expect(widget).toContain("Educational AI");
+    expect(widget).toContain("Source-linked education");
     expect(widget).toContain("Ask CHAP about an IRC §6656 scenario");
     expect(widget).not.toContain("getUserMedia");
     expect(widget).not.toContain("speechSynthesis");

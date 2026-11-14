@@ -48,6 +48,9 @@ vi.mock("@anthropic-ai/sdk", () => ({
 }));
 
 import { POST } from "../route";
+import { consumeChapStream } from "@/lib/chapStreamClient";
+import { retrieveRelevantCorpus } from "@/lib/corpusRetrieval";
+import { COMPLIANCE_CORPUS } from "@/data/complianceCorpus";
 
 function makeRequest(body: Record<string, unknown> | string): NextRequest {
   const req = new Request("http://localhost/api/chap/ask", {
@@ -187,6 +190,101 @@ describe("POST /api/chap/ask", () => {
     expect(body).toContain('"kind":"out_of_scope"');
     expect(body).toContain('"detectedCategory":"injection"');
     expect(body).toContain("[DONE]");
+    expect(mockStreamDetermination).not.toHaveBeenCalled();
+  });
+
+  it("answers an in-scope question with a bounded, non-model educational response", async () => {
+    const res = await POST(makeRequest({
+      question: "What triggers an IRC §6656 deposit penalty?",
+      sessionId: "sess-education",
+    }));
+    expect(res.status).toBe(200);
+    const body = await readSseBody(res);
+    expect(body).toContain('"kind":"education"');
+    expect(body).toContain('"topicId":"deposit-trigger"');
+    expect(body).toContain("reasonable cause");
+    expect(body).not.toContain('"confidence"');
+    expect(body).not.toContain('"determination":"FLAGGED"');
+    expect(body).not.toContain('"type":"chunk"');
+    expect(mockStreamDetermination).not.toHaveBeenCalled();
+    expect(mockSql).toHaveBeenCalledTimes(1);
+  });
+
+  it("answers the real reconciliation trigger with conditional language", async () => {
+    const res = await POST(makeRequest({
+      question: "How can reconciliation gaps cascade into failure-to-deposit penalties?",
+      sessionId: "sess-reconciliation",
+    }));
+    const body = await readSseBody(res);
+    expect(body).toContain('"topicId":"reconciliation-and-deposits"');
+    expect(body).toContain("not by itself proof");
+    expect(body).not.toContain('"confidence":"high"');
+    expect(mockStreamDetermination).not.toHaveBeenCalled();
+  });
+
+  it("limits unsupported inquiries without invoking a legal reasoning model", async () => {
+    const res = await POST(makeRequest({
+      question: "How do I knit mittens?",
+      sessionId: "sess-unrelated",
+    }));
+    const body = await readSseBody(res);
+    expect(body).toContain('"kind":"limited_education"');
+    expect(body).not.toContain('"kind":"out_of_scope"');
+    expect(mockStreamDetermination).not.toHaveBeenCalled();
+  });
+
+  it.each(["valid", "limited"] as const)(
+    "logs once after client cancels a bounded response while SQL is pending (%s)",
+    async (scenario) => {
+      let releaseInsert!: (value: { rows: never[] }) => void;
+      const pendingInsert = new Promise<{ rows: never[] }>((resolve) => {
+        releaseInsert = resolve;
+      });
+      mockSql.mockImplementation(() => pendingInsert);
+      const response = await POST(makeRequest({
+        question: scenario === "valid"
+          ? "What triggers an IRC §6656 deposit penalty?"
+          : "How do I knit mittens?",
+        sessionId: "cancel-after-education",
+      }));
+      expect(response.body).not.toBeNull();
+      if (!response.body) return;
+      const delivered: string[] = [];
+      await consumeChapStream(response.body, new AbortController().signal, event => {
+        delivered.push(event.type);
+      });
+      expect(delivered).toEqual(["final"]);
+      expect(mockSql).toHaveBeenCalledTimes(1);
+      releaseInsert({ rows: [] });
+      await new Promise(resolve => setTimeout(resolve, 0));
+      expect(mockSql).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  it.each([
+    ["What is the interest rate on a bank deposit?", "limited_education", ""],
+    ["What is the deposit shortfall safe-harbor threshold?", "education", "deposit-shortfall-safe-harbor"],
+    ["What is the penalty for one day late under IRC 6656?", "education", "deposit-rate-tiers"],
+    ["What does the 2 percent penalty rate mean under IRC 6656?", "education", "deposit-rate-tiers"],
+    ["What are mortgage deposit interest rates?", "limited_education", ""],
+    ["What is the income tax rate for 2026?", "limited_education", ""],
+    ["How do I apply for an employment tax deposit extension?", "limited_education", ""],
+    ["How do I apply for an extension to pay an employment tax deposit penalty?","limited_education",""],
+    ["How do I appeal an employment tax deposit penalty?","limited_education",""],
+    ["Does first-time depositor relief under IRC §6656(c) require that I file a timely return?", "education", "first-time-depositor-relief"],
+    ["What is the abatement for an initial deposit sent to the Secretary under IRC §6656(d)?","education","first-time-depositor-relief"],
+    ["What is the monthly employment tax deposit schedule that applies to my business?", "limited_education", ""],
+
+
+    ["What is the federal estate tax threshold?", "limited_education", ""],
+    ["What is the shortfall safe harbor threshold for an employment tax deposit?", "education", "deposit-shortfall-safe-harbor"],
+    ["What is the IRC §6656 2 percent penalty tier?", "education", "deposit-rate-tiers"],
+  ] as const)("routes public question safely: %s", async (question, kind, topic) => {
+    const response = await POST(makeRequest({ question, sessionId: "case-routing-synthetic" }));
+    const body = await readSseBody(response);
+    expect(body).toContain(`"kind":"${kind}"`);
+    if (topic) expect(body).toContain(`"topicId":"${topic}"`);
+    expect(body).not.toContain('"confidence"');
     expect(mockStreamDetermination).not.toHaveBeenCalled();
   });
 

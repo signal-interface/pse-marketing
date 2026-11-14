@@ -25,10 +25,10 @@ export default function ChapAIPage() {
                 <em>Explore IRC §6656 with statutory references.</em>
               </h1>
               <p className="chap-hero__sub">
-                This limited marketing experience answers educational questions about
-                IRC §6656 using reference material and AI-generated explanations.
-                It is not connected to a payroll system or customer data, and
-                it does not make operational compliance decisions.
+                This limited marketing experience presents a small collection of
+                predefined, source-linked IRC §6656 educational explanations.
+                Coverage is limited; unsupported questions receive a scope notice.
+                It is not connected to a payroll system or customer data and does not make compliance decisions.
               </p>
               <div className="chap-hero__actions">
                 <a href="#try-chap-ai" className="chap-btn-primary">Try CHAP AI</a>
@@ -49,8 +49,10 @@ export default function ChapAIPage() {
             <h2 className="chap-section-headline">A focused introduction to IRC §6656.</h2>
             <p className="chap-section-sub">
               Ask general questions about federal employment tax deposit penalties.
-              CHAP AI draws on a limited reference corpus and presents information
-              for human review. Answers are educational, not individualized legal,
+              The experience selects from a limited set of predefined educational topics
+              with published source links, rather than generating new legal opinions.
+              Verify the explanations against the cited current authorities before relying on them.
+              Answers are educational, not individualized legal,
               tax, payroll, or compliance advice.
             </p>
             <div className="chap-steps-grid">
@@ -60,7 +62,7 @@ export default function ChapAIPage() {
               </div>
               <div className="chap-step-card">
                 <div className="chap-step-name">Review</div>
-                <p className="chap-step-body">Read the AI-generated explanation and check the cited statutory references independently.</p>
+                <p className="chap-step-body">Read the predefined educational overview and independently verify the cited statutory and regulatory sources.</p>
               </div>
               <div className="chap-step-card">
                 <div className="chap-step-name">Understand boundaries</div>
