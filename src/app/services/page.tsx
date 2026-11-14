@@ -6,7 +6,7 @@ import { ENFORCEMENT_STATS } from '@/lib/stats';
 
 export const metadata: Metadata = {
   title: 'Services | Payroll Synergy Experts',
-  description: 'Explore PSE's six-part vision for payroll governance, compliance intelligence, workforce analytics, reconciliation, integration, and advisory.',
+  description: 'Explore PSE\'s six-part vision for payroll governance, compliance intelligence, workforce analytics, reconciliation, integration, and advisory.',
 };
 
 const services = [
@@ -42,7 +42,7 @@ const services = [
     slug: 'workforce-analytics',
     name: 'Workforce Analytics',
     headline: 'Labor costs, overtime exposure, and headcount trends — connected.',
-    body: 'PSE's end-state analytics vision connects labor costs, overtime trends, and compliance exposure in a unified view for payroll leaders.',
+    body: 'PSE\'s end-state analytics vision connects labor costs, overtime trends, and compliance exposure in a unified view for payroll leaders.',
     features: [
       'Live labor cost dashboards',
       'Overtime exposure by department',
