@@ -30,10 +30,10 @@ export default function Hero() {
             <h1 className="text-[clamp(2.2rem,4vw,3.2rem)] font-bold leading-[1.15] tracking-[-0.03em] text-text mb-5">
               Payroll needs governance beyond the payroll engine.{" "}
               <em className="not-italic relative inline-block">
-                That
+                PSE
                 <span className="absolute left-0 right-0 bottom-1 h-[3px] bg-steel-light rounded-sm opacity-50" />
               </em>{" "}
-              PSE is building that layer.
+              is building that layer.
             </h1>
 
             <p className="text-[17px] leading-[1.7] text-text-secondary max-w-[480px] mb-8">
