@@ -28,7 +28,7 @@ export default function ChapAIPage() {
                 This limited marketing experience presents a small collection of
                 predefined, source-linked IRC §6656 educational explanations.
                 Coverage is limited; unsupported questions receive a scope notice.
-                It is not connected to customer payroll data and does not make compliance decisions.
+                It is not connected to a payroll system or customer data and does not make compliance decisions.
               </p>
               <div className="chap-hero__actions">
                 <a href="#try-chap-ai" className="chap-btn-primary">Try CHAP AI</a>
