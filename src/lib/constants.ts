@@ -100,7 +100,7 @@ export const CHAP_STEPS = [
   {
     step: "Explain",
     claimId: CHAP_PIPELINE_CLAIM_ID,
-    desc: "Provides an AI-generated educational explanation with source citations where supported.",
+    desc: "Provides predefined source-linked IRC §6656 educational explanations for supported topics.",
     color: "purple",
   },
   {
