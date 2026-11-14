@@ -18,7 +18,7 @@
 import { NextRequest } from "next/server";
 import { sql } from "@vercel/postgres";
 import { ensureChapTables } from "@/lib/db";
-import { containsInjectionPattern } from "@/lib/chapAi";
+import { containsInjectionPattern } from "@/lib/chapMarketingInjection";
 import { educationalMarketingResponse } from "@/lib/chapMarketingEducation";
 import { extractIp, hashIp, ipHashingConfigured } from "@/lib/ipHash";
 import {
