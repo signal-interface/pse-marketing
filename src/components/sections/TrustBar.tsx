@@ -31,7 +31,7 @@ export default function TrustBar() {
       <div className="max-w-[1200px] mx-auto">
         <RevealOnScroll className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
           <span className="text-xs font-semibold text-text-tertiary uppercase tracking-[0.08em]">
-            We don&apos;t compete with your payroll vendor. We govern it.
+            We complement your payroll platform with independent governance and audit intelligence.
           </span>
           {TRUST_ITEMS.map((item) => (
             <div
