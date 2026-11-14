@@ -199,6 +199,8 @@ export async function POST(request: NextRequest): Promise<Response> {
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       let accumulated = "";
+      let logAttempted = false;
+      let terminalEmitted = false;
       try {
         for await (const event of anthropicStream) {
           if (
@@ -222,6 +224,7 @@ export async function POST(request: NextRequest): Promise<Response> {
             ? { type: "final", response: validated }
             : { type: "error", code: "validation_failed" })
         );
+        terminalEmitted = true;
         controller.enqueue(sseEvent("[DONE]"));
 
         // Awaited BEFORE close: once close() ends the response, the
@@ -229,6 +232,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         // never lands (verified in prod — streamed determinations left
         // no chap_interactions row). The client acts on the final event
         // above, so the extra ~tens of ms before close are invisible.
+        logAttempted = true;
         await logInteraction({
           sessionId,
           ipHash,
@@ -237,26 +241,35 @@ export async function POST(request: NextRequest): Promise<Response> {
           response: validated,
           latencyMs: Date.now() - startedAt,
         });
-        controller.close();
+        // A consumer may cancel immediately after the terminal event.
+        // Stream cancellation makes close() throw; this is normal cleanup,
+        // not a second failed interaction. Never repeat the database insert.
       } catch (err) {
-        console.error("[chap/ask] stream error:", err);
-        try {
-          controller.enqueue(sseEvent({ type: "error" }));
-        } catch {
-          // controller may already be closed
+        if (!terminalEmitted) {
+          console.error("[chap/ask] stream error:", err);
+          try {
+            controller.enqueue(sseEvent({ type: "error" }));
+            terminalEmitted = true;
+          } catch {
+            // Client may have disconnected.
+          }
         }
-        await logInteraction({
-          sessionId,
-          ipHash,
-          email: capturedEmail,
-          question,
-          response: null,
-          latencyMs: Date.now() - startedAt,
-        });
+        if (!logAttempted) {
+          logAttempted = true;
+          await logInteraction({
+            sessionId,
+            ipHash,
+            email: capturedEmail,
+            question,
+            response: null,
+            latencyMs: Date.now() - startedAt,
+          });
+        }
+      } finally {
         try {
           controller.close();
         } catch {
-          // controller may already be closed
+          // Already cancelled/closed by the client after the terminal event.
         }
       }
     },
