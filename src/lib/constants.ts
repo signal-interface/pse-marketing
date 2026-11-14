@@ -3,7 +3,7 @@ export const SITE = {
   title:
     "AI-Powered Payroll Compliance & Controls | Payroll Synergy Experts",
   description:
-    "AI-powered payroll controls that catch compliance issues before they cost you. Every run validated, every decision documented. Request a demo today.",
+    "PSE is building an independent payroll governance and audit intelligence layer. Explore its end-state vision, advisory services, and guided demo.",
   url: "https://payrollsynergyexperts.com",
   ogImage: "https://payrollsynergyexperts.com/opengraph-image",
 } as const;
