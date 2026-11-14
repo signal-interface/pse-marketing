@@ -193,113 +193,69 @@ describe("POST /api/chap/ask", () => {
     expect(mockStreamDetermination).not.toHaveBeenCalled();
   });
 
-  it("does not stream unvalidated model chunks to the browser", async () => {
-    const untrusted = '{"kind":"determination","analysis":"unvalidated text","citations":[]}';
-    mockStreamDetermination.mockReturnValue((async function* () {
-      yield { type: "content_block_delta", delta: { type: "text_delta", text: untrusted } };
-    })());
+  it("answers an in-scope question with a bounded, non-model educational response", async () => {
     const res = await POST(makeRequest({
-      question: "What triggers an IRC 6656 deposit penalty?",
-      sessionId: "sess-guard",
+      question: "What triggers an IRC §6656 deposit penalty?",
+      sessionId: "sess-education",
     }));
     expect(res.status).toBe(200);
     const body = await readSseBody(res);
-    expect(body).not.toContain("unvalidated text");
+    expect(body).toContain('"kind":"education"');
+    expect(body).toContain('"topicId":"deposit-trigger"');
+    expect(body).toContain("reasonable cause");
+    expect(body).not.toContain('"confidence"');
+    expect(body).not.toContain('"determination":"FLAGGED"');
     expect(body).not.toContain('"type":"chunk"');
-    expect(body).toContain('"type":"error"');
-    expect(body).toContain('"code":"validation_failed"');
+    expect(mockStreamDetermination).not.toHaveBeenCalled();
+    expect(mockSql).toHaveBeenCalledTimes(1);
   });
 
-  it("uses the same authoritative entries in the model prompt and validator", async () => {
-    const statute = COMPLIANCE_CORPUS.find(entry => entry.id === "irc-6656-a");
-    const note = COMPLIANCE_CORPUS.find(entry => entry.sourceType === "pse_written");
-    expect(statute).toBeDefined();
-    expect(note).toBeDefined();
-    if (!statute || !note) return;
-    vi.mocked(retrieveRelevantCorpus).mockReturnValueOnce([statute]);
-    mockStreamDetermination.mockReturnValue((async function* () {
-      const answer = {
-        kind: "determination",
-        applicableRegulation: {
-          reference: "untrusted",
-          name: "untrusted",
-          jurisdiction: "federal",
-          primarySourceUrl: "https://attacker.example",
-        },
-        analysis: "Section 6656 addresses federal failure-to-deposit penalties.",
-        determination: "NEEDS_HUMAN_REVIEW",
-        rationale: "Verify the facts against official authority.",
-        citations: [{ id: statute.id, citation: "invented", sourceUrl: "https://attacker.example" }],
-        confidence: "medium",
-      };
-      yield { type: "content_block_delta", delta: { type: "text_delta", text: JSON.stringify(answer) } };
-    })());
+  it("answers the real reconciliation trigger with conditional language", async () => {
     const res = await POST(makeRequest({
-      question: "What triggers an IRC 6656 deposit penalty?",
-      sessionId: "sess-real-corpus",
+      question: "How can reconciliation gaps cascade into failure-to-deposit penalties?",
+      sessionId: "sess-reconciliation",
     }));
     const body = await readSseBody(res);
-    expect(mockStreamDetermination).toHaveBeenCalledWith({
-      question: "What triggers an IRC 6656 deposit penalty?",
-      retrievedCorpus: [statute],
-    });
-    expect(body).toContain('"kind":"determination"');
-    expect(body).toContain(statute.sourceUrl);
-    expect(body).not.toContain("attacker.example");
-    expect(body).not.toContain(note.id);
+    expect(body).toContain('"topicId":"reconciliation-and-deposits"');
+    expect(body).toContain("not by itself proof");
+    expect(body).not.toContain('"confidence":"high"');
+    expect(mockStreamDetermination).not.toHaveBeenCalled();
   });
 
-  it.each(["valid", "invalid"] as const)(
-    "logs exactly once after terminal cancellation while SQL is pending (%s)",
-    async (scenario) => {
-      const statute = COMPLIANCE_CORPUS.find(entry => entry.id === "irc-6656-a");
-      expect(statute).toBeDefined();
-      if (!statute) return;
-      vi.mocked(retrieveRelevantCorpus).mockReturnValueOnce([statute]);
+  it("limits unsupported inquiries without invoking a legal reasoning model", async () => {
+    const res = await POST(makeRequest({
+      question: "How do I knit mittens?",
+      sessionId: "sess-unrelated",
+    }));
+    const body = await readSseBody(res);
+    expect(body).toContain('"kind":"limited_education"');
+    expect(body).not.toContain('"kind":"out_of_scope"');
+    expect(mockStreamDetermination).not.toHaveBeenCalled();
+  });
 
+  it.each(["valid", "limited"] as const)(
+    "logs once after client cancels a bounded response while SQL is pending (%s)",
+    async (scenario) => {
       let releaseInsert!: (value: { rows: never[] }) => void;
       const pendingInsert = new Promise<{ rows: never[] }>((resolve) => {
         releaseInsert = resolve;
       });
       mockSql.mockImplementation(() => pendingInsert);
-      const answer = scenario === "valid"
-        ? JSON.stringify({
-          kind: "determination",
-          applicableRegulation: {
-            reference: statute.citation,
-            name: statute.title,
-            jurisdiction: statute.jurisdiction,
-            primarySourceUrl: statute.sourceUrl,
-          },
-          analysis: "Failure to deposit is governed by the cited authority.",
-          determination: "NEEDS_HUMAN_REVIEW",
-          rationale: "Verify employer facts against the authority.",
-          citations: [{
-            id: statute.id,
-            citation: statute.citation,
-            sourceUrl: statute.sourceUrl,
-          }],
-          confidence: "medium",
-        })
-        : "{not valid JSON";
-      mockStreamDetermination.mockReturnValue((async function* () {
-        yield { type: "content_block_delta", delta: { type: "text_delta", text: answer } };
-      })());
       const response = await POST(makeRequest({
-        question: "What triggers an IRC §6656 deposit penalty?",
-        sessionId: "cancel-after-terminal",
+        question: scenario === "valid"
+          ? "What triggers an IRC §6656 deposit penalty?"
+          : "How do I knit mittens?",
+        sessionId: "cancel-after-education",
       }));
       expect(response.body).not.toBeNull();
       if (!response.body) return;
-
       const delivered: string[] = [];
-      await consumeChapStream(response.body, new AbortController().signal, (event) => {
+      await consumeChapStream(response.body, new AbortController().signal, event => {
         delivered.push(event.type);
       });
-      expect(delivered).toEqual([scenario === "valid" ? "final" : "error"]);
+      expect(delivered).toEqual(["final"]);
       expect(mockSql).toHaveBeenCalledTimes(1);
       releaseInsert({ rows: [] });
-      // Allow the server stream's post-log close path to settle after cancellation.
       await new Promise(resolve => setTimeout(resolve, 0));
       expect(mockSql).toHaveBeenCalledTimes(1);
     }
