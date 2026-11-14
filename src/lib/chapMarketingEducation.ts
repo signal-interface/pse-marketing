@@ -23,7 +23,7 @@ const CASES: Record<string, Case> = {
   rates: {
     id: "deposit-rate-tiers",
     title: "Deposit-penalty percentages and notice conditions",
-    explanation: "IRC §6656(b)(1) generally specifies 2% when the failure lasts no more than 5 days, 5% when it lasts more than 5 but no more than 15 days, and 10% when it lasts more than 15 days. A separate 15% special rule applies when the deposit remains unpaid on or before the earlier of the statutory tenth-day-after-first-delinquency-notice date or certain immediate-payment notice-and-demand events. The 15% rate does not arise solely from being 15 days late. The facts, notices and applicable exceptions require independent verification.",
+    explanation: "IRC §6656(b)(1) generally specifies 2% when the failure lasts no more than 5 days, 5% when it lasts more than 5 but no more than 15 days, and 10% when it lasts more than 15 days. A separate 15% special rule applies when the amount has not been deposited by the earlier of the day 10 days after the first delinquency notice or certain statutory immediate-payment notice-and-demand dates. The 15% rate does not arise solely from being 15 days late. The facts, notices and applicable exceptions require independent verification.",
     ids: ["irc-6656-b", "irc-6656-a"],
   },
   reconciliation: {
@@ -54,8 +54,8 @@ const CASES: Record<string, Case> = {
     id: "first-time-depositor-relief",
     title: "Certain first-time deposit and schedule-change waivers",
     explanation: [
-      "IRC §6656(c) authorizes a discretionary waiver for certain inadvertent failures in an employer's first required quarter.",
-      "It also covers certain first deposits after required frequency changes, subject to statutory eligibility and timely filing.",
+      "IRC §6656(c) authorizes a discretionary waiver for certain inadvertent failures in an employer's first required quarter, subject to the section's eligibility requirements and timely filing.",
+      "It also covers certain first deposits after required frequency changes, with those same statutory eligibility and timely-filing requirements.",
       "Section 6656(d) separately addresses potential abatement when an initial payment is inadvertently sent to the Secretary instead of an appropriate depository.",
       "Neither provision guarantees relief in a particular case.",
     ].join(" "),
@@ -78,8 +78,9 @@ function selectCase(question: string): Case | null {
   const explicitStatute = /(?:§|section|irc|usc|u\\.s\\.c\\.)?\\s*6656\\b/.test(q);
   const employmentDeposit = /(?:employment|federal|payroll)\\s+(?:tax\\s+)?deposits?\\b|(?:employment|federal|payroll)\\s+tax(?:es)?\\s+deposits?\\b|deposits?\\s+of\\s+(?:federal\\s+)?(?:employment|payroll)\\s+tax/.test(q);
   const failureToDeposit = /failure[- ]to[- ]deposit|deposit\\s+penalt|penalt(?:y|ies)\\s+(?:for|on)\\s+(?:late\\s+)?(?:tax\\s+)?deposits?/.test(q);
+  const depositSafeHarbor = /deposit\\s+shortfall\\s+safe.harbor/.test(q);
   const qualifiedRelief = /(?:reasonable cause|willful neglect)\\s+(?:for|in|under)?\\s*(?:a\\s+)?(?:tax\\s+)?penalt|penalt(?:y|ies)\\s+abatement/.test(q);
-  if (!(explicitStatute || employmentDeposit || failureToDeposit || qualifiedRelief)) return null;
+  if (!(explicitStatute || employmentDeposit || failureToDeposit || qualifiedRelief || depositSafeHarbor)) return null;
 
   // Only choose a topic when the request explicitly signals that topic.
   // Prefer a regulatory shortfall safe harbor over the generic threshold
