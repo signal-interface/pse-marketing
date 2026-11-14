@@ -99,7 +99,7 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
   setTextColor(doc, NAVY);
   doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
-  doc.text('Compliance Risk Exposure Estimate', ML, y);
+  doc.text('Illustrative Compliance Scenario', ML, y);
 
   y += 8;
   setTextColor(doc, STEEL);
@@ -124,7 +124,7 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
   setTextColor(doc, '#6b8caa');
   doc.setFontSize(7);
   doc.setFont('helvetica', 'normal');
-  doc.text('ESTIMATED ANNUAL EXPOSURE', ML + 8, y + 9);
+  doc.text('MODELED ANNUAL SCENARIO', ML + 8, y + 9);
 
   setTextColor(doc, WHITE);
   doc.setFontSize(28);
@@ -144,7 +144,7 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
   setTextColor(doc, NAVY);
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text('Exposure Breakdown', ML, y);
+  doc.text('Modeled Cost Components', ML, y);
 
   y += 6;
   setDrawColor(doc, ICE);
@@ -155,25 +155,25 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
       name: 'Deposit Penalty Exposure',
       value: results.depositPenaltyExposure,
       source: 'IRC §6656',
-      desc: 'Four-tier IRS penalty on late or incorrect tax deposits, escalating from 2% to 15%.',
+      desc: 'Statutory rates vary with deposit timing and notice conditions; modeled amount is not assessed tax.',
     },
     {
       name: 'Wage & Hour Back-Pay Exposure',
       value: results.wageHourExposure,
       source: 'DOL WHD FY2023',
-      desc: 'Estimated DOL back-wage liability based on $1,296 avg recovery per affected employee.',
+      desc: 'Modeled back-wage scenario using a historical per-affected-worker reference.',
     },
     {
       name: 'Compliance Staff Time Cost',
       value: results.complianceTimeCost,
       source: 'Lano, citing EY',
-      desc: '120 hrs/yr average lost resolving payroll-related litigation and compliance issues, scaled by headcount and states. Staff time valued at $26/hr blended rate (BLS OES May 2024, Financial Clerks median $48,650, SOC 43-3000).',
+      desc: 'PSE scenario scales a reported 120-hour reference with assumed headcount/state factors and a modeled $26/hour rate.',
     },
     {
       name: 'Error Correction Cost',
       value: results.errorCorrectionCost,
       source: 'EY 2022',
-      desc: '15 errors per payroll run at $291/error, scaled by employee count and a modeled error rate.',
+      desc: 'Uses historical $291/error reference with assumed error counts and headcount scaling.',
     },
   ];
 
@@ -225,7 +225,7 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
   setTextColor(doc, WHITE);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
-  doc.text('Total estimated annual exposure', ML + 4, y + 7);
+  doc.text('Total illustrative scenario', ML + 4, y + 7);
   doc.setFontSize(12);
   doc.text(formatCurrency(results.totalAnnualExposure), PW - MR, y + 7, { align: 'right' });
 
@@ -265,33 +265,31 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
       text:
         'Based on IRC §6656 four-tier penalty structure. Applies a 33% employer ' +
         'error rate — an internal modeling assumption — to estimated quarterly deposit ' +
-        'obligations scaled by employee count. Industry and state multipliers applied ' +
-        'from DOL enforcement data.',
-      source: 'IRC §6656(b)(1); IRS Notice 746 (Rev. 12-2024)',
+        'obligations scaled by employee count. Industry and state multipliers are PSE internal assumptions, not DOL coefficients.',
+      source: 'IRC §6656(b)(1); IRS Notice 746 (Rev. 7-2026)',
     },
     {
       label: 'Wage & Hour Exposure',
       text:
-        'Based on DOL WHD FY2023 recovery of $212M for 163,000 workers ($1,296 per affected ' +
-        'employee). Applied to headcount × error rate × industry risk × 0.25 investigation ' +
-        'probability factor.',
+        'Uses a historical DOL per-affected-worker recovery reference. Applies PSE internal ' +
+        'headcount, 33% error-rate, industry/state and 0.25 investigation assumptions; ' +
+        'this does not estimate actual employer liability.',
       source: 'DOL WHD FY2023 Statistical Release',
     },
     {
       label: 'Compliance Staff Time Cost',
       text:
-        'Industry reporting: average employer spends 120 hours/year resolving ' +
-        'payroll-related litigation and compliance issues (29 hrs litigation + 91 hrs ' +
-        'compliance management). Scaled logarithmically by employee count and linearly ' +
-        'by state count at 8% per additional state.',
+        'Illustrative scenario starting from a reported 120-hour reference, then scaled ' +
+        'by PSE internal logarithmic headcount and 8% per additional state assumptions. ' +
+        'This is not a measured workload for the selected employer.',
       source: 'Reported by Lano, citing EY Global Payroll Operations Survey, 2024; BLS OES May 2024 (SOC 43-3000, Financial Clerks median annual wage $48,650)',
     },
     {
       label: 'Error Correction Cost',
       text:
-        'EY: average 15 corrections per payroll run at $291 per error. Applied to 26 ' +
-        'biweekly runs/year × a 33% employer error rate (internal modeling assumption) ' +
-        '× headcount scaling factor.',
+        'Uses historical 2022 $291 per payroll error reference, with 15 corrections per ' +
+        'payroll period, 26 runs/year, 33% employer-error calibration, and headcount ' +
+        'scaling as PSE internal scenario assumptions.',
       source: 'Ernst & Young payroll errors survey, 2022',
     },
   ];
@@ -329,11 +327,11 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
   doc.setFontSize(7);
   doc.setFont('helvetica', 'normal');
   const disclaimer =
-    'IMPORTANT DISCLAIMER: These estimates are based on industry benchmark data and ' +
-    'statistical averages. They do not represent guaranteed outcomes or actual PSE client ' +
-    'results. Actual compliance exposure varies by payroll structure, historical error rate, ' +
-    'jurisdictional requirements, and remediation practices. This report is provided for ' +
-    'informational purposes only and does not constitute legal, tax, or financial advice.';
+    'IMPORTANT: This illustrative scenario combines historical reference figures and PSE ' +
+    'assumptions (including a 33% error factor, investigation probability and risk multipliers). ' +
+    'Categories may overlap; the total is not a forecast, assessed penalty, actual loss or ' +
+    'guaranteed PSE savings. Verify current sources and employer-specific facts. ' +
+    'Not legal, tax or financial advice.';
   const dLines = doc.splitTextToSize(disclaimer, CW - 8);
   doc.text(dLines, ML + 4, y + 6);
 
@@ -351,9 +349,9 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
   doc.text(
-    'PSE\'s CHAP AI validates every payroll run against federal and state\n' +
-    'statutory requirements before payroll commits — addressing deposit\n' +
-    'timing, overtime, meal break, and classification compliance automatically.',
+    'PSE offers a guided discussion of payroll governance, audit controls,\n' +
+    'compliance risks, and potential opportunities for better oversight.\n' +
+    'The public CHAP educational widget does not inspect payroll data.',
     ML + 8, y + 18
   );
 
@@ -362,7 +360,7 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
   setTextColor(doc, WHITE);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'bold');
-  doc.text('payrollsynergyexperts.com/demo', ML + 33, y + 31.5, { align: 'center' });
+  doc.text('payrollsynergyexperts.com', ML + 33, y + 31.5, { align: 'center' });
 
   // Footer
   setFill(doc, NAVY);

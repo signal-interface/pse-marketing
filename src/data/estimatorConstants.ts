@@ -5,7 +5,7 @@
 
 export const BENCHMARKS = {
   // IRC §6656(b)(1) — four-tier deposit penalty, max rate
-  // Source: IRS Notice 746 (Rev. 12-2024)
+  // Source: IRS Notice 746 (Rev. 7-2026)
   MAX_DEPOSIT_PENALTY_RATE: 0.15,
 
   // NOT A VERIFIED EXTERNAL STATISTIC. Internal modeling assumption — the once-cited "IRS employer

@@ -117,7 +117,7 @@ export function ComplianceEstimator() {
         </div>
 
         <button className="est-calculate-btn" onClick={handleCalculate}>
-          Calculate my exposure
+          Explore modeled scenario
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
             width="14" height="14">
@@ -136,7 +136,7 @@ export function ComplianceEstimator() {
         <div className="est-results" id="estimator-results">
 
           <div className="est-results__header">
-            <p className="est-results__eyebrow">Illustrative modeled annual exposure</p>
+            <p className="est-results__eyebrow">Illustrative modeled annual scenario</p>
             <div className="est-results__total">
               {formatCurrency(results.totalAnnualExposure)}
             </div>
@@ -150,7 +150,7 @@ export function ComplianceEstimator() {
           <div className="est-breakdown">
             <div className="est-breakdown__row">
               <div className="est-breakdown__label">
-                <span className="est-breakdown__name">Deposit penalty exposure</span>
+                <span className="est-breakdown__name">Modeled deposit penalty component</span>
                 <span className="est-breakdown__source">IRC §6656</span>
               </div>
               <span className="est-breakdown__value">
@@ -159,7 +159,7 @@ export function ComplianceEstimator() {
             </div>
             <div className="est-breakdown__row">
               <div className="est-breakdown__label">
-                <span className="est-breakdown__name">Wage &amp; hour back-pay exposure</span>
+                <span className="est-breakdown__name">Modeled wage &amp; hour component</span>
                 <span className="est-breakdown__source">DOL WHD FY2023</span>
               </div>
               <span className="est-breakdown__value">
@@ -168,7 +168,7 @@ export function ComplianceEstimator() {
             </div>
             <div className="est-breakdown__row">
               <div className="est-breakdown__label">
-                <span className="est-breakdown__name">Compliance staff time cost</span>
+                <span className="est-breakdown__name">Modeled compliance staff time</span>
                 <span className="est-breakdown__source">Lano, citing EY</span>
               </div>
               <span className="est-breakdown__value">
@@ -177,7 +177,7 @@ export function ComplianceEstimator() {
             </div>
             <div className="est-breakdown__row est-breakdown__row--last">
               <div className="est-breakdown__label">
-                <span className="est-breakdown__name">Error correction cost</span>
+                <span className="est-breakdown__name">Modeled correction cost</span>
                 <span className="est-breakdown__source">EY 2022</span>
               </div>
               <span className="est-breakdown__value">
@@ -218,7 +218,7 @@ export function ComplianceEstimator() {
               )}
             </button>
             <p className="est-download__note">
-              Includes methodology, source citations, and breakdown by exposure category.
+              Includes scenario methodology, reference sources, assumptions and modeled cost categories.
               No email required.
             </p>
           </div>
@@ -236,7 +236,7 @@ export function ComplianceEstimator() {
           )}
 
           <div className="est-disclaimer">
-            This scenario uses public benchmark references and PSE internal assumptions, including a 33% employer-error calibration, estimated deposit amounts, investigation probability and industry/state multipliers. The 33% assumption is not a verified IRS or DOL statistic. Results are illustrative, not predicted losses or PSE client outcomes. Actual exposure varies by payroll structure, error history, and jurisdiction. References: {results.sources.join(' · ')}
+            This illustrative scenario combines selected public reference figures with PSE internal model assumptions, including a 33% employer-error calibration, estimated deposit amounts, investigation probability, industry/state multipliers, and headcount scaling. The 33% assumption is not a verified IRS or DOL statistic; the modeled risk factors are not externally calibrated employer probabilities. The categories may overlap and their sum is not an actual employer loss estimate, penalty assessment, verified annual forecast or guaranteed PSE savings. Confirm applicability using your own payroll facts and current authorities. References: {results.sources.join(' · ')}
           </div>
 
           <button

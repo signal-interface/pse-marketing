@@ -19,17 +19,15 @@ export default function ComplianceRiskPage() {
           <div className="est-hero__inner">
             <p className="est-eyebrow">Compliance Risk Estimator</p>
             <h1 className="est-hero__headline">
-              How much compliance risk is your payroll carrying right now?
+              Explore a modeled payroll compliance cost scenario.
             </h1>
             <p className="est-hero__sub">
-              Three inputs. Thirty seconds. Explore an illustrative annual
-              scenario combining public IRS and DOL references, payroll
-              research, and clearly disclosed PSE modeling assumptions.
+              Choose your workforce size, number of states, and industry to explore an illustrative annual scenario. Results combine selected public references with clearly disclosed PSE modeling assumptions; they are not a forecast of actual losses or penalties.
             </p>
             <div className="est-hero__trust">
               <span className="est-trust-item">No email required to see results</span>
               <span className="est-trust-divider">&middot;</span>
-              <span className="est-trust-item">Based on public enforcement data</span>
+              <span className="est-trust-item">Uses public references and internal assumptions</span>
               <span className="est-trust-divider">&middot;</span>
               <span className="est-trust-item">Public sources and model assumptions identified</span>
             </div>
@@ -61,9 +59,9 @@ export default function ComplianceRiskPage() {
               <div className="est-context__card">
                 <div className="est-context__stat">15%</div>
                 <div className="est-context__stat-label">
-                  Maximum IRS deposit penalty rate under IRC §6656
+                  Statutory maximum deposit penalty rate under specific IRS notice conditions
                 </div>
-                <div className="est-context__source">IRS Notice 746, 2024</div>
+                <div className="est-context__source">IRS Notice 746, 2026</div>
               </div>
               <div className="est-context__card">
                 <div className="est-context__stat">$1,296</div>
