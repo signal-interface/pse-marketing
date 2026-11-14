@@ -263,6 +263,12 @@ describe("POST /api/chap/ask", () => {
 
   it.each([
     ["What is the interest rate on a bank deposit?", "limited_education", ""],
+    ["What is the deposit shortfall safe-harbor threshold?", "education", "deposit-shortfall-safe-harbor"],
+    ["What is the penalty for one day late under IRC 6656?", "education", "deposit-rate-tiers"],
+    ["What does the 2 percent penalty rate mean under IRC 6656?", "education", "deposit-rate-tiers"],
+    ["What are mortgage deposit interest rates?", "limited_education", ""],
+    ["What is the income tax rate for 2026?", "limited_education", ""],
+
     ["What is the federal estate tax threshold?", "limited_education", ""],
     ["What is the shortfall safe harbor threshold for an employment tax deposit?", "education", "deposit-shortfall-safe-harbor"],
     ["What is the IRC §6656 2 percent penalty tier?", "education", "deposit-rate-tiers"],
