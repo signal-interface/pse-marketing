@@ -215,7 +215,7 @@ describe("POST /api/chap/ask", () => {
     expect(statute).toBeDefined();
     expect(note).toBeDefined();
     if (!statute || !note) return;
-    vi.mocked(retrieveRelevantCorpus).mockReturnValueOnce([note, statute]);
+    vi.mocked(retrieveRelevantCorpus).mockReturnValueOnce([statute]);
     mockStreamDetermination.mockReturnValue((async function* () {
       const answer = {
         kind: "determination",
