@@ -6,7 +6,7 @@ import { ENFORCEMENT_STATS } from '@/lib/stats';
 
 export const metadata: Metadata = {
   title: 'Services | Payroll Synergy Experts',
-  description: 'Six integrated payroll service areas. Payroll run governance, tax compliance, workforce analytics, benefits integration, system integration, and strategic advisory — all powered by CHAP AI.',
+  description: 'Explore PSE\'s six-part vision for payroll governance, compliance intelligence, workforce analytics, reconciliation, integration, and advisory.',
 };
 
 const services = [
@@ -14,7 +14,7 @@ const services = [
     slug: 'payroll-processing', // boundary-lint-allow: prohibited-execution-nominal -- legacy public slug; rename tracked separately, requires 308 + re-index
     name: 'Governed Payroll Runs',
     headline: 'Real-time compliance validation for automated multi-state payroll.',
-    body: 'Every payroll run validated against federal statutory requirements before commit. CHAP AI catches violations — wrong overtime calculations, missed meal break premiums, deposit timing errors — before they become penalties.',
+    body: 'The PSE platform vision places structured statutory checks and exception review before payroll closes — helping teams assess overtime, deposit timing, and other compliance risks.',
     features: [
       'Multi-state validation in a single pass',
       'CHAP AI pre-run compliance scan',
@@ -22,13 +22,13 @@ const services = [
       'Guided correction workflow',
       'Audit-ready run documentation',
     ],
-    stat: { value: ENFORCEMENT_STATS.irsMaxDepositPenalty.value, label: 'Max IRS deposit penalty — eliminated by pre-run validation' },
+    stat: { value: ENFORCEMENT_STATS.irsMaxDepositPenalty.value, label: 'Maximum IRC §6656 penalty rate in qualifying circumstances' },
   },
   {
     slug: 'tax-compliance',
     name: 'Tax & Compliance',
     headline: 'Payroll tax compliance audited, documented, and actioned — every cycle.',
-    body: 'Payroll tax compliance audited and actioned across all active jurisdictions. When a tax notice arrives, PSE researches the issue and delivers a structured response plan. CHAP AI flags deposit timing exposure before it triggers a penalty.',
+    body: 'PSE advisory helps employers assess payroll tax compliance and respond to notices. The CHAP AI roadmap adds earlier visibility into deposit timing and related exposure.',
     features: [
       'Multi-jurisdiction compliance audit',
       'Regulatory change monitoring',
@@ -41,8 +41,8 @@ const services = [
   {
     slug: 'workforce-analytics',
     name: 'Workforce Analytics',
-    headline: 'Labor costs, overtime exposure, and headcount trends — live.',
-    body: 'Real-time visibility into labor cost drivers, overtime trends, and compliance exposure before they appear in a quarterly review. Built for payroll directors who need to answer questions before the CFO asks them.',
+    headline: 'Labor costs, overtime exposure, and headcount trends — connected.',
+    body: 'PSE\'s end-state analytics vision connects labor costs, overtime trends, and compliance exposure in a unified view for payroll leaders.',
     features: [
       'Live labor cost dashboards',
       'Overtime exposure by department',
@@ -70,7 +70,7 @@ const services = [
     slug: 'system-integration',
     name: 'System Integration',
     headline: 'Connect payroll to your HRIS and workforce management platforms.',
-    body: 'Pre-built integrations with UKG, ADP, Dayforce, and major HRIS platforms. Custom API for proprietary systems. Data flows in both directions — payroll inputs from HRIS, validated outputs back.',
+    body: 'The PSE architecture envisions interoperability with UKG, ADP, Dayforce, and major HRIS platforms, including governed data exchange and custom API connectivity.',
     features: [
       'UKG, ADP, Dayforce connectors',
       'Custom REST API',
@@ -111,8 +111,8 @@ export default function ServicesPage() {
               who need it right the first time.
             </h1>
             <p className="svc-hero__sub">
-              Six integrated service areas. One compliance-first platform.
-              Every decision documented, every run validated.
+              Six connected service areas. One governance-first vision.
+              Built to connect validation, professional judgment, and audit evidence.
             </p>
             <p className="svc-hero__sub">
               Powered by CHAP AI™ — Compliance, Helpdesk &amp; Automation Platform.
@@ -162,12 +162,12 @@ export default function ServicesPage() {
           <div className="svc-chap-callout__inner">
             <div className="svc-chap-callout__content">
               <p className="svc-eyebrow" style={{ color: '#6b8caa' }}>Powered by CHAP AI™</p>
-              <h2>Every service runs on the same compliance engine.</h2>
+              <h2>One connected intelligence vision across payroll operations.</h2>
               <p>
-                CHAP AI isn&apos;t a reporting layer — it&apos;s the validation engine underneath
-                every payroll run, filing, and deduction reconciliation PSE governs.
-                Pre-run scans, statute-level citations, and audit-ready documentation
-                are built into the platform, not bolted on.
+                The CHAP AI platform vision connects pre-close checks, statutory references,
+                exception review, and evidence management across payroll operations.
+                The public CHAP marketing experience remains an educational demonstration,
+                separate from operational payroll systems.
               </p>
               <Link href="/chap-ai" className="svc-chap-link">
                 See how CHAP AI works

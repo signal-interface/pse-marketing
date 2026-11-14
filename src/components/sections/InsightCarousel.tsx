@@ -15,38 +15,38 @@ interface Slide {
 const slides: Slide[] = [
   {
     stat: '15', statSuffix: '%',
-    headline: 'The penalty rate on an unpaid deposit once the IRS sends its first notice',
-    body: 'Under IRC §6656, a four-tier escalation means a single late deposit moves from a 2% nuisance to a 15% penalty without a single late payroll to employees. The error is invisible until the IRS notice arrives, typically 60–90 days after the pay period.',
-    sourceBadge: 'IRS IRC §6656',
-    sourceText: 'IRS Notice 746 (Rev. 12-2024) · IRS Internal Revenue Manual 20.1.4',
+    headline: 'Maximum federal deposit penalty rate after qualifying IRS notice conditions',
+    body: 'IRC §6656 provides deposit penalty tiers of 2%, 5%, and 10% based on lateness. The 15% rate applies if an amount remains unpaid more than 10 days after the first notice requesting payment, or upon qualifying notice and demand for immediate payment, whichever is earlier. Penalty tiers are not additive.',
+    sourceBadge: 'IRS FTD penalty guidance',
+    sourceText: 'IRS Failure to Deposit Penalty · IRC §6656 (irs.gov/payments/failure-to-deposit-penalty)',
     points: [
-      'Pre-run deposit schedule validation against your pay frequency and liability thresholds before payroll commits',
-      'Automatic detection of semi-weekly vs. monthly depositor status mismatches — the most common §6656 trigger',
-      'Audit-ready deposit schedule documentation generated automatically for each pay period',
+      'The envisioned governance workflow assesses deposit schedules and liability indicators ahead of payroll close',
+      'Planned detection of deposit schedule mismatches for practitioner review',
+      'Proposed evidence capture for deposit schedule reviews and follow-up decisions',
     ],
   },
   {
-    stat: '$1,296', statSuffix: ' avg',
-    headline: 'Back wages per affected employee recovered by DOL WHD in FY2023',
-    body: 'In FY2023, the DOL Wage & Hour Division recovered $212M in back wages across 163,000 workers. For a 500-person employer that\'s a potential $648,000 exposure per investigation cycle. Overtime miscalculation and split-shift violations remain the leading triggers.',
-    sourceBadge: 'DOL WHD FY2023',
-    sourceText: 'DOL FY2023 Statistical Release · Bitner Henry Insurance Group, 2024',
+    stat: '$259M+', statSuffix: '',
+    headline: 'Back wages recovered nationwide by DOL WHD in FY2025',
+    body: 'The U.S. Department of Labor reported more than $259 million in back wages recovered for nearly 177,000 workers in fiscal year 2025. This is nationwide historical enforcement activity, not a prediction of any employer\'s potential liability.',
+    sourceBadge: 'DOL WHD FY2025',
+    sourceText: 'U.S. Department of Labor · WHD announcement, January 8, 2026',
     points: [
-      'Real-time FLSA §207 overtime calculation validation against actual hours worked — not just entered hours',
-      'Split-shift and meal-break violation detection aligned to applicable state IWC orders before payroll runs',
-      'Three-year audit trail of all wage decisions accessible for any WHD investigation',
+      'Envisioned comparison of overtime calculations against authorized time and pay records',
+      'Planned review of jurisdiction-specific wage and scheduling exceptions where applicable',
+      'Traceable records of reviewed wage decisions, with retention and access governed by an approved evidence policy',
     ],
   },
   {
-    stat: '120', statSuffix: ' hrs/yr',
-    headline: 'Lost to payroll compliance issue resolution per employer, per year',
-    body: 'EY research found companies spend an average of 29 hours resolving litigation and 91 hours managing compliance issues annually. Separately, 14% of businesses faced compliance litigation related to payroll errors in the prior 12 months.',
-    sourceBadge: 'EY Payroll Survey',
-    sourceText: 'Ernst & Young Global Payroll Operations Survey · via Lano, 2024',
+    stat: '91', statSuffix: ' hrs',
+    headline: 'Average time spent settling a regulatory or compliance issue among affected companies',
+    body: 'An EY study commissioned by Paycom reported that surveyed companies experiencing regulatory or compliance issues spent an average of 91 hours settling an issue. This is an affected-company issue-resolution measure, not an annual average across all employers.',
+    sourceBadge: 'EY study (2022)',
+    sourceText: 'EY, Cost and Risks Due to Payroll Errors (2022), commissioned by Paycom',
     points: [
-      'Every flag includes the specific statute, plain-language explanation, and recommended correction — eliminating research time',
-      'Pre-run detection means issues resolve before the run commits, not after a notice or audit request',
-      'Automated documentation produces audit-ready records on demand with zero additional effort',
+      'The PSE vision connects flagged issues with supporting authorities, explanations, and suggested next steps to reduce repetitive research',
+      'Pre-close exception review is designed to surface issues earlier, when payroll teams can still assess and address them',
+      'Structured evidence generation is designed to reduce manual documentation and support audit preparation',
     ],
   },
 ];
@@ -74,7 +74,7 @@ export function InsightCarousel() {
             <p className="pse-insights-eyebrow">Compliance intelligence</p>
             <h2 className="pse-insights-headline">What the enforcement data tells payroll teams</h2>
             <blockquote className="pse-pull-quote">
-              &ldquo;Your payroll vendor processes transactions. It does not tell you whether those transactions are legally correct. That is the gap PSE closes.&rdquo;
+              &ldquo;Payroll teams already validate outcomes. PSE is building the independent governance layer that connects those checks, decisions, and supporting evidence.&rdquo;
             </blockquote>
           </div>
           <div className="pse-carousel-controls" role="group" aria-label="Carousel navigation">
@@ -106,7 +106,7 @@ export function InsightCarousel() {
                     </div>
                   </div>
                   <div className="pse-insight-right">
-                    <div className="pse-insight-right-label">How CHAP AI addresses this</div>
+                    <div className="pse-insight-right-label">How the PSE platform is designed to address this</div>
                     <ul className="pse-insight-points">
                       {slide.points.map((point, j) => <li key={j}>{point}</li>)}
                     </ul>

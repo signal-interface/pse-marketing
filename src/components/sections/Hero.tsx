@@ -28,19 +28,20 @@ export default function Hero() {
           {/* Content */}
           <div className="pse-hero-enter">
             <h1 className="text-[clamp(2.2rem,4vw,3.2rem)] font-bold leading-[1.15] tracking-[-0.03em] text-text mb-5">
-              Payroll has no governance layer.{" "}
+              Payroll needs governance beyond the payroll engine.{" "}
               <em className="not-italic relative inline-block">
-                That
+                PSE
                 <span className="absolute left-0 right-0 bottom-1 h-[3px] bg-steel-light rounded-sm opacity-50" />
               </em>{" "}
-              is the problem PSE solves.
+              is building that layer.
             </h1>
 
             <p className="text-[17px] leading-[1.7] text-text-secondary max-w-[480px] mb-8">
-              ADP runs payroll. UKG runs payroll. Nobody validates compliance
-              before it finalizes. PSE is the control plane that closes that
-              gap &mdash; ensuring every payroll outcome is compliant, explainable,
-              and provable before payroll closes.
+              Your payroll provider executes payroll. Your payroll team validates
+              the results. PSE brings governance, compliance intelligence, and
+              audit evidence together in an independent control layer &mdash;
+              designed to make payroll decisions easier to validate, explain,
+              and defend.
             </p>
 
             <div className="flex flex-wrap gap-3">

@@ -51,7 +51,7 @@ const jsonLdOrganization = {
   url: "https://www.payrollsynergyexperts.com",
   logo: "https://www.payrollsynergyexperts.com/favicon.svg",
   description:
-    "AI-powered payroll compliance and controls platform. Detect compliance issues early, generate audit-ready evidence, and keep every payroll run clean.",
+    "Independent payroll governance and audit intelligence designed to strengthen existing payroll controls, surface risks, and support explainable decisions.",
   sameAs: [
     "https://x.com/psecompliance",
     "https://www.instagram.com/pse_intelligence/",
@@ -72,7 +72,7 @@ const jsonLdSoftware = {
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
   description:
-    "AI-powered compliance intelligence engine for payroll. Detects statutory violations, flags risks, explains issues in plain language, and generates audit-ready documentation.",
+    "PSE's envisioned CHAP AI compliance intelligence engine supports exception detection, statutory explanations, and traceable governance workflows. The public CHAP marketing experience is educational only.",
   creator: {
     "@type": "Organization",
     name: "Payroll Synergy Experts",
