@@ -70,7 +70,7 @@ const CASES: Record<string, Case> = {
 };
 
 function selectCase(question: string): Case | null {
-  const q = question.toLowerCase().replace(/\s+/g, " ").trim();
+  const q = question.toLowerCase().replace(/safe-harbor/g, "safe harbor").replace(/\s+/g, " ").trim();
 
   // Require explicit federal employment-tax deposit context. A bare word
   // such as "tax", "deposit", "rate", or "threshold" is not sufficient.
@@ -101,8 +101,8 @@ function selectCase(question: string): Case | null {
   if (/first.time|first quarter|first deposit|frequency change|waiver/.test(q)) return CASES.firsttime;
   if (/safe.harbor|de minimis|shortfall/.test(q)) return CASES.safeharbor;
   if (/designat|most recent period|90.day/.test(q)) return CASES.designation;
-  if (/(?:penalt|6656).{0,45}(?:rate|tier|percentage|percent|2%|5%|10%|15%|notice)|(?:rate|tier|percentage|percent|2%|5%|10%|15%|notice).{0,45}(?:penalt|6656)|four.tier/.test(q)) return CASES.rates;
-  if (/100,?000|one.day|next.day|accumulat/.test(q)) return CASES.threshold;
+  if (/(?:penalt|6656).{0,45}(?:rate|tier|percentage|percent|2%|5%|10%|15%|notice)|(?:rate|tier|percentage|percent|2%|5%|10%|15%|notice).{0,45}(?:penalt|6656)|four.tier|\b(?:one|\d+)\s+days?\s+late\b/.test(q)) return CASES.rates;
+  if (/100,?000|one.day\s+(?:deposit\s+)?rule|next.day\s+deposit|accumulat/.test(q)) return CASES.threshold;
   if (/trigger|appl|failure.to.deposit|late deposit|deposit penalty/.test(q)) return CASES.trigger;
   return null; // Ambiguous intent gets a limitation, never a legal conclusion.
 }
