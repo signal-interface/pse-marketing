@@ -14,10 +14,8 @@
 //     email_required. We render an inline email-gate form in the chat
 //     and re-fire the original question once the email is accepted.
 //   - Rate-limit hard caps render a polite bubble pointing at /#demo.
-//   - While streaming, raw text accumulates in a bubble. On the final
-//     SSE event, if validation succeeded we swap in the structured
-//     ChapDetermination component; if validation failed (null), we
-//     render an out-of-scope block.
+//   - Wait for a validated terminal event; never render raw model chunks.
+//     Failure, timeout and malformed output render an error, not out-of-scope.
 //
 // The Exceptions tab from the mock is removed in v1 — fewer moving
 // parts and the canned exception list was illustrative only.
@@ -25,6 +23,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { ValidatedResponse } from '@/lib/chapValidation';
+import { consumeChapStream } from '@/lib/chapStreamClient';
 import { ChapDetermination } from './ChapDetermination';
 import { answerWebsiteQuestion, WEBSITE_SUGGESTIONS, websiteGuideDemoCta, websiteGuideFollowUps, type SiteGuideTopic } from '@/lib/siteGuide';
 
@@ -73,24 +72,6 @@ function readStoredEmail(): string | null {
 function writeStoredEmail(email: string): void {
   if (typeof window === 'undefined') return;
   window.sessionStorage.setItem('chap_email', email);
-}
-
-interface SseEvent {
-  type: 'chunk' | 'final' | 'error';
-  text?: string;
-  response?: ValidatedResponse | null;
-}
-
-function parseSseLine(line: string): SseEvent | '[DONE]' | null {
-  const trimmed = line.trim();
-  if (!trimmed.startsWith('data:')) return null;
-  const payload = trimmed.slice(5).trim();
-  if (payload === '[DONE]') return '[DONE]';
-  try {
-    return JSON.parse(payload) as SseEvent;
-  } catch {
-    return null;
-  }
 }
 
 function initialGuideMessages(): Msg[] {
@@ -146,11 +127,13 @@ export function ChapaInterface() {
     setInput('');
     setIsStreaming(true);
     let terminalReceived = false;
-    let finalReceived = false;
+    const requestController = new AbortController();
+    const deadline = setTimeout(() => requestController.abort(), 55_000);
 
     try {
       const res = await fetch('/api/chap/ask', {
         method: 'POST',
+        signal: requestController.signal,
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           question: requestQuestion,
@@ -204,70 +187,33 @@ export function ChapaInterface() {
         throw new Error('no response body');
       }
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let sseBuffer = '';
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        sseBuffer += decoder.decode(value, { stream: true });
-
-        let sepIdx = sseBuffer.indexOf('\n\n');
-        while (sepIdx !== -1) {
-          const rawEvent = sseBuffer.slice(0, sepIdx);
-          sseBuffer = sseBuffer.slice(sepIdx + 2);
-          sepIdx = sseBuffer.indexOf('\n\n');
-
-          const event = parseSseLine(rawEvent);
-          if (event === null) continue;
-          if (event === '[DONE]') continue;
-
-          if (event.type === 'chunk' && typeof event.text === 'string') {
-            const delta = event.text;
-            setMessages((prev) => {
-              const next = [...prev];
-              const last = next[next.length - 1];
-              if (last && last.role === 'assistant' && last.status === 'streaming') {
-                next[next.length - 1] = { ...last, buffer: last.buffer + delta };
-              }
-              return next;
-            });
-          } else if (event.type === 'final') {
-            terminalReceived = true;
-            finalReceived = true;
-            const finalResponse = event.response ?? null;
-            setMessages((prev) => {
-              const next = [...prev];
-              const last = next[next.length - 1];
-              if (last && last.role === 'assistant' && last.status === 'streaming') {
-                next[next.length - 1] = {
-                  role: 'assistant',
-                  status: 'done',
-                  response: finalResponse,
-                  buffer: last.buffer,
-                };
-              }
-              return next;
-            });
-          } else if (event.type === 'error') {
-            if (finalReceived) continue;
-            terminalReceived = true;
-            setMessages((prev) => {
-              const next = prev.slice(0, -1);
-              return [
-                ...next,
-                {
-                  role: 'assistant',
-                  status: 'error',
-                  text: 'The educational answer could not be verified. Please try again or consult the linked official sources.',
-                },
-              ];
-            });
-          }
+      await consumeChapStream(res.body, requestController.signal, (event) => {
+        terminalReceived = true;
+        if (event.type === 'final') {
+          setMessages((prev) => {
+            const next = [...prev];
+            const last = next[next.length - 1];
+            if (last && last.role === 'assistant' && last.status === 'streaming') {
+              next[next.length - 1] = {
+                role: 'assistant',
+                status: 'done',
+                response: event.response,
+                buffer: '',
+              };
+            }
+            return next;
+          });
+        } else {
+          setMessages((prev) => {
+            const next = prev.slice(0, -1);
+            return [...next, {
+              role: 'assistant',
+              status: 'error',
+              text: 'The educational answer could not be verified. Please try again or consult official sources.',
+            }];
+          });
         }
-      }
-      if (!terminalReceived) throw new Error('CHAP stream ended without a terminal response');
+      });
     } catch (err) {
       console.error('[ChapaInterface] request failed:', err);
       if (terminalReceived) return; // A validated final answer must survive a late transport error.
@@ -283,6 +229,7 @@ export function ChapaInterface() {
         ];
       });
     } finally {
+      clearTimeout(deadline);
       setIsStreaming(false);
     }
   };
