@@ -18,15 +18,10 @@
 import { NextRequest } from "next/server";
 import { sql } from "@vercel/postgres";
 import { ensureChapTables } from "@/lib/db";
-import {
-  streamDetermination,
-  MODEL,
-  containsInjectionPattern,
-} from "@/lib/chapAi";
+import { containsInjectionPattern } from "@/lib/chapAi";
+import { educationalMarketingResponse } from "@/lib/chapMarketingEducation";
 import { extractIp, hashIp, ipHashingConfigured } from "@/lib/ipHash";
-import { retrieveRelevantCorpus } from "@/lib/corpusRetrieval";
 import {
-  validateChapResponse,
   syntheticInjectionOutOfScope,
   type ValidatedResponse,
 } from "@/lib/chapValidation";
@@ -81,7 +76,7 @@ async function logInteraction(params: {
       VALUES
         (${sessionId}, ${ipHash}, ${email}, ${question},
          ${JSON.stringify(response)}::jsonb, ${determination},
-         ${latencyMs}, ${MODEL})
+         ${latencyMs}, ${"chap-marketing-editorial-v1"})
     `;
   } catch (err) {
     // Logging failure must not break the user-facing response.
@@ -184,96 +179,31 @@ export async function POST(request: NextRequest): Promise<Response> {
     return sseResponse(stream);
   }
 
-  // 6. Retrieve corpus (top 5 by keyword score, or all entries if zero signal)
-  // Retrieval applies source eligibility before scoring and truncation;
-  // the prompt and validator consume the same official-source subset.
-  const retrieved = retrieveRelevantCorpus(question, 5);
-
-  // 7. Open Anthropic stream + wrap into SSE ReadableStream
+  // 6. Public CHAP Marketing education is intentionally bounded.
+  // AI-generated legal analysis and self-rated confidence are not released.
+  // Unsupported questions receive a truthful limitation, not a false answer.
   const startedAt = Date.now();
-  const anthropicStream = streamDetermination({
-    question,
-    retrievedCorpus: retrieved,
-  });
-
+  const response = educationalMarketingResponse(question);
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
-      let accumulated = "";
-      let logAttempted = false;
-      let terminalEmitted = false;
+      controller.enqueue(sseEvent({ type: "final", response }));
+      controller.enqueue(sseEvent("[DONE]"));
+      // Preserve server-side logging before function completion; cancellation
+      // after terminal delivery is routine and cannot cause a second write.
+      await logInteraction({
+        sessionId,
+        ipHash,
+        email: capturedEmail,
+        question,
+        response,
+        latencyMs: Date.now() - startedAt,
+      });
       try {
-        for await (const event of anthropicStream) {
-          if (
-            event.type === "content_block_delta" &&
-            event.delta.type === "text_delta"
-          ) {
-            // Buffer all model output server-side. Never stream raw, unvalidated
-            // JSON or model-provided URLs to the public browser.
-            accumulated += event.delta.text;
-          }
-        }
-
-        const validated = validateChapResponse(
-          accumulated,
-          retrieved
-        );
-        // An invalid response is a generation/validation failure, not proof
-        // that the user's question is outside the statutory corpus.
-        controller.enqueue(
-          sseEvent(validated
-            ? { type: "final", response: validated }
-            : { type: "error", code: "validation_failed" })
-        );
-        terminalEmitted = true;
-        controller.enqueue(sseEvent("[DONE]"));
-
-        // Awaited BEFORE close: once close() ends the response, the
-        // serverless function can freeze and a fire-and-forget insert
-        // never lands (verified in prod — streamed determinations left
-        // no chap_interactions row). The client acts on the final event
-        // above, so the extra ~tens of ms before close are invisible.
-        logAttempted = true;
-        await logInteraction({
-          sessionId,
-          ipHash,
-          email: capturedEmail,
-          question,
-          response: validated,
-          latencyMs: Date.now() - startedAt,
-        });
-        // A consumer may cancel immediately after the terminal event.
-        // Stream cancellation makes close() throw; this is normal cleanup,
-        // not a second failed interaction. Never repeat the database insert.
-      } catch (err) {
-        if (!terminalEmitted) {
-          console.error("[chap/ask] stream error:", err);
-          try {
-            controller.enqueue(sseEvent({ type: "error" }));
-            terminalEmitted = true;
-          } catch {
-            // Client may have disconnected.
-          }
-        }
-        if (!logAttempted) {
-          logAttempted = true;
-          await logInteraction({
-            sessionId,
-            ipHash,
-            email: capturedEmail,
-            question,
-            response: null,
-            latencyMs: Date.now() - startedAt,
-          });
-        }
-      } finally {
-        try {
-          controller.close();
-        } catch {
-          // Already cancelled/closed by the client after the terminal event.
-        }
+        controller.close();
+      } catch {
+        // The visitor may already have cancelled the completed stream.
       }
     },
   });
-
   return sseResponse(stream);
 }
