@@ -1,6 +1,8 @@
 // Public PSE Marketing site guide. Static, bounded, client-side information only.
 // No model calls, network fetch, visitor tracking, customer data, or subscription.
 // Source links point only to already-published PSE Marketing pages.
+// Marketing-only knowledge discovery: no Context Hub, Core, Professional or tenant access.
+import { domains } from "@/lib/payroll-intelligence";
 export type SiteGuideTopic = "about" | "services" | "demo" | "estimator" | "chap" | "privacy" | "payroll-intelligence";
 export interface SiteGuideAnswer {
   topic: SiteGuideTopic | null;
@@ -10,7 +12,7 @@ export interface SiteGuideAnswer {
 export const WEBSITE_SUGGESTIONS = [
   "What is PSE?",
   "What services does PSE offer?",
-  "How do I request a demonstration?",
+  "What is Payroll Intelligence?",
   "Where is the risk estimator?",
 ] as const;
 
@@ -74,6 +76,35 @@ const TOPICS: Record<SiteGuideTopic, SiteGuideAnswer> = {
     links: [{ label: "Privacy policy", href: "/privacy" }, { label: "Terms", href: "/terms" }],
   },
 };
+// Only routes visitors to the public, source-controlled domain index.
+// It does not generate jurisdiction-specific conclusions or search draft briefings.
+function approvedDomainNavigation(question: string): SiteGuideAnswer | null {
+  const q = question.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, " ");
+  const domainAliases: ReadonlyArray<readonly [string, string]> = [
+    ["wage-hour", "overtime|minimum wage|wage and hour"],
+    ["withholding", "withholding|w 4|federal income tax"],
+    ["tax-reporting", "tax deposit|form 941|w 2|year end"],
+    ["records-retention", "recordkeeping|retention|audit records"],
+    ["payroll-accounting", "payroll accounting|general ledger|accrual"],
+    ["international", "international payroll|cross border|expatriate"],
+    ["deductions", "garnishment|payroll deductions|child support"],
+  ];
+  for (const [slug, pattern] of domainAliases) {
+    if (!new RegExp(`\\b(?:${pattern})\\b`, "i").test(q)) continue;
+    const domain = domains.find((d) => d.slug === slug);
+    if (!domain) return null;
+    return {
+      topic: "payroll-intelligence",
+      text: `The published PSE Payroll Intelligence framework includes ${domain.name}. ${domain.summary} Explore the public domain guide and its source references. This Website Guide does not determine employer-specific compliance or use live payroll data.`,
+      links: [
+        { label: `Explore ${domain.name}`, href: `/payroll-intelligence/topics/${domain.slug}` },
+        { label: "Payroll Intelligence methodology", href: "/payroll-intelligence/methodology" },
+      ],
+    };
+  }
+  return null;
+}
+
 export function answerWebsiteQuestion(question: string, previousTopic: SiteGuideTopic | null = null): SiteGuideAnswer {
   const q = question.trim().toLowerCase().replace(/[^\p{L}\p{N}\s§]/gu, " ");
   if (q.length === 0) return { topic: null, text: "Ask about PSE, services, the risk estimator, CHAP education, or how to schedule a demonstration.", links: [] };
@@ -86,6 +117,9 @@ export function answerWebsiteQuestion(question: string, previousTopic: SiteGuide
     const previous = TOPICS[previousTopic];
     return { ...previous, text: previous.text + " The linked website page contains the published details." };
   }
+  // Prefer approved first-party Payroll Intelligence domain navigation to generic marketing answers.
+  const domainAnswer = approvedDomainNavigation(q);
+  if (domainAnswer) return domainAnswer;
   // Narrowly allow deterministic routing to approved public page descriptions.
   if (/privacy|terms|data handling|confidential|personal information/.test(q)) return TOPICS.privacy;
   if (/payroll intelligence|knowledge domain|knowledge framework|payroll framework|source linked briefing|payroll topics|regulatory research|payroll research/.test(q)) return TOPICS["payroll-intelligence"];
