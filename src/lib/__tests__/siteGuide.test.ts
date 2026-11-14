@@ -63,6 +63,23 @@ describe("CHAP Marketing Website Guide", () => {
     expect(answerWebsiteQuestion("Explain", "payroll-intelligence").topic).toBe("payroll-intelligence");
   });
 
+  it("routes public payroll topics to published marketing pages only", () => {
+    const examples = [
+      ["How does overtime work?", "/payroll-intelligence/topics/wage-hour"],
+      ["Tell me about Form 941", "/payroll-intelligence/topics/tax-reporting"],
+      ["What about payroll recordkeeping?", "/payroll-intelligence/topics/records-retention"],
+      ["Explain payroll accounting", "/payroll-intelligence/topics/payroll-accounting"],
+    ] as const;
+    for (const [question, href] of examples) {
+      const answer = answerWebsiteQuestion(question);
+      expect(answer.topic).toBe("payroll-intelligence");
+      expect(answer.links.some(link => link.href === href)).toBe(true);
+      expect(answer.text).toContain("does not determine employer-specific compliance");
+      expect(answer.links.every(link => /^\\/(?!\\/)/.test(link.href))).toBe(true);
+    }
+    expect(answerWebsiteQuestion("Show me my payroll records").links.every(link => link.href.startsWith("/"))).toBe(true);
+  });
+
   it("reset clears visible state only, retaining marketing session and quota", () => {
     const widget = readFileSync("src/components/sections/ChapaInterface.tsx", "utf8");
     expect(widget).toContain("New Conversation");
