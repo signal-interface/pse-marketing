@@ -190,6 +190,23 @@ describe("POST /api/chap/ask", () => {
     expect(mockStreamDetermination).not.toHaveBeenCalled();
   });
 
+  it("does not stream unvalidated model chunks to the browser", async () => {
+    const untrusted = '{"kind":"determination","analysis":"unvalidated text","citations":[]}';
+    mockStreamDetermination.mockReturnValue((async function* () {
+      yield { type: "content_block_delta", delta: { type: "text_delta", text: untrusted } };
+    })());
+    const res = await POST(makeRequest({
+      question: "What triggers an IRC 6656 deposit penalty?",
+      sessionId: "sess-guard",
+    }));
+    expect(res.status).toBe(200);
+    const body = await readSseBody(res);
+    expect(body).not.toContain("unvalidated text");
+    expect(body).not.toContain('"type":"chunk"');
+    expect(body).toContain('"type":"final"');
+    expect(body).toContain('"response":null');
+  });
+
   it("returns 429 when the rate limiter blocks", async () => {
     mockCheckAndIncrement.mockResolvedValue({
       allowed: false,
