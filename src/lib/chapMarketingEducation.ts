@@ -70,32 +70,29 @@ const CASES: Record<string, Case> = {
 };
 
 function selectCase(question: string): Case | null {
-  const q = question.toLowerCase();
-  // A keyword such as "notice" or "rate" alone is not sufficient
-  // to claim that an unrelated question concerns federal tax deposits.
-  const contextTerms = [
-    "6656",
-    "deposit",
-    "penalt",
-    "payroll",
-    "tax",
-    "reconcil",
-    "shortfall",
-    "abatement",
-    "depositor",
-    "liabilit",
-    "reasonable cause",
-  ];
-  if (!contextTerms.some(term => q.includes(term))) return null;
+  const q = question.toLowerCase().replace(/\s+/g, " ").trim();
+
+  // Explicitly require an employment-tax deposit context. Single terms such
+  // as "tax", "deposit", "rate", or "threshold" must not route bank interest,
+  // estate-tax, or unrelated questions into statutory payroll advice.
+  const explicitStatute = /(?:§|section|irc|usc|u\\.s\\.c\\.)?\\s*6656\\b/.test(q);
+  const employmentDeposit = /(?:employment|federal|payroll)\\s+(?:tax\\s+)?deposits?\\b|(?:employment|federal|payroll)\\s+tax(?:es)?\\s+deposits?\\b|deposits?\\s+of\\s+(?:federal\\s+)?(?:employment|payroll)\\s+tax/.test(q);
+  const failureToDeposit = /failure[- ]to[- ]deposit|deposit\\s+penalt|penalt(?:y|ies)\\s+(?:for|on)\\s+(?:late\\s+)?(?:tax\\s+)?deposits?/.test(q);
+  const qualifiedRelief = /(?:reasonable cause|willful neglect)\\s+(?:for|in|under)?\\s*(?:a\\s+)?(?:tax\\s+)?penalt|penalt(?:y|ies)\\s+abatement/.test(q);
+  if (!(explicitStatute || employmentDeposit || failureToDeposit || qualifiedRelief)) return null;
+
+  // Only choose a topic when the request explicitly signals that topic.
+  // Prefer a regulatory shortfall safe harbor over the generic threshold
+  // question, and a penalty-rate question over the 2% shortfall rule.
   if (/reconcil|discrepan|cascade|deposit gap/.test(q)) return CASES.reconciliation;
-  if (/100,?000|one.day|next.day|accumulat|threshold/.test(q)) return CASES.threshold;
   if (/reasonable cause|willful neglect|abatement/.test(q)) return CASES.reasonable;
   if (/first.time|first quarter|first deposit|frequency change|waiver/.test(q)) return CASES.firsttime;
-  if (/safe.harbor|shortfall|de minimis|2 percent/.test(q)) return CASES.safeharbor;
+  if (/safe.harbor|de minimis|shortfall/.test(q)) return CASES.safeharbor;
   if (/designat|most recent period|90.day/.test(q)) return CASES.designation;
-  if (/rate|tier|percentage|percent|2%|5%|10%|15%|notice/.test(q)) return CASES.rates;
-  if (/6656|failure.to.deposit|deposit penalty|late deposit|deposit tax/.test(q)) return CASES.trigger;
-  return null;
+  if (/(?:penalt|6656).{0,45}(?:rate|tier|percentage|percent|2%|5%|10%|15%|notice)|(?:rate|tier|percentage|percent|2%|5%|10%|15%|notice).{0,45}(?:penalt|6656)|four.tier/.test(q)) return CASES.rates;
+  if (/100,?000|one.day|next.day|accumulat/.test(q)) return CASES.threshold;
+  if (/trigger|appl|failure.to.deposit|late deposit|deposit penalty/.test(q)) return CASES.trigger;
+  return null; // Unclear intent is a limitation, never an invented answer.
 }
 
 export function educationalMarketingResponse(question: string): ValidatedResponse {
