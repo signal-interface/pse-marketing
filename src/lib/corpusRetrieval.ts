@@ -7,7 +7,6 @@
 import {
   COMPLIANCE_CORPUS,
   type CorpusEntry,
-  type CorpusSourceType,
 } from "@/data/complianceCorpus";
 
 // Common English filler. Removed before scoring so a "how does X work"
@@ -23,13 +22,6 @@ const STOPWORDS = new Set([
   "where", "why", "how", "not", "no", "so", "than", "too", "very",
   "just", "about",
 ]);
-
-const SOURCE_TYPE_PRIORITY: Record<CorpusSourceType, number> = {
-  usc: 4,
-  cfr: 3,
-  irs_guidance: 2,
-  pse_written: 1,
-};
 
 function tokenize(text: string): string[] {
   return text
@@ -72,7 +64,9 @@ export function retrieveRelevantCorpus(
 ): CorpusEntry[] {
   const tokens = tokenize(question);
 
-  const scored = COMPLIANCE_CORPUS.map((entry) => ({
+  const scored = COMPLIANCE_CORPUS
+    .filter((entry) => entry.sourceType !== "pse_written")
+    .map((entry) => ({
     entry,
     score: scoreEntry(entry, tokens),
   }));
@@ -83,17 +77,10 @@ export function retrieveRelevantCorpus(
     // No signal at all — hand the full corpus to the model and let it
     // decide out_of_scope. The corpus is small enough that this is
     // cheap.
-    return COMPLIANCE_CORPUS;
+    return scored.map((item) => item.entry).slice(0, maxResults);
   }
 
-  scored.sort((a, b) => {
-    if (b.score !== a.score) return b.score - a.score;
-    // Tie-break on source type priority: usc > cfr > irs_guidance > pse_written
-    return (
-      SOURCE_TYPE_PRIORITY[b.entry.sourceType] -
-      SOURCE_TYPE_PRIORITY[a.entry.sourceType]
-    );
-  });
+  scored.sort((a, b) => b.score - a.score);
 
   return scored
     .filter((s) => s.score > 0)
