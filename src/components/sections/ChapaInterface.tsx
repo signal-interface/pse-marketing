@@ -44,7 +44,7 @@ type Msg =
   | { role: 'assistant'; status: 'guide'; text: string; links: ReadonlyArray<{ label: string; href: string }> };
 
 const INITIAL_GREETING =
-  'Hi — I can help with IRC §6656 (failure-to-deposit penalty) questions. Describe your situation and I’ll return a determination with citations to the primary source.';
+  'Hi — I can help with IRC §6656 (failure-to-deposit penalty) questions. Ask a general educational question and I’ll share source-linked information where the limited corpus supports an answer. Do not enter payroll or personal data.';
 
 const SUGGESTED_QUESTIONS = [
   'What triggers an IRC §6656 deposit penalty?',
@@ -145,6 +145,8 @@ export function ChapaInterface() {
     ]);
     setInput('');
     setIsStreaming(true);
+    let terminalReceived = false;
+    let finalReceived = false;
 
     try {
       const res = await fetch('/api/chap/ask', {
@@ -232,6 +234,8 @@ export function ChapaInterface() {
               return next;
             });
           } else if (event.type === 'final') {
+            terminalReceived = true;
+            finalReceived = true;
             const finalResponse = event.response ?? null;
             setMessages((prev) => {
               const next = [...prev];
@@ -247,6 +251,8 @@ export function ChapaInterface() {
               return next;
             });
           } else if (event.type === 'error') {
+            if (finalReceived) continue;
+            terminalReceived = true;
             setMessages((prev) => {
               const next = prev.slice(0, -1);
               return [
@@ -254,15 +260,17 @@ export function ChapaInterface() {
                 {
                   role: 'assistant',
                   status: 'error',
-                  text: 'The model stream failed. Please try asking again.',
+                  text: 'The educational answer could not be verified. Please try again or consult the linked official sources.',
                 },
               ];
             });
           }
         }
       }
+      if (!terminalReceived) throw new Error('CHAP stream ended without a terminal response');
     } catch (err) {
       console.error('[ChapaInterface] request failed:', err);
+      if (terminalReceived) return; // A validated final answer must survive a late transport error.
       setMessages((prev) => {
         const next = prev.slice(0, -1);
         return [
