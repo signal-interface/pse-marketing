@@ -266,7 +266,7 @@ export async function generateComplianceReport(results: EstimatorOutputs): Promi
         'Based on IRC §6656 four-tier penalty structure. Applies a 33% employer ' +
         'error rate — an internal modeling assumption — to estimated quarterly deposit ' +
         'obligations scaled by employee count. Industry and state multipliers are PSE internal assumptions, not DOL coefficients.',
-      source: 'IRC §6656(b)(1); IRS Notice 746 (Rev. 12-2024)',
+      source: 'IRC §6656(b)(1); IRS Notice 746 (Rev. 7-2026)',
     },
     {
       label: 'Wage & Hour Exposure',
