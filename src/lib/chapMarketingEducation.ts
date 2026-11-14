@@ -103,7 +103,7 @@ function selectCase(question: string): Case | null {
   if (/designat|most recent period|90.day/.test(q)) return CASES.designation;
   if (/(?:penalt|6656).{0,45}(?:rate|tier|percentage|percent|2%|5%|10%|15%|notice)|(?:rate|tier|percentage|percent|2%|5%|10%|15%|notice).{0,45}(?:penalt|6656)|four.tier|\b(?:one|\d+)\s+days?\s+late\b/.test(q)) return CASES.rates;
   if (/100,?000|one.day\s+(?:deposit\s+)?rule|next.day\s+deposit|accumulat/.test(q)) return CASES.threshold;
-  if (/trigger|appl|failure.to.deposit|late deposit|deposit penalty/.test(q)) return CASES.trigger;
+  if (/\btriggers?\b|\bpenalt(?:y|ies)\s+apply\b|failure.to.deposit\s+penalt|late\s+(?:tax\s+)?deposit\s+penalt|deposit\s+penalt/.test(q)) return CASES.trigger;
   return null; // Ambiguous intent gets a limitation, never a legal conclusion.
 }
 
