@@ -53,7 +53,12 @@ const CASES: Record<string, Case> = {
   firsttime: {
     id: "first-time-depositor-relief",
     title: "Certain first-time deposit and schedule-change waivers",
-    explanation: "IRC §6656(c) authorizes a discretionary waiver for certain inadvertent first-quarter deposit failures and certain first deposits following a required frequency change, subject to the statute's additional requirements, including timely filing and referenced eligibility requirements. Section 6656(d) separately addresses potential abatement when the first required deposit was inadvertently sent to the Secretary rather than an appropriate depository. Neither provision guarantees relief in a particular case.",
+    explanation: [
+      "IRC §6656(c) authorizes a discretionary waiver for certain inadvertent failures in an employer's first required quarter.",
+      "It also covers certain first deposits after required frequency changes, subject to statutory eligibility and timely filing.",
+      "Section 6656(d) separately addresses potential abatement when an initial payment is inadvertently sent to the Secretary instead of an appropriate depository.",
+      "Neither provision guarantees relief in a particular case.",
+    ].join(" "),
     ids: ["irc-6656-c", "irc-6656-d"],
   },
   designation: {
@@ -68,7 +73,20 @@ function selectCase(question: string): Case | null {
   const q = question.toLowerCase();
   // A keyword such as "notice" or "rate" alone is not sufficient
   // to claim that an unrelated question concerns federal tax deposits.
-  if (!/6656|deposit|penalt|payroll|tax|reconcil|shortfall|abatement|depositor|liabilit|reasonable cause/.test(q)) return null;
+  const contextTerms = [
+    "6656",
+    "deposit",
+    "penalt",
+    "payroll",
+    "tax",
+    "reconcil",
+    "shortfall",
+    "abatement",
+    "depositor",
+    "liabilit",
+    "reasonable cause",
+  ];
+  if (!contextTerms.some(term => q.includes(term))) return null;
   if (/reconcil|discrepan|cascade|deposit gap/.test(q)) return CASES.reconciliation;
   if (/100,?000|one.day|next.day|accumulat|threshold/.test(q)) return CASES.threshold;
   if (/reasonable cause|willful neglect|abatement/.test(q)) return CASES.reasonable;
