@@ -53,7 +53,11 @@ export const serviceData: Record<string, ServiceData> = {
       { value: ENFORCEMENT_STATS.perErrorCost.value, label: 'Average cost per payroll error — before penalties and interest', source: ENFORCEMENT_STATS.perErrorCost.source },
     ],
     chapAiConnection: 'The envisioned CHAP AI control workflow links pre-close checks to practitioner review and evidence capture, with payroll execution retained by the employer\'s system of record.',
-    screenshot: { src: '/screenshots/payroll-run.png', alt: 'Illustrative pre-run governance dashboard using sample payroll data', caption: 'Illustrative CHAP AI pre-run validation concept — sample data, not an operational customer payroll workflow' },
+    screenshot: {
+      src: '/screenshots/payroll-run.png',
+      alt: 'Illustrative governance dashboard using synthetic payroll data',
+      caption: 'Illustrative CHAP AI validation concept using synthetic data',
+    },
     related: [
       { slug: 'tax-compliance', name: 'Tax & Compliance' },
       { slug: 'workforce-analytics', name: 'Workforce Analytics' },
@@ -66,7 +70,7 @@ export const serviceData: Record<string, ServiceData> = {
     headline: 'Payroll tax compliance audited, documented, and actioned — every cycle.',
     subheadline: 'PSE audits your payroll tax position, identifies exposure, and delivers a clear action plan — including full support on tax notices from the IRS and state agencies.',
     metaDescription: 'Payroll tax compliance audit and tax notice support for multi-state employers. Regulatory change monitoring, deposit timing validation, and structured response plans for IRS and state agency notices.',
-    body: 'PSE advisory helps employers assess payroll tax positions and develop structured responses to IRS and state notices. The broader CHAP AI platform vision adds statutory context and early deposit timing exception visibility across payroll workflows. The public CHAP marketing experience is educational and does not perform operational payroll compliance checks.',
+    body: 'PSE advisory helps employers assess payroll tax positions and develop structured responses to IRS and state notices. The broader CHAP AI platform vision adds statutory context and early deposit timing exception visibility across payroll workflows. The public CHAP marketing experience is educational and does not make operational compliance determinations.',
     features: [
       { title: 'Multi-jurisdiction compliance audit', body: 'PSE audits your payroll tax position across all active federal, state, and local jurisdictions — identifying withholding errors, deposit timing issues, and classification gaps before they become penalties.' },
       { title: 'Regulatory change monitoring', body: 'Rate changes, new requirements, and statutory updates at the federal and state level are tracked and reflected in your compliance rules.' },
