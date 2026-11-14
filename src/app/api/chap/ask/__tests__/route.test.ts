@@ -261,6 +261,20 @@ describe("POST /api/chap/ask", () => {
     }
   );
 
+  it.each([
+    ["What is the interest rate on a bank deposit?", "limited_education", ""],
+    ["What is the federal estate tax threshold?", "limited_education", ""],
+    ["What is the shortfall safe harbor threshold for an employment tax deposit?", "education", "deposit-shortfall-safe-harbor"],
+    ["What is the IRC §6656 2 percent penalty tier?", "education", "deposit-rate-tiers"],
+  ] as const)("routes public question safely: %s", async (question, kind, topic) => {
+    const response = await POST(makeRequest({ question, sessionId: "case-routing-synthetic" }));
+    const body = await readSseBody(response);
+    expect(body).toContain(`"kind":"${kind}"`);
+    if (topic) expect(body).toContain(`"topicId":"${topic}"`);
+    expect(body).not.toContain('"confidence"');
+    expect(mockStreamDetermination).not.toHaveBeenCalled();
+  });
+
   it("returns 429 when the rate limiter blocks", async () => {
     mockCheckAndIncrement.mockResolvedValue({
       allowed: false,
