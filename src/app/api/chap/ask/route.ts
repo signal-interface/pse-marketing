@@ -185,11 +185,9 @@ export async function POST(request: NextRequest): Promise<Response> {
   }
 
   // 6. Retrieve corpus (top 5 by keyword score, or all entries if zero signal)
-  // Only external authority entries are eligible for both model citations and validation.
-  // PSE-authored interpretation remains internal background, never cited as law.
-  const retrieved = retrieveRelevantCorpus(question, 5).filter(
-    (entry) => entry.sourceType !== "pse_written"
-  );
+  // Retrieval applies source eligibility before scoring and truncation;
+  // the prompt and validator consume the same official-source subset.
+  const retrieved = retrieveRelevantCorpus(question, 5);
 
   // 7. Open Anthropic stream + wrap into SSE ReadableStream
   const startedAt = Date.now();
