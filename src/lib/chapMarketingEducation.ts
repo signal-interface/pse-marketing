@@ -121,7 +121,7 @@ export function educationalMarketingResponse(question: string): ValidatedRespons
   if (!selected) {
     return {
       kind: "limited_education",
-      message: "This educational demonstration currently offers only a few reviewed-topic drafts about IRC §6656. It cannot assess your circumstances or answer this question reliably. Consult the official authorities or a qualified payroll or tax professional.",
+      message: "This educational demonstration currently offers only a limited set of source-linked topics about IRC §6656. It cannot assess your circumstances or answer this question reliably. Consult the official authorities or a qualified payroll or tax professional.",
     };
   }
   const byId = new Map(COMPLIANCE_CORPUS
