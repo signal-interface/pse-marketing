@@ -66,6 +66,9 @@ const CASES: Record<string, Case> = {
 
 function selectCase(question: string): Case | null {
   const q = question.toLowerCase();
+  // A keyword such as "notice" or "rate" alone is not sufficient
+  // to claim that an unrelated question concerns federal tax deposits.
+  if (!/6656|deposit|penalt|payroll|tax|reconcil|shortfall|abatement|depositor|liabilit|reasonable cause/.test(q)) return null;
   if (/reconcil|discrepan|cascade|deposit gap/.test(q)) return CASES.reconciliation;
   if (/100,?000|one.day|next.day|accumulat|threshold/.test(q)) return CASES.threshold;
   if (/reasonable cause|willful neglect|abatement/.test(q)) return CASES.reasonable;
