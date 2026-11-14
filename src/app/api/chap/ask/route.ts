@@ -185,7 +185,11 @@ export async function POST(request: NextRequest): Promise<Response> {
   }
 
   // 6. Retrieve corpus (top 5 by keyword score, or all entries if zero signal)
-  const retrieved = retrieveRelevantCorpus(question, 5);
+  // Only external authority entries are eligible for both model citations and validation.
+  // PSE-authored interpretation remains internal background, never cited as law.
+  const retrieved = retrieveRelevantCorpus(question, 5).filter(
+    (entry) => entry.sourceType !== "pse_written"
+  );
 
   // 7. Open Anthropic stream + wrap into SSE ReadableStream
   const startedAt = Date.now();
@@ -213,8 +217,12 @@ export async function POST(request: NextRequest): Promise<Response> {
           accumulated,
           retrieved
         );
+        // An invalid response is a generation/validation failure, not proof
+        // that the user's question is outside the statutory corpus.
         controller.enqueue(
-          sseEvent({ type: "final", response: validated })
+          sseEvent(validated
+            ? { type: "final", response: validated }
+            : { type: "error", code: "validation_failed" })
         );
         controller.enqueue(sseEvent("[DONE]"));
 
