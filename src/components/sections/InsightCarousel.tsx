@@ -21,8 +21,8 @@ const slides: Slide[] = [
     sourceText: 'IRS Notice 746 (Rev. 12-2024) · IRS Internal Revenue Manual 20.1.4',
     points: [
       'Pre-run deposit schedule validation against your pay frequency and liability thresholds before payroll commits',
-      'Automatic detection of semi-weekly vs. monthly depositor status mismatches — the most common §6656 trigger',
-      'Audit-ready deposit schedule documentation generated automatically for each pay period',
+      'Planned detection of deposit schedule mismatches for practitioner review',
+      'Proposed evidence capture for deposit schedule reviews and follow-up decisions',
     ],
   },
   {
@@ -34,7 +34,7 @@ const slides: Slide[] = [
     points: [
       'Real-time FLSA §207 overtime calculation validation against actual hours worked — not just entered hours',
       'Split-shift and meal-break violation detection aligned to applicable state IWC orders before payroll runs',
-      'Three-year audit trail of all wage decisions accessible for any WHD investigation',
+      'Traceable records of reviewed wage decisions, with retention and access governed by an approved evidence policy',
     ],
   },
   {
@@ -44,9 +44,9 @@ const slides: Slide[] = [
     sourceBadge: 'EY Payroll Survey',
     sourceText: 'Ernst & Young Global Payroll Operations Survey · via Lano, 2024',
     points: [
-      'Every flag includes the specific statute, plain-language explanation, and recommended correction — eliminating research time',
-      'Pre-run detection means issues resolve before the run commits, not after a notice or audit request',
-      'Automated documentation produces audit-ready records on demand with zero additional effort',
+      'The PSE vision connects flagged issues with supporting authorities, explanations, and suggested next steps to reduce repetitive research',
+      'Pre-close exception review is designed to surface issues earlier, when payroll teams can still assess and address them',
+      'Structured evidence generation is designed to reduce manual documentation and support audit preparation',
     ],
   },
 ];
@@ -74,7 +74,7 @@ export function InsightCarousel() {
             <p className="pse-insights-eyebrow">Compliance intelligence</p>
             <h2 className="pse-insights-headline">What the enforcement data tells payroll teams</h2>
             <blockquote className="pse-pull-quote">
-              &ldquo;Your payroll vendor processes transactions. It does not tell you whether those transactions are legally correct. That is the gap PSE closes.&rdquo;
+              &ldquo;Payroll teams already validate outcomes. PSE is building the independent governance layer that connects those checks, decisions, and supporting evidence.&rdquo;
             </blockquote>
           </div>
           <div className="pse-carousel-controls" role="group" aria-label="Carousel navigation">
@@ -106,7 +106,7 @@ export function InsightCarousel() {
                     </div>
                   </div>
                   <div className="pse-insight-right">
-                    <div className="pse-insight-right-label">How CHAP AI addresses this</div>
+                    <div className="pse-insight-right-label">How the PSE platform is designed to address this</div>
                     <ul className="pse-insight-points">
                       {slide.points.map((point, j) => <li key={j}>{point}</li>)}
                     </ul>
