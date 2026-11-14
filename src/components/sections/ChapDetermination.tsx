@@ -100,8 +100,9 @@ export function ChapDetermination(props: {
       </div>
 
       <div className="chap-determination__disclaimer">
-        Informational. Not legal or tax advice. CHAP AI routes NEEDS_HUMAN_REVIEW
-        determinations to a credentialed human before finalization.
+        Educational information only — not legal, tax, or employer-specific payroll advice.
+        A NEEDS HUMAN REVIEW result is not automatically referred to anyone.
+        Consult a qualified payroll, tax, or legal professional before acting.
       </div>
     </div>
   );
