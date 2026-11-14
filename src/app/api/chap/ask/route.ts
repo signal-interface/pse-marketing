@@ -6,12 +6,11 @@
 //   3. Pre-filter obvious prompt injections → synthetic out_of_scope
 //   4. Rate-limit check (email gate or hard cap)
 //   5. Keyword-retrieve corpus entries
-//   6. Open Anthropic stream, forward deltas as SSE `chunk` events
+//   6. Read Anthropic stream privately; buffer output until full validation
 //   7. On stream end, validate accumulated JSON, emit final SSE event
 //   8. Log to chap_interactions (fire-and-forget after close)
 //
 // The client receives:
-//   - Zero or more `{"type":"chunk","text":"..."}` events (raw stream)
 //   - Exactly one `{"type":"final","response":<validated>|null}` event
 //   - `[DONE]`
 // or on failure, a single `{"type":"error"}` event before close.
@@ -187,7 +186,6 @@ export async function POST(request: NextRequest): Promise<Response> {
 
   // 6. Retrieve corpus (top 5 by keyword score, or all entries if zero signal)
   const retrieved = retrieveRelevantCorpus(question, 5);
-  const allowedCitationIds = retrieved.map((e) => e.id);
 
   // 7. Open Anthropic stream + wrap into SSE ReadableStream
   const startedAt = Date.now();
@@ -205,15 +203,15 @@ export async function POST(request: NextRequest): Promise<Response> {
             event.type === "content_block_delta" &&
             event.delta.type === "text_delta"
           ) {
-            const text = event.delta.text;
-            accumulated += text;
-            controller.enqueue(sseEvent({ type: "chunk", text }));
+            // Buffer all model output server-side. Never stream raw, unvalidated
+            // JSON or model-provided URLs to the public browser.
+            accumulated += event.delta.text;
           }
         }
 
         const validated = validateChapResponse(
           accumulated,
-          allowedCitationIds
+          retrieved
         );
         controller.enqueue(
           sseEvent({ type: "final", response: validated })
