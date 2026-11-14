@@ -37,7 +37,7 @@ export default function Hero() {
             </h1>
 
             <p className="text-[17px] leading-[1.7] text-text-secondary max-w-[480px] mb-8">
-              Your payroll system executes payroll. Your payroll team validates
+              Your payroll provider executes payroll. Your payroll team validates
               the results. PSE brings governance, compliance intelligence, and
               audit evidence together in an independent control layer &mdash;
               designed to make payroll decisions easier to validate, explain,
