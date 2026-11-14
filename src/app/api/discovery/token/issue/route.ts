@@ -60,8 +60,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Journey initiation, not delivery.
-    await transitionLead(leadId, "QUESTIONNAIRE_SENT", ctx);
+    // Journey initiation, not delivery. A booked lead retains
+    // MEETING_SCHEDULED as its commercial stage; the token/session/event
+    // records hold optional pre-call questionnaire progress independently.
+    // The state-machine still rejects a regression from a confirmed booking.
+    const result = await transitionLead(leadId, "QUESTIONNAIRE_SENT", ctx);
+    if (!result.ok && !(
+      result.reason === "invalid_transition" && result.from === "MEETING_SCHEDULED"
+    )) {
+      console.error(`[token-issue:${requestId}] unexpected state transition`, result.reason);
+      return NextResponse.json({ error: "transition_not_accepted" }, { status: 409 });
+    }
 
     const { rows } = await sql`
       SELECT first_name, name, email FROM demo_requests WHERE id = ${leadId}
