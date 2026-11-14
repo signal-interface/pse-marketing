@@ -164,7 +164,7 @@ function validateOutOfScope(
 
 export function validateChapResponse(
   raw: unknown,
-  corpus: readonly CorpusEntry[] | string[]
+  corpus: readonly CorpusEntry[]
 ): ValidatedResponse | null {
   let parsed: unknown = raw;
 
@@ -186,14 +186,12 @@ export function validateChapResponse(
   if (!isRecord(parsed)) return null;
 
   if (parsed.kind === "determination") {
-    const corpusIds = corpus.map(entry => typeof entry === "string" ? entry : entry.id);
+    const corpusIds = corpus.map(entry => entry.id);
     const validated = validateDetermination(parsed, corpusIds);
     if (!validated) return null;
     // Production route supplies trusted corpus entries. Never render model-supplied
     // citation URLs, citation labels, or primary authority metadata.
-    if (corpus.some(entry => typeof entry === "string")) return validated;
-    const entries = corpus as readonly CorpusEntry[];
-    const byId = new Map(entries.map(entry => [entry.id, entry]));
+    const byId = new Map(corpus.map(entry => [entry.id, entry]));
     const citations = validated.citations.map(citation => byId.get(citation.id));
     if (citations.some(entry => !entry || entry.sourceType === "pse_written")) return null;
     const trusted = citations as CorpusEntry[];
