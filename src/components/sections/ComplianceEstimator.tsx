@@ -236,7 +236,7 @@ export function ComplianceEstimator() {
           )}
 
           <div className="est-disclaimer">
-            This illustrative scenario combines selected public reference figures with PSE internal model assumptions, including a 33% employer-error calibration, estimated deposit amounts, investigation probability, industry/state multipliers, and headcount scaling. These assumptions are not IRS, DOL or EY-calibrated employer probabilities. The categories may overlap and their sum is not an actual employer loss estimate, penalty assessment, verified annual forecast or guaranteed PSE savings. Confirm applicability using your own payroll facts and current authorities. References: {results.sources.join(' · ')}
+            This illustrative scenario combines selected public reference figures with PSE internal model assumptions, including a 33% employer-error calibration, estimated deposit amounts, investigation probability, industry/state multipliers, and headcount scaling. The 33% assumption is not a verified IRS or DOL statistic; the modeled risk factors are not externally calibrated employer probabilities. The categories may overlap and their sum is not an actual employer loss estimate, penalty assessment, verified annual forecast or guaranteed PSE savings. Confirm applicability using your own payroll facts and current authorities. References: {results.sources.join(' · ')}
           </div>
 
           <button
