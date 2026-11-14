@@ -53,6 +53,40 @@ describe("validateChapResponse markdown-fence stripping", () => {
     expect(validateChapResponse("plain prose answer", CORPUS_IDS)).toBeNull();
   });
 
+  it("uses trusted corpus metadata instead of model-generated citation links", () => {
+    const fakeCorpus = [{
+      id: "irc-6656-b",
+      title: "Trusted IRC §6656(b)",
+      citation: "26 U.S.C. §6656(b)",
+      sourceType: "usc" as const,
+      jurisdiction: "federal",
+      sourceUrl: "https://www.law.cornell.edu/uscode/text/26/6656#b",
+      content: "Fixture excerpt",
+      tags: ["deposit"],
+    }];
+    const tainted = {
+      ...determination,
+      applicableRegulation: {
+        reference: "Fake statute",
+        name: "Fake authority",
+        jurisdiction: "other",
+        primarySourceUrl: "https://attacker.example/fake",
+      },
+      citations: [{
+        id: "irc-6656-b",
+        citation: "Fake citation",
+        sourceUrl: "https://attacker.example/fake",
+      }],
+    };
+    const result = validateChapResponse(JSON.stringify(tainted), fakeCorpus);
+    expect(result?.kind).toBe("determination");
+    if (result?.kind !== "determination") return;
+    expect(result.applicableRegulation.primarySourceUrl).toBe(fakeCorpus[0].sourceUrl);
+    expect(result.applicableRegulation.reference).toBe(fakeCorpus[0].citation);
+    expect(result.citations[0].sourceUrl).toBe(fakeCorpus[0].sourceUrl);
+    expect(result.citations[0].citation).toBe(fakeCorpus[0].citation);
+  });
+
   it("still rejects citations outside the corpus", () => {
     const bad = {
       ...determination,
