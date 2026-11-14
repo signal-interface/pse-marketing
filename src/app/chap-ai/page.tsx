@@ -51,7 +51,7 @@ export default function ChapAIPage() {
               Ask general questions about federal employment tax deposit penalties.
               The experience selects from a limited set of predefined educational topics
               with published source links, rather than generating new legal opinions.
-              These editorial drafts require independent professional verification.
+              Verify the explanations against the cited current authorities before relying on them.
               Answers are educational, not individualized legal,
               tax, payroll, or compliance advice.
             </p>
