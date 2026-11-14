@@ -1,7 +1,16 @@
 import { describe, it, expect } from "vitest";
 import { validateChapResponse } from "../chapValidation";
 
-const CORPUS_IDS = ["irc-6656-a", "irc-6656-b"];
+const TEST_CORPUS = ["irc-6656-a", "irc-6656-b"].map(id => ({
+  id,
+  title: "Trusted IRC §6656",
+  citation: id === "irc-6656-b" ? "26 U.S.C. §6656(b)" : "26 U.S.C. §6656(a)",
+  sourceType: "usc" as const,
+  jurisdiction: "federal",
+  sourceUrl: `https://www.law.cornell.edu/uscode/text/26/6656#${id.endsWith("-b") ? "b" : "a"}`,
+  content: "Fixture statutory excerpt",
+  tags: ["deposit"],
+}));
 
 const determination = {
   kind: "determination",
@@ -32,25 +41,25 @@ const outOfScope = {
 
 describe("validateChapResponse markdown-fence stripping", () => {
   it("accepts plain JSON", () => {
-    const v = validateChapResponse(JSON.stringify(determination), CORPUS_IDS);
+    const v = validateChapResponse(JSON.stringify(determination), TEST_CORPUS);
     expect(v?.kind).toBe("determination");
   });
 
   it("accepts ```json-fenced output (the model's observed framing)", () => {
     const raw = "```json\n" + JSON.stringify(determination, null, 2) + "\n```";
-    const v = validateChapResponse(raw, CORPUS_IDS);
+    const v = validateChapResponse(raw, TEST_CORPUS);
     expect(v?.kind).toBe("determination");
   });
 
   it("accepts bare ```-fenced output", () => {
     const raw = "```\n" + JSON.stringify(outOfScope) + "\n```";
-    const v = validateChapResponse(raw, CORPUS_IDS);
+    const v = validateChapResponse(raw, TEST_CORPUS);
     expect(v?.kind).toBe("out_of_scope");
   });
 
   it("still rejects non-JSON garbage", () => {
-    expect(validateChapResponse("```json\nnot json at all\n```", CORPUS_IDS)).toBeNull();
-    expect(validateChapResponse("plain prose answer", CORPUS_IDS)).toBeNull();
+    expect(validateChapResponse("```json\nnot json at all\n```", TEST_CORPUS)).toBeNull();
+    expect(validateChapResponse("plain prose answer", TEST_CORPUS)).toBeNull();
   });
 
   it("uses trusted corpus metadata instead of model-generated citation links", () => {
@@ -99,6 +108,6 @@ describe("validateChapResponse markdown-fence stripping", () => {
       ],
     };
     const raw = "```json\n" + JSON.stringify(bad) + "\n```";
-    expect(validateChapResponse(raw, CORPUS_IDS)).toBeNull();
+    expect(validateChapResponse(raw, TEST_CORPUS)).toBeNull();
   });
 });
