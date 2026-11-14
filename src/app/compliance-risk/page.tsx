@@ -22,7 +22,7 @@ export default function ComplianceRiskPage() {
               Explore a modeled payroll compliance cost scenario.
             </h1>
             <p className="est-hero__sub">
-              Choose your workforce size, number of states, and industry to explore an illustrative annual scenario. Results combine selected public references with PSE&apos;s internal assumptions; they are not a forecast of actual losses or penalties.
+              Choose your workforce size, number of states, and industry to explore an illustrative annual scenario. Results combine selected public references with clearly disclosed PSE modeling assumptions; they are not a forecast of actual losses or penalties.
             </p>
             <div className="est-hero__trust">
               <span className="est-trust-item">No email required to see results</span>
