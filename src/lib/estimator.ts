@@ -114,7 +114,7 @@ export function calculateExposure(inputs: EstimatorInputs): EstimatorOutputs {
     totalAnnualExposure,
     inputs,
     sources: [
-      'IRC §6656(b)(1); IRS Notice 746 (Rev. 12-2024)',
+      'IRC §6656(b)(1); IRS Notice 746 (Rev. 7-2026)',
       'DOL WHD FY2023 Statistical Release',
       'Reported by Lano, citing EY Global Payroll Operations Survey, 2024',
       'Ernst & Young payroll errors survey, 2022',
