@@ -48,6 +48,7 @@ vi.mock("@anthropic-ai/sdk", () => ({
 }));
 
 import { POST } from "../route";
+import { consumeChapStream } from "@/lib/chapStreamClient";
 import { retrieveRelevantCorpus } from "@/lib/corpusRetrieval";
 import { COMPLIANCE_CORPUS } from "@/data/complianceCorpus";
 
@@ -247,6 +248,62 @@ describe("POST /api/chap/ask", () => {
     expect(body).not.toContain("attacker.example");
     expect(body).not.toContain(note.id);
   });
+
+  it.each(["valid", "invalid"] as const)(
+    "logs exactly once after terminal cancellation while SQL is pending (%s)",
+    async (scenario) => {
+      const statute = COMPLIANCE_CORPUS.find(entry => entry.id === "irc-6656-a");
+      expect(statute).toBeDefined();
+      if (!statute) return;
+      vi.mocked(retrieveRelevantCorpus).mockReturnValueOnce([statute]);
+
+      let releaseInsert!: (value: { rows: never[] }) => void;
+      const pendingInsert = new Promise<{ rows: never[] }>((resolve) => {
+        releaseInsert = resolve;
+      });
+      mockSql.mockImplementation(() => pendingInsert);
+      const answer = scenario === "valid"
+        ? JSON.stringify({
+          kind: "determination",
+          applicableRegulation: {
+            reference: statute.citation,
+            name: statute.title,
+            jurisdiction: statute.jurisdiction,
+            primarySourceUrl: statute.sourceUrl,
+          },
+          analysis: "Failure to deposit is governed by the cited authority.",
+          determination: "NEEDS_HUMAN_REVIEW",
+          rationale: "Verify employer facts against the authority.",
+          citations: [{
+            id: statute.id,
+            citation: statute.citation,
+            sourceUrl: statute.sourceUrl,
+          }],
+          confidence: "medium",
+        })
+        : "{not valid JSON";
+      mockStreamDetermination.mockReturnValue((async function* () {
+        yield { type: "content_block_delta", delta: { type: "text_delta", text: answer } };
+      })());
+      const response = await POST(makeRequest({
+        question: "What triggers an IRC §6656 deposit penalty?",
+        sessionId: "cancel-after-terminal",
+      }));
+      expect(response.body).not.toBeNull();
+      if (!response.body) return;
+
+      const delivered: string[] = [];
+      await consumeChapStream(response.body, new AbortController().signal, (event) => {
+        delivered.push(event.type);
+      });
+      expect(delivered).toEqual([scenario === "valid" ? "final" : "error"]);
+      expect(mockSql).toHaveBeenCalledTimes(1);
+      releaseInsert({ rows: [] });
+      // Allow the server stream's post-log close path to settle after cancellation.
+      await new Promise(resolve => setTimeout(resolve, 0));
+      expect(mockSql).toHaveBeenCalledTimes(1);
+    }
+  );
 
   it("returns 429 when the rate limiter blocks", async () => {
     mockCheckAndIncrement.mockResolvedValue({
