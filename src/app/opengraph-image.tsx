@@ -68,8 +68,8 @@ export default function OGImage() {
             lineHeight: 1.4,
           }}
         >
-          AI-powered payroll controls that catch compliance issues before they
-          cost you.
+          Independent payroll governance and audit intelligence,
+          built around the expertise of your team.
         </span>
 
         {/* CHAP AI badge */}
