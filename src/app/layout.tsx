@@ -48,8 +48,8 @@ const jsonLdOrganization = {
   "@type": "Organization",
   name: "Payroll Synergy Experts",
   alternateName: "PSE",
-  url: "https://www.payrollsynergyexperts.com",
-  logo: "https://www.payrollsynergyexperts.com/favicon.svg",
+  url: SITE.url,
+  logo: `${SITE.url}/favicon.svg`,
   description:
     "Independent payroll governance and audit intelligence designed to strengthen existing payroll controls, surface risks, and support explainable decisions.",
   sameAs: [
