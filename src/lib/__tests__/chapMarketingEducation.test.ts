@@ -6,7 +6,10 @@ import { COMPLIANCE_CORPUS } from "@/data/complianceCorpus";
 // payroll-tax approval. Live editorial acceptance remains mandatory.
 const prompts = [
   ["What triggers an IRC §6656 deposit penalty?", "deposit-trigger"],
-  ["How can reconciliation gaps cascade into failure-to-deposit penalties?", "reconciliation-and-deposits"],
+  [
+    "How can reconciliation gaps cascade into failure-to-deposit penalties?",
+    "reconciliation-and-deposits",
+  ],
   ["How is the four-tier §6656(b) penalty calculated?", "deposit-rate-tiers"],
   ["What happens when employment tax deposits cross $100,000?", "one-day-deposit-rule"],
   ["Do I qualify for first-time depositor relief under IRC §6656(c)?", "first-time-depositor-relief"],
