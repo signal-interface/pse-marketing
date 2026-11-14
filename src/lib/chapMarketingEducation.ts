@@ -97,7 +97,14 @@ function selectCase(question: string): Case | null {
 
   // Procedural help (appeals, extensions, filing, payment plans) is outside
   // this finite statutory education catalog even when penalty terms appear.
-  if (/\b(?:appeal|appeals|appealing|extension|extensions|apply\s+for|file\s+(?:a|an)|payment\s+plan|request\s+(?:a|an))\b/.test(q)) return null;
+  // Procedural filing instructions are unsupported, but questions about
+  // statutory eligibility (e.g. whether a timely return must be filed)
+  // remain in scope. Do not reject every occurrence of "file a".
+  const proceduralIntent =
+    /\b(?:appeal|appeals|appealing|extension|extensions|apply\s+for|payment\s+plan|request\s+(?:a|an))\b/.test(q) ||
+    /\b(?:how|where|when)\s+(?:do|can|should)\s+i\s+file\b/.test(q) ||
+    /\bfile\s+(?:an?\s+)?(?:appeal|extension|application|form)\b/.test(q);
+  if (proceduralIntent) return null;
 
   // A §6656(d) initial deposit inadvertently paid to the Secretary is a
   // different abatement case from reasonable-cause relief under §6656(a).
