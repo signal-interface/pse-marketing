@@ -75,7 +75,7 @@ describe("CHAP Marketing Website Guide", () => {
       expect(answer.topic).toBe("payroll-intelligence");
       expect(answer.links.some(link => link.href === href)).toBe(true);
       expect(answer.text).toContain("does not determine employer-specific compliance");
-      expect(answer.links.every(link => /^\\/(?!\\/)/.test(link.href))).toBe(true);
+      expect(answer.links.every(link => link.href.startsWith("/") && !link.href.startsWith("//"))).toBe(true);
     }
     expect(answerWebsiteQuestion("Show me my payroll records").links.every(link => link.href.startsWith("/"))).toBe(true);
   });
