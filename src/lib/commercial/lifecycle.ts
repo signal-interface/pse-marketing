@@ -284,7 +284,8 @@ export async function applyCalendarEvent(
   eventType: CalendarLifecycleEvent,
   bookingUid: string,
   externalId: string,
-  ctx: EventContext
+  ctx: EventContext,
+  previousBookingUid?: string
 ): Promise<CalendarApplyResult> {
   const client = await db.connect();
   try {
@@ -308,7 +309,11 @@ export async function applyCalendarEvent(
 
     // Late cancellation/reschedule for an older booking must not mutate the
     // newest calendar state. If the event is not yet matched, do not guess.
-    if (eventType !== "MEETING_BOOKED" && priorBooking !== bookingUid) {
+    const matchesPriorBooking = priorBooking === bookingUid ||
+      (eventType === "MEETING_RESCHEDULED" &&
+       typeof previousBookingUid === "string" && previousBookingUid.length > 0 &&
+       priorBooking === previousBookingUid);
+    if (eventType !== "MEETING_BOOKED" && !matchesPriorBooking) {
       await client.sql`ROLLBACK`;
       return { ok: false, reason: "booking_mismatch" };
     }
@@ -353,6 +358,15 @@ export async function applyCalendarEvent(
           WHERE id = ${leadId}
         `;
       }
+    } else if (eventType === "MEETING_RESCHEDULED" && priorBooking !== bookingUid) {
+      // A Cal.com reschedule may replace the UID. Only update it when the
+      // signed provider payload linked its previous UID to our locked row.
+      // An already-applied replay retains the new UID and deduplicates above.
+      await client.sql`
+        UPDATE demo_requests
+        SET calendar_event_id = ${bookingUid}, updated_at = NOW()
+        WHERE id = ${leadId}
+      `;
     } else if (eventType === "MEETING_CANCELLED" && from !== "NURTURE") {
       await client.sql`
         UPDATE demo_requests
