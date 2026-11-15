@@ -2,11 +2,13 @@
 
 Status: DRAFT / operational qualification required. Related: Marketing #55, #52, PR #85. This document does not activate a webhook, monitoring system, or production release.
 
+**Founder accountability:** Tom is the sole accountable owner and final approval authority for PSE commercial operations, webhook activation, live acceptance, exception dispositions requiring business judgment and production release. A designated primary operator, backup, reviewer or AI agent may perform specifically delegated monitoring and execution; these assignments transfer responsibility for tasks, not Founder ownership or approval authority.
+
 ## Scope and existing behavior
 The signed calendar receiver `POST /api/webhooks/calendar` accepts known Cal.com booking events. It responds `{received:true,handled:false}` (HTTP 200) for an unresolvable lead, stale booking association, or invalid lifecycle transition. Acknowledgment avoids repeated unresolvable provider delivery; **it does not mean reconciliation succeeded**. Database errors instead return HTTP 500 for provider retry. The route uses HMAC and `applyCalendarEvent` to serialize event and status writes; `MEETING_SCHEDULED` must never be claimed solely because a meeting link exists.
 
 ## Required existing-owner handling before activation
-1. Name a PSE commercial primary operator and backup; establish a one-business-day lead follow-up review from the *existing* marketing lead/event records, Cal.com bookings and provider receipts.
+1. Founder designates a PSE commercial primary operator and backup for delegated execution; establish a one-business-day lead follow-up review from the *existing* marketing lead/event records, Cal.com bookings and provider receipts.
 2. Confirm what existing application runtime logs, provider delivery attempts and lead-events can be inspected within available retention. Unmatched webhooks do not necessarily have a durable event record because lead attribution is unknown; a log line by itself is not a durable queue.
 3. For a **signed and unmatched** callback, use protected provider delivery history and time-window correlation. Confirm trigger, booking UID, event type, event timestamp, attendee count and whether signed leadRef is present. Do not put attendee email, URL parameters, raw HMAC signature, lead IDs, meeting links or actual UID in GitHub/Drive.
 4. Verify candidate lead uniqueness through authorized, parameterized, **read-only** access to the existing PSE Marketing database. If zero/multiple candidates or attendee mismatch, **do not** force link, downgrade a bad signed leadRef to email, reassign a booking, or change a production lead status as a workaround. Escalate to the accountable commercial operator with a redacted case reference.
@@ -34,7 +36,7 @@ No new Vercel project, CRM, mailing queue, webhook receiver, database schema or 
 - Delivery destination **host and route only**, without query parameters, tokens or credentials
 - Selected webhook payload version/template and evidence whether the normal booking metadata is included
 - Whether an HMAC secret is configured (yes/no only), header name if visible, last attempted delivery status/time if available
-- Named existing commercial owner and backup, monitoring/reconciliation responsibility and log retention source
+- Founder accountable owner (Tom); designated operational primary and backup if delegated, monitoring/reconciliation responsibility and log retention source
 
 **Decision matrix:**
 1. **Existing authorized event-specific receiver found:** inspect its protection and least-privilege scope before testing. Do not assume it points to PR #85 merely because a calendar event exists.
