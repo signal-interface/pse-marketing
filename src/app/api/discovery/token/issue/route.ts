@@ -119,7 +119,9 @@ export async function POST(request: NextRequest) {
       tokenId: issued.tokenId,
       expiresAt: issued.expiresAt.toISOString(),
       rotated: issued.revokedCount > 0,
-      emailDelivered: !failed,
+      // Provider API acceptance is not proof of recipient delivery.
+      emailProviderAccepted: !failed,
+      emailDeliveryVerified: false,
     });
   } catch (error) {
     console.error(`[token-issue:${requestId}] error:`, error);
