@@ -126,8 +126,13 @@ export function parseCalcomEvent(body: unknown): CalcomBookingEvent | null {
     p.metadata && typeof p.metadata === "object"
       ? (p.metadata as Record<string, unknown>)
       : {};
-  const leadRef =
-    typeof metadata.leadRef === "string" ? metadata.leadRef : undefined;
+  // Supplied but malformed metadata is NOT an absent legacy attribution.
+  // Treat non-string values as invalid references, never as permission to
+  // downgrade the provider event to attendee-email matching.
+  const refWasSupplied = Object.prototype.hasOwnProperty.call(metadata, "leadRef");
+  const leadRef = refWasSupplied
+    ? (typeof metadata.leadRef === "string" ? metadata.leadRef : "")
+    : undefined;
 
   return {
     trigger: trigger as CalcomTrigger,
