@@ -21,9 +21,9 @@ import {
 import { transitionLead, recordLeadEvent } from "@/lib/commercial/lifecycle";
 import { questionnaireInviteHtml } from "@/lib/emails";
 import { safeEqual } from "@/lib/safeEqual";
+import { invitationOrigin } from "@/lib/commercial/invitation-origin";
 import { sql } from "@vercel/postgres";
 
-const SITE_URL = process.env.SITE_URL || "https://payrollsynergyexperts.com";
 
 export async function POST(request: NextRequest) {
   const requestId = crypto.randomUUID();
@@ -32,6 +32,17 @@ export async function POST(request: NextRequest) {
   const auth = request.headers.get("authorization");
   if (!secret || !auth || !safeEqual(auth, `Bearer ${secret}`)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  // Guard BEFORE token issuance: an invitation stored in Preview must not
+  // point to production. Never issue/rotate a one-time token until its
+  // destination is explicitly configured and validated.
+  const siteOrigin = invitationOrigin({
+    siteUrl: process.env.SITE_URL,
+    vercelEnv: process.env.VERCEL_ENV,
+  });
+  if (!siteOrigin) {
+    return NextResponse.json({ error: "invitation_origin_not_configured" }, { status: 503 });
   }
 
   try {
@@ -80,7 +91,7 @@ export async function POST(request: NextRequest) {
     const email = rows[0]?.email as string;
 
     // Raw token goes into the email link and nowhere else.
-    const discoveryUrl = `${SITE_URL}/discovery/start?t=${issued.rawToken}`;
+    const discoveryUrl = `${siteOrigin}/discovery/start?t=${issued.rawToken}`;
 
     const resend = new Resend(process.env.RESEND_API_KEY);
     let failed = false;
