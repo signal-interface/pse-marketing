@@ -179,7 +179,7 @@ describe("POST /api/webhooks/calendar", () => {
     expect(await res.json()).toEqual({ received: true, handled: true });
     expect(mockApply).toHaveBeenCalledWith(
       42, "MEETING_BOOKED", "bk_123", "bk_123",
-      expect.objectContaining({ actorType: "CALENDAR_PROVIDER" })
+      expect.objectContaining({ actorType: "CALENDAR_PROVIDER" }), undefined
     );
   });
 
@@ -188,7 +188,7 @@ describe("POST /api/webhooks/calendar", () => {
     const res = await POST(signedRequest(bookingPayload("BOOKING_CREATED")));
     expect(res.status).toBe(200);
     expect(mockApply).toHaveBeenCalledWith(
-      7, "MEETING_BOOKED", "bk_123", "bk_123", expect.anything()
+      7, "MEETING_BOOKED", "bk_123", "bk_123", expect.anything(), undefined
     );
   });
 
@@ -205,7 +205,22 @@ describe("POST /api/webhooks/calendar", () => {
     await POST(signedRequest(bookingPayload("BOOKING_RESCHEDULED")));
     expect(mockApply).toHaveBeenCalledWith(
       7, "MEETING_RESCHEDULED", "bk_123", "bk_123:2026-08-01T15:00:00Z",
-      expect.anything()
+      expect.anything(), undefined
+    );
+  });
+
+  it("preserves provider original and replacement IDs on a signed reschedule", async () => {
+    state.poolRows = [[{ id: 7 }]];
+    const res = await POST(signedRequest(bookingPayload("BOOKING_RESCHEDULED", {
+      uid: "bk_new",
+      rescheduleUid: "bk_123",
+      startTime: "2026-08-02T15:00:00Z",
+    })));
+    expect(await res.json()).toEqual({ received: true, handled: true });
+    expect(mockApply).toHaveBeenCalledWith(
+      7, "MEETING_RESCHEDULED", "bk_new", "bk_new:2026-08-02T15:00:00Z",
+      expect.objectContaining({ metadata: expect.objectContaining({ previousBookingUid: "bk_123" }) }),
+      "bk_123"
     );
   });
 
@@ -213,7 +228,7 @@ describe("POST /api/webhooks/calendar", () => {
     state.poolRows = [[{ id: 7 }]];
     await POST(signedRequest(bookingPayload("BOOKING_CANCELLED")));
     expect(mockApply).toHaveBeenCalledWith(
-      7, "MEETING_CANCELLED", "bk_123", "bk_123", expect.anything()
+      7, "MEETING_CANCELLED", "bk_123", "bk_123", expect.anything(), undefined
     );
   });
 
