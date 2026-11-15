@@ -160,7 +160,8 @@ export function externalIdFor(event: CalcomBookingEvent): string {
 export async function resolveBookingLead(
   event: CalcomBookingEvent
 ): Promise<number | null> {
-  if (event.leadRef) {
+  if (event.leadRef !== undefined) {
+    // Even an empty supplied reference is invalid, not a legacy absence.
     // An explicitly supplied but invalid/unknown reference is never downgraded
     // to email lookup. Otherwise a forged ref could target a different lead.
     const leadId = verifyLeadRef(event.leadRef);
