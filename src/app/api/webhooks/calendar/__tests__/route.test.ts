@@ -260,6 +260,18 @@ describe("POST /api/webhooks/calendar", () => {
     }
   });
 
+  it("rejects supplied non-string leadRefs rather than using legacy email attribution", async () => {
+    for (const leadRef of [null, 42, false, { id: 42 }, ["42.sig"]]) {
+      state.poolRows = [[{ id: 7 }]];
+      const res = await POST(signedRequest(
+        bookingPayload("BOOKING_CREATED", { metadata: { leadRef } })
+      ));
+      expect(await res.json()).toEqual({ received: true, handled: false });
+      expect(mockApply).not.toHaveBeenCalled();
+      expect(state.calls).toHaveLength(0);
+    }
+  });
+
   it("keeps failed business-rule reconciliations visibly unhandled", async () => {
     state.poolRows = [[{ id: 7 }]];
     mockApply.mockResolvedValueOnce({ ok: false, reason: "invalid_transition" });
