@@ -100,11 +100,16 @@ describe("MOB-01 success screen", () => {
     const panel = markup.slice(markup.indexOf('data-testid="demo-success-panel"'));
     expect(panel).toContain(`href="${SCHEDULING_URL}"`);
     expect(panel).toContain("Schedule your PSE demonstration");
+    expect(panel).toContain("Demo request received");
+    expect(panel).not.toContain("Request noted");
   });
 
   it("preserves the no-scheduling confirmation copy and renders no invented CTA", () => {
     const markup = render(<DemoRequestForm />, successState(null));
-    expect(markup).toContain("We&#x27;ll reach out within one business day to schedule your walkthrough.");
+    expect(markup).toContain("Request noted");
+    expect(markup).toContain("If this is a new request");
+    expect(markup).toContain("submitting again within 24 hours will not generate another email");
+    expect(markup).not.toContain("Demo request received");
     expect(markup).not.toContain("Schedule your PSE demonstration");
   });
 
