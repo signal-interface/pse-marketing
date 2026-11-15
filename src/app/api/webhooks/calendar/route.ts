@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     // one DB transaction. A failed write cannot poison subsequent retries.
     const applied = await applyCalendarEvent(
       leadId, eventType, event.bookingUid, externalIdFor(event), ctx,
-      ... (event.previousBookingUid ? [event.previousBookingUid] : [])
+      event.previousBookingUid
     );
     if (!applied.ok) {
       console.warn(`[calendar-webhook:${requestId}] reconciliation required: ${applied.reason}`);
