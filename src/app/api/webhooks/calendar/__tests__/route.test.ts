@@ -247,6 +247,19 @@ describe("POST /api/webhooks/calendar", () => {
     expect(mockApply).not.toHaveBeenCalled();
   });
 
+  it("does not downgrade explicitly empty or malformed signed refs to legacy email attribution", async () => {
+    for (const leadRef of ["", " ", "invalid", "42."]) {
+      state.poolRows = [[{ id: 7 }]]; // would match legacy email if incorrectly queried
+      const res = await POST(signedRequest(
+        bookingPayload("BOOKING_CREATED", { metadata: { leadRef } })
+      ));
+      expect(await res.json()).toEqual({ received: true, handled: false });
+      expect(mockApply).not.toHaveBeenCalled();
+      // A supplied but untrusted signed reference must not trigger email fallback.
+      expect(state.calls).toHaveLength(0);
+    }
+  });
+
   it("keeps failed business-rule reconciliations visibly unhandled", async () => {
     state.poolRows = [[{ id: 7 }]];
     mockApply.mockResolvedValueOnce({ ok: false, reason: "invalid_transition" });
