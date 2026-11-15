@@ -1,55 +1,43 @@
-# PSE Demo Video — Viewer Walkthrough Contract Reconciliation (Proposal Only)
+# PSE Demo Video — Script-First Workflow Reconciliation (Proposal Only)
 
-**Status:** PROPOSED / NOT FROZEN / NO RECORDING / NO PUBLICATION  
-**Date:** 2026-11-15  
-**Marketing authority:** `signal-interface/pse-marketing` `docs/video/demo-v1`  
-**Application authority:** `payroll-synergy-experts/PSE--Projects` `frontend/apps/demo/src/{config.tsx,App.tsx}`  
-**Related issues:** Marketing #72 (video gate), #55 (commercial booking-first), Marketing PR #85 (draft)
+**Status:** PROPOSED / NO RECORDING / NO CANONICAL SCRIPT REPLACEMENT / NO PUBLICATION
+**Corrected:** 2026-11-15, founder clarification
+**Narrative authority:** `docs/video/demo-v1/script.md` — **PSE Product Demo — Script v1.0 (Stage A draft)**
+**Technical recording authority:** `docs/video/demo-v1/demo-contract.yaml` and `recording-plan.md`
+**Application authority:** `payroll-synergy-experts/PSE--Projects`, current Demo app and eventual frozen tag
+**Tracking:** Marketing PR #85, Issue #72 video activation, Issue #55 commercial booking-first
 
-## Source findings
+## Correction to the previous proposal
 
-The current application navigation in `frontend/apps/demo/src/config.tsx` defines the public viewer walkthrough as:
+The previously proposed five-scene `Dashboard → CHAP Home → Command Center → Exceptions → Final Pay` sequence **must not replace the Demo video narrative**. Those are current viewer-navigation paths, not the script. The video follows the eight chapters and their sequence, timing, narration and demonstration intent from the existing `script.md`. Viewer navigation is a **technical access and capture mapping** to validate against the script, not a new storytelling authority.
 
-1. Dashboard — `/dashboard`
-2. CHAP Home — `/chap-home`
-3. Command Center — `/command-center`
-4. Exceptions — `/exceptions`
-5. Final Pay — `/final-pay`
+## Script-first eight-chapter capture specification
 
-Other areas, including `/chap-ai`, Operations Hub, Audit Ledger and Payroll Detail, reside under **Component Review**, subject to the `manage:users` staff permission. `App.tsx` retains a development-gated trailer and default-deny Readiness beta routes. This is a *source navigation declaration*, not visual or E2E acceptance of every listed screen.
-
-The current marketing `docs/video/demo-v1/demo-contract.yaml` instead requires **Upload, Command Center, Findings, CHAP, Executive Summary**. `recording-plan.md` requires an upload of an approved fixture and independent findings-count, CHAP citation, replay and executive/reporting assertions. Its freeze-dependent fixture hash, expected findings and selected question remain TBD. The required `demo-v1.0-frozen` Git ref did not resolve during the 2026-11-15 review. These claims and screens cannot be assumed ready.
-
-## Proposed viewer-aligned sequence — for Demo owner acceptance, NOT a replacement contract
-
-| Proposed scene | Viewer route | Claim allowed before evidence | Required owner evidence before recording |
+| Script chapter | Script time | Canonical content and demonstration | Current acceptance dependency |
 | --- | --- | --- | --- |
-| 1. Synthetic environment and executive orientation | `/dashboard` | Clearly labeled synthetic scenario and governance overview | Authenticated viewer render, dataset provenance, visible labels |
-| 2. CHAP Home — explain the current review | `/chap-home` | Explain run-derived outcomes without claiming CHAP Marketing or CHAP Production integration | Owner-approved CHAP content and permission boundary, no hallucinated or ungrounded answer |
-| 3. Control / payroll readiness story | `/command-center` | Show available readiness controls as they actually render | Frozen result/state, source fixture and exact visible UI assertion |
-| 4. Review an exception | `/exceptions` | Demonstrate governed inspection with no claim PSE executes payroll | Deterministic synthetic finding, approved click path and status labels |
-| 5. Final Pay and executive takeaway | `/final-pay` | Explain only the accepted scenario shown on screen, then display a separate marketing CTA card | Viewer-accessible UI and accepted fixed-data behavior; no invented processing or compliance outcome |
+| 1. Why PSE exists | 0:00–0:40 | Branded opener and independently governed payroll-risk problem statement | Substantiate every numerical claim before narration approval; old script's ~one-third employer-error statement is **not an accepted statistic** |
+| 2. What PSE governs and does not do | 0:40–1:20 | System of record executes; PSE governs; accurate visual separation | Confirm product integration/support wording and no payroll-processing claims |
+| 3. Upload and intake | 1:20–2:00 | Approved synthetic fixture intake, actual analysis and completion state | Verify this works in the frozen, authorized viewer flow; don't invent a screen or quietly omit the chapter |
+| 4. Findings, severity and score | 2:00–3:30 | Command Center → Exceptions → designated finding, exact fixture-derived score and severity | Required route access, fixture hash, exact findings count, visible controls, cited detection rationale |
+| 5. CHAP explanation and evidence | 3:30–4:30 | Approved question, explanation, citation and reasoning evidence | Determine whether the correct approved CHAP experience is accessible for capture and the claim is demonstrable; staff-only `/chap-ai` cannot be implied public |
+| 6. Executive visibility and audit trail | 4:30–5:20 | Executive/reporting and evidence/replay view, as described by script | Verify actual permitted screen(s), replay status and evidence; no invented product route |
+| 7. Discovery process | 5:20–6:00 | Short governance questionnaire, discovery session and tailored review explanation | **Commercial sequence reconciliation required:** booking-first currently permits scheduling immediately and the questionnaire is optional, not a prerequisite |
+| 8. CTA | 6:00–6:20 | Closing PSE governance message and the exact approved conversion action | Reconcile old questionnaire-first CTA to current booking-first flow without changing script until editorial/founder approval |
 
-**Important:** The five routes above are candidates for a revised *recording sequence*, not proof that any current route is visually accepted or ready to publish. The Demo owner must verify each route and may reject/reorder scenes. Do not represent staff-only `Component Review`, product beta or Dev trailer routes as prospect-accessible features.
+**Script target:** approximately 5:30–6:20 as documented. Above segments are original script markers, not invented re-timing.
 
-## Reconciliation to the existing contract
+## Required source reconciliation, not new creative scope
 
-- **Upload / ingest:** do not include in prospect footage unless independently demonstrated and accepted on a viewer-accessible route; the old `upload.required: true` is a proposal for reconsideration, not silently removed from the canonical contract.
-- **Findings:** the currently proposed Exceptions scene requires owner acceptance that the exact synthetic finding opens and has traceable evidence; don't imply a separate Findings destination is public.
-- **CHAP:** current `/chap-home` is not the same as staff-only `/chap-ai`; require owner acceptance of its run-derived story and explanation safety before mentioning citations or statutory interpretation.
-- **Executive Summary / replay / audit:** do not show hidden or inaccessible screens; a standalone narrative CTA card is *marketing composition*, not evidence of a public Executive Summary product route.
-- **Fixture / counts / scores / evidence:** continue to mark them unverified until the Demo freeze provides fixture hash, exact scenario output, visible counts, approved question (if any), and deterministic assertions. Do not fabricate values.
+1. The product Demo must demonstrate the script's intended actions. Map each script demonstration to an **actual, owner-accepted** capability and screen in an immutable Demo build. If inaccessible, nonfunctional or unapproved, record a BLOCKER and seek an explicit script/product acceptance decision; do not replace the chapter based solely on available menu items.
+2. Current Demo source declares viewer routes `/dashboard`, `/chap-home`, `/command-center`, `/exceptions`, `/final-pay`; `/chap-ai` and other Component Review areas are staff-gated. This remains a technical access constraint, **not the video script**.
+3. Existing `demo-contract.yaml` and `recording-plan.md` reference Upload, Findings, CHAP, Executive Summary and replay. Preserve them until verified against the approved script and frozen Demo. Freeze-dependent fixture hash, findings count, CHAP question and replay acceptance remain TBD.
+4. Script v1.0 contains an historical claim that roughly one-third of employers make payroll errors; the November 14 Marketing Copy & Trust acceptance withdrew the 33% employer-error assumption as a verified statistic. Do not publish the claim merely because it appears in the script. Treat this as **video script factual acceptance only**, not reopening the closed website-copy baseline.
+5. Script Chapters 7–8 currently imply questionnaire-first conversion. The founder-approved Marketing commercial direction is Request Demo → immediately offer Cal.com scheduling → optional questionnaire → live Demo. Preserve the script text until explicit editorial reconciliation, but do not record/publish a contradictory CTA.
+6. Do not assume product ability from the script. The tag `demo-v1.0-frozen` was not verified in the Demo repository at the last check; Stage B capture must remain disabled pending an approved immutable freeze.
 
-## Required gated execution (owner approval before contract edit)
+## Approval and production boundaries
 
-1. Demo owner independently tests current viewer role navigation, functionality, synthetic dataset and CHAP Home presentation, recording redacted screenshots/evidence for each scene. Follow the accepted Demo admin-to-professional component promotion gates separately; this video does not authorize a component promotion.
-2. Owner approves a specific recording route map and wording. Only then propose changes to `demo-contract.yaml`, `recording-plan.md`, storyboard, narration and manifest in one reviewed Marketing PR.
-3. Pass Stage-3 manual E2E, deck reconciliation, frozen fixture/manifest and actual deployed Demo acceptance; create/verify `demo-v1.0-frozen` release tag **in PSE--Projects** only after authorized release freeze.
-4. Marketing records the immutable Demo commit/tag, approved routes, assertion results, fixture hashes, screen captures and content claims; Playwright capture must run against the frozen release and fail on wrong UI or data.
-5. Human-review MP4 + manifest + approval record. Only after explicit founder approval host the asset, populate `PSE_OVERVIEW_VIDEO_URL`, and run non-submitting mobile/accessibility truth checks. No customer payroll data or production CHAP embedding.
-
-## Independence and prohibitions
-
-- Booking-first Marketing PR #85 still gates on a real signed Cal.com webhook round-trip; this **video is optional** and must not block scheduling or direct questionnaire invitation.
-- Do not mutate the PSE Demo app, introduce a recording tool or video host, create a freeze tag, publish screenshots/video, enable `PSE_OVERVIEW_VIDEO_URL`, alter CHAP Marketing, modify Professional or change production as part of this proposal.
-- Keep existing `demo-v1` package and freeze-dependent values intact until accepted. This proposal is review context, not a replacement source of product truth.
+- Demo owner signs off on the **script-aligned** route/capability matrix and synthetic fixture, including CHAP and evidence views. Canonical script and contract changes require separate review and founder acceptance.
+- Only after product walkthrough E2E, exact frozen tag, approved fixture/hash/claims and contract tests may Playwright capture the script's live demo chapters. Compose MP4 with the original script's eight-chapter structure, then review the video, narration, captions, CTA and JSON manifest.
+- No recording, public video, `PSE_OVERVIEW_VIDEO_URL` activation, application changes, Demo menu promotion, PR #85 production merge or additional infrastructure is authorized here.
+- Marketing booking-first and Issue #55 remain independent from video readiness; Issue #72 retains the video/freeze/content acceptance gate.
