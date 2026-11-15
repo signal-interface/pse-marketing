@@ -61,6 +61,7 @@ export async function POST(request: NextRequest) {
       externalId: externalIdFor(event),
       metadata: {
         bookingUid: event.bookingUid,
+        previousBookingUid: event.previousBookingUid,
         startTime: event.startTime,
         endTime: event.endTime,
       },
@@ -76,7 +77,8 @@ export async function POST(request: NextRequest) {
     // Booking event, calendar reference and any status transition commit in
     // one DB transaction. A failed write cannot poison subsequent retries.
     const applied = await applyCalendarEvent(
-      leadId, eventType, event.bookingUid, externalIdFor(event), ctx
+      leadId, eventType, event.bookingUid, externalIdFor(event), ctx,
+      ... (event.previousBookingUid ? [event.previousBookingUid] : [])
     );
     if (!applied.ok) {
       console.warn(`[calendar-webhook:${requestId}] reconciliation required: ${applied.reason}`);
