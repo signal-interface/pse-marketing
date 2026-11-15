@@ -6,6 +6,7 @@
 **Technical recording authority:** `docs/video/demo-v1/demo-contract.yaml` and `recording-plan.md`
 **Application authority:** `payroll-synergy-experts/PSE--Projects`, current Demo app and eventual frozen tag
 **Tracking:** Marketing PR #85, Issue #72 video activation, Issue #55 commercial booking-first
+**Accountable owner / final approval authority:** Tom, Founder of PSE. Authorized reviewers and agents may execute delegated checks and supply evidence; they cannot independently approve release or redefine the script.
 
 ## Correction to the previous proposal
 
@@ -37,7 +38,7 @@ The previously proposed five-scene `Dashboard → CHAP Home → Command Center �
 
 ## Approval and production boundaries
 
-- Demo owner signs off on the **script-aligned** route/capability matrix and synthetic fixture, including CHAP and evidence views. Canonical script and contract changes require separate review and founder acceptance.
+- **Tom, Founder, is the single accountable approval authority** for the script-aligned route/capability matrix, synthetic fixture, CHAP/evidence claims, canonical script/contract revisions, recording, final video and publication. Technical reviewers and agents execute delegated evaluation and assemble evidence, but do not replace Founder sign-off.
 - Only after product walkthrough E2E, exact frozen tag, approved fixture/hash/claims and contract tests may Playwright capture the script's live demo chapters. Compose MP4 with the original script's eight-chapter structure, then review the video, narration, captions, CTA and JSON manifest.
 - No recording, public video, `PSE_OVERVIEW_VIDEO_URL` activation, application changes, Demo menu promotion, PR #85 production merge or additional infrastructure is authorized here.
 - Marketing booking-first and Issue #55 remain independent from video readiness; Issue #72 retains the video/freeze/content acceptance gate.
