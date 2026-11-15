@@ -1,0 +1,24 @@
+# PSE Booking-First — Webhook Exception Operator Runbook
+
+Status: DRAFT / operational qualification required. Related: Marketing #55, #52, PR #85. This document does not activate a webhook, monitoring system, or production release.
+
+## Scope and existing behavior
+The signed calendar receiver `POST /api/webhooks/calendar` accepts known Cal.com booking events. It responds `{received:true,handled:false}` (HTTP 200) for an unresolvable lead, stale booking association, or invalid lifecycle transition. Acknowledgment avoids repeated unresolvable provider delivery; **it does not mean reconciliation succeeded**. Database errors instead return HTTP 500 for provider retry. The route uses HMAC and `applyCalendarEvent` to serialize event and status writes; `MEETING_SCHEDULED` must never be claimed solely because a meeting link exists.
+
+## Required existing-owner handling before activation
+1. Name a PSE commercial primary operator and backup; establish a one-business-day lead follow-up review from the *existing* marketing lead/event records, Cal.com bookings and provider receipts.
+2. Confirm what existing application runtime logs, provider delivery attempts and lead-events can be inspected within available retention. Unmatched webhooks do not necessarily have a durable event record because lead attribution is unknown; a log line by itself is not a durable queue.
+3. For a **signed and unmatched** callback, use protected provider delivery history and time-window correlation. Confirm trigger, booking UID, event type, event timestamp, attendee count and whether signed leadRef is present. Do not put attendee email, URL parameters, raw HMAC signature, lead IDs, meeting links or actual UID in GitHub/Drive.
+4. Verify candidate lead uniqueness through an authorized, parameterized, **read-only** Neon query. If zero/multiple candidates or attendee mismatch, **do not** force link, downgrade a bad signed leadRef to email, reassign a booking, or change a production lead status as a workaround. Escalate to the accountable commercial operator with a redacted case reference.
+5. If provider retries reflect a 500 transaction failure, inspect existing provider retry and runtime evidence, confirm exactly one effective booking event and status transition after successful retry; do not manually replay a webhook without separate authorization.
+6. For cancellation/reschedule, confirm that the callback UID matches the currently associated booking and that the event is current. Stale events remain unresolved until manually assessed, not silently reassigned.
+7. Document the disposition and follow-up ownership. **Do not close the exception based only on HTTP 200**. If a recurring unmatched-event case cannot be monitored within retention, webhook activation is NO-GO until a separately approved durable reconciliation mechanism or safe operator process exists.
+
+## Acceptance evidence required
+- One authorized synthetic example of a valid signed `metadata[leadRef]` round trip from booking URL to verified Cal.com payload, correct attendee association, one effective `MEETING_SCHEDULED` transition, event idempotency and repeat.
+- At least one tested unmatched, invalid-reference, stale cancellation and database-failure recovery path; record the owner, review interval, source evidence and redacted resolution.
+- Preview configured with correct event URL and matching signature/signing secrets under existing project isolation; no unreviewed production secret reuse.
+- Exact commit + CI, protected preview, physical mobile acceptance, explicit founder GO and rollback evidence.
+
+## No-go boundaries
+No new Vercel project, CRM, mailing queue, webhook receiver, Neon schema or privilege change without separately demonstrated need. No real prospect data in synthetic test. Do not reopen closed copy work, CHAP Marketing, CHAP Production, Professional, or public video gating.
