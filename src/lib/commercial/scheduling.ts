@@ -86,6 +86,8 @@ export type CalcomTrigger =
 export interface CalcomBookingEvent {
   trigger: CalcomTrigger;
   bookingUid: string;
+  /** Cal.com prior booking UID on a reschedule; never inferred from attendee email. */
+  previousBookingUid?: string;
   startTime?: string;
   endTime?: string;
   attendeeEmails: string[];
@@ -130,6 +132,9 @@ export function parseCalcomEvent(body: unknown): CalcomBookingEvent | null {
   return {
     trigger: trigger as CalcomTrigger,
     bookingUid,
+    previousBookingUid:
+      trigger === "BOOKING_RESCHEDULED" && typeof p.rescheduleUid === "string" && p.rescheduleUid.trim()
+        ? p.rescheduleUid.trim() : undefined,
     startTime: typeof p.startTime === "string" ? p.startTime : undefined,
     endTime: typeof p.endTime === "string" ? p.endTime : undefined,
     attendeeEmails,
