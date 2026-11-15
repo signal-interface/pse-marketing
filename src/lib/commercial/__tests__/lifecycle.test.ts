@@ -160,6 +160,23 @@ describe("applyCalendarEvent atomicity and recovery", () => {
     expect(statements()).not.toContain("COMMIT");
   });
 
+  it("preserves the active meeting when a different CREATED booking arrives", async () => {
+    state.selectRows = [{ lead_status: "MEETING_SCHEDULED", calendar_event_id: "bk_current" }];
+    expect(await applyCalendarEvent(1, "MEETING_BOOKED", "bk_unrelated", "bk_unrelated", ctx))
+      .toEqual({ ok: false, reason: "booking_mismatch" });
+    expect(statements()).toContain("ROLLBACK");
+    expect(statements().some(s => s.includes("INSERT INTO lead_events"))).toBe(false);
+    expect(statements().some(s => s.includes("UPDATE demo_requests"))).toBe(false);
+  });
+
+  it("permits the current booking CREATED UID without rewriting a different meeting", async () => {
+    state.selectRows = [{ lead_status: "MEETING_SCHEDULED", calendar_event_id: "bk_current" }];
+    state.duplicateCalendarEvent = true;
+    expect(await applyCalendarEvent(1, "MEETING_BOOKED", "bk_current", "bk_current", ctx))
+      .toEqual({ ok: true, duplicate: true });
+    expect(statements()).toContain("ROLLBACK");
+  });
+
   it("rejects cancellation for an older booking without regressing the current meeting", async () => {
     state.selectRows = [{ lead_status: "MEETING_SCHEDULED", calendar_event_id: "bk_current" }];
     expect(await applyCalendarEvent(1, "MEETING_CANCELLED", "bk_old", "bk_old", ctx))
