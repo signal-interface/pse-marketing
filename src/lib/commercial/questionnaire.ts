@@ -19,6 +19,7 @@ import crypto from "node:crypto";
 import { db, sql } from "@vercel/postgres";
 import { transitionLead, recordLeadEvent, type EventContext } from "./lifecycle";
 import { consumeQuestionnaireToken, sha256Hex } from "./tokens";
+import { APPROVED_DEMO_SELECTIONS } from "./demo-selections";
 
 export const SESSION_TTL_DAYS = 14;
 
@@ -62,6 +63,7 @@ const ANSWER_FIELDS: Record<string, FieldSpec> = {
   governanceConfidence: { kind: "int", min: 1, max: 10 },
   desiredFutureState: { kind: "string", maxLen: 2000 },
   meetingPurpose: { kind: "string", maxLen: 1000 },
+  demoSelection: { kind: "enum", values: APPROVED_DEMO_SELECTIONS.map(s => s.id) },
 };
 
 const MAX_ANSWERS_BYTES = 16 * 1024;
@@ -208,7 +210,16 @@ export async function startQuestionnaireSession(
       ...ctx,
       metadata: { sessionId: started.sessionId },
     });
-    await transitionLead(started.leadId, "QUESTIONNAIRE_STARTED", ctx);
+    const transition = await transitionLead(started.leadId, "QUESTIONNAIRE_STARTED", ctx);
+    // After a booked-first invitation, the canonical lead stage remains
+    // MEETING_SCHEDULED. The append-only OPENED event and session hold
+    // questionnaire progress, without undoing the confirmed appointment.
+    if (!transition.ok && !(
+      transition.reason === "invalid_transition" &&
+      transition.from === "MEETING_SCHEDULED"
+    )) {
+      console.warn(`[questionnaire:${ctx.requestId ?? "?"}] unexpected start transition`, transition.reason);
+    }
   } catch (err) {
     console.error(
       `[questionnaire:${ctx.requestId ?? "?"}] post-start trail error:`,
@@ -387,7 +398,15 @@ export async function submitSession(
       ...ctx,
       metadata: { sessionId },
     });
-    await transitionLead(leadId, "QUESTIONNAIRE_COMPLETED", ctx);
+    const transition = await transitionLead(leadId, "QUESTIONNAIRE_COMPLETED", ctx);
+    // Preserve an already booked meeting instead of regressing the lead
+    // to QUESTIONNAIRE_COMPLETED; the submitted session + event are proof.
+    if (!transition.ok && !(
+      transition.reason === "invalid_transition" &&
+      transition.from === "MEETING_SCHEDULED"
+    )) {
+      console.warn(`[questionnaire:${ctx.requestId ?? "?"}] unexpected submit transition`, transition.reason);
+    }
   } catch (err) {
     console.error(`[questionnaire:${ctx.requestId ?? "?"}] submit trail:`, err);
   }

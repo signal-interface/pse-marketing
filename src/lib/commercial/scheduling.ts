@@ -40,12 +40,17 @@ export function buildSchedulingUrl(lead: {
   const base = process.env.CALCOM_EVENT_URL;
   if (!base) return null;
 
+  // An unsigned scheduling link cannot be safely reconciled to the lead.
+  // Do not show a booking CTA when attribution signing is unavailable.
+  const ref = signLeadRef(lead.id);
+  if (!ref) return null;
+
   const url = new URL(base);
+  if (url.protocol !== "https:" || url.hostname !== "cal.com") return null;
   const name = [lead.firstName, lead.lastName].filter(Boolean).join(" ");
   if (name) url.searchParams.set("name", name);
   url.searchParams.set("email", lead.email);
-  const ref = signLeadRef(lead.id);
-  if (ref) url.searchParams.set("metadata[leadRef]", ref);
+  url.searchParams.set("metadata[leadRef]", ref);
   return url.toString();
 }
 
@@ -81,6 +86,8 @@ export type CalcomTrigger =
 export interface CalcomBookingEvent {
   trigger: CalcomTrigger;
   bookingUid: string;
+  /** Cal.com prior booking UID on a reschedule; never inferred from attendee email. */
+  previousBookingUid?: string;
   startTime?: string;
   endTime?: string;
   attendeeEmails: string[];
@@ -119,12 +126,20 @@ export function parseCalcomEvent(body: unknown): CalcomBookingEvent | null {
     p.metadata && typeof p.metadata === "object"
       ? (p.metadata as Record<string, unknown>)
       : {};
-  const leadRef =
-    typeof metadata.leadRef === "string" ? metadata.leadRef : undefined;
+  // Supplied but malformed metadata is NOT an absent legacy attribution.
+  // Treat non-string values as invalid references, never as permission to
+  // downgrade the provider event to attendee-email matching.
+  const refWasSupplied = Object.prototype.hasOwnProperty.call(metadata, "leadRef");
+  const leadRef = refWasSupplied
+    ? (typeof metadata.leadRef === "string" ? metadata.leadRef : "")
+    : undefined;
 
   return {
     trigger: trigger as CalcomTrigger,
     bookingUid,
+    previousBookingUid:
+      trigger === "BOOKING_RESCHEDULED" && typeof p.rescheduleUid === "string" && p.rescheduleUid.trim()
+        ? p.rescheduleUid.trim() : undefined,
     startTime: typeof p.startTime === "string" ? p.startTime : undefined,
     endTime: typeof p.endTime === "string" ? p.endTime : undefined,
     attendeeEmails,
@@ -150,22 +165,31 @@ export function externalIdFor(event: CalcomBookingEvent): string {
 export async function resolveBookingLead(
   event: CalcomBookingEvent
 ): Promise<number | null> {
-  if (event.leadRef) {
+  if (event.leadRef !== undefined) {
+    // Even an empty supplied reference is invalid, not a legacy absence.
+    // An explicitly supplied but invalid/unknown reference is never downgraded
+    // to email lookup. Otherwise a forged ref could target a different lead.
     const leadId = verifyLeadRef(event.leadRef);
-    if (leadId !== null) {
-      const { rows } = await sql`
-        SELECT id FROM demo_requests WHERE id = ${leadId}
-      `;
-      if (rows.length) return leadId;
-    }
-  }
-  for (const email of event.attendeeEmails) {
+    if (leadId === null) return null;
     const { rows } = await sql`
-      SELECT id FROM demo_requests
-      WHERE email = ${email}
-      ORDER BY created_at DESC LIMIT 1
+      SELECT id, email FROM demo_requests WHERE id = ${leadId}
     `;
-    if (rows.length) return rows[0].id as number;
+    if (rows.length !== 1) return null;
+    // A valid attribution reference must still belong to the attendee.
+    // Prevents accidental linking of a forwarded booking URL.
+    const leadEmail = String(rows[0].email).toLowerCase();
+    return event.attendeeEmails.includes(leadEmail) ? leadId : null;
   }
-  return null;
+
+  // Legacy/direct Cal.com bookings may contain no signed leadRef. Only
+  // reconcile automatically if exactly ONE lead matches exactly ONE distinct
+  // attendee; duplicate leads or multiple prospect emails require review.
+  const attendeeEmails = [...new Set(event.attendeeEmails)];
+  if (attendeeEmails.length !== 1) return null;
+  const { rows } = await sql`
+    SELECT id FROM demo_requests
+    WHERE lower(email) = ${attendeeEmails[0]}
+    ORDER BY created_at DESC LIMIT 2
+  `;
+  return rows.length === 1 ? (rows[0].id as number) : null;
 }

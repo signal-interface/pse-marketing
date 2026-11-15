@@ -26,9 +26,11 @@ export const INVITATION_TOKEN_TTL_DAYS = 7;
 // Lead states eligible for token issuance (ratified). Regeneration while
 // already QUESTIONNAIRE_SENT covers expiry/resend.
 const ISSUE_ELIGIBLE_STATES: readonly LeadStatus[] = [
+  "NEW", // booking-first, video-optional: operator-authorized invitation only
   "VIDEO_SENT",
   "VIDEO_ENGAGED",
   "QUESTIONNAIRE_SENT",
+  "MEETING_SCHEDULED", // optional pre-call discovery does not undo a booking
   "NURTURE",
 ];
 

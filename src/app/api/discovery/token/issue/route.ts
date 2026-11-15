@@ -21,9 +21,9 @@ import {
 import { transitionLead, recordLeadEvent } from "@/lib/commercial/lifecycle";
 import { questionnaireInviteHtml } from "@/lib/emails";
 import { safeEqual } from "@/lib/safeEqual";
+import { invitationOrigin } from "@/lib/commercial/invitation-origin";
 import { sql } from "@vercel/postgres";
 
-const SITE_URL = process.env.SITE_URL || "https://payrollsynergyexperts.com";
 
 export async function POST(request: NextRequest) {
   const requestId = crypto.randomUUID();
@@ -32,6 +32,17 @@ export async function POST(request: NextRequest) {
   const auth = request.headers.get("authorization");
   if (!secret || !auth || !safeEqual(auth, `Bearer ${secret}`)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  // Guard BEFORE token issuance: an invitation stored in Preview must not
+  // point to production. Never issue/rotate a one-time token until its
+  // destination is explicitly configured and validated.
+  const siteOrigin = invitationOrigin({
+    siteUrl: process.env.SITE_URL,
+    vercelEnv: process.env.VERCEL_ENV,
+  });
+  if (!siteOrigin) {
+    return NextResponse.json({ error: "invitation_origin_not_configured" }, { status: 503 });
   }
 
   try {
@@ -60,8 +71,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Journey initiation, not delivery.
-    await transitionLead(leadId, "QUESTIONNAIRE_SENT", ctx);
+    // Journey initiation, not delivery. A booked lead retains
+    // MEETING_SCHEDULED as its commercial stage; the token/session/event
+    // records hold optional pre-call questionnaire progress independently.
+    // The state-machine still rejects a regression from a confirmed booking.
+    const result = await transitionLead(leadId, "QUESTIONNAIRE_SENT", ctx);
+    if (!result.ok && !(
+      result.reason === "invalid_transition" && result.from === "MEETING_SCHEDULED"
+    )) {
+      console.error(`[token-issue:${requestId}] unexpected state transition`, result.reason);
+      return NextResponse.json({ error: "transition_not_accepted" }, { status: 409 });
+    }
 
     const { rows } = await sql`
       SELECT first_name, name, email FROM demo_requests WHERE id = ${leadId}
@@ -71,7 +91,7 @@ export async function POST(request: NextRequest) {
     const email = rows[0]?.email as string;
 
     // Raw token goes into the email link and nowhere else.
-    const discoveryUrl = `${SITE_URL}/discovery/start?t=${issued.rawToken}`;
+    const discoveryUrl = `${siteOrigin}/discovery/start?t=${issued.rawToken}`;
 
     const resend = new Resend(process.env.RESEND_API_KEY);
     let failed = false;
@@ -110,7 +130,9 @@ export async function POST(request: NextRequest) {
       tokenId: issued.tokenId,
       expiresAt: issued.expiresAt.toISOString(),
       rotated: issued.revokedCount > 0,
-      emailDelivered: !failed,
+      // Provider API acceptance is not proof of recipient delivery.
+      emailProviderAccepted: !failed,
+      emailDeliveryVerified: false,
     });
   } catch (error) {
     console.error(`[token-issue:${requestId}] error:`, error);
