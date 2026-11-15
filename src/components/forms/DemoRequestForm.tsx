@@ -115,12 +115,14 @@ export default function DemoRequestForm({
                   tabIndex={-1}
                   className="text-xl font-bold text-text mb-1.5 outline-none"
                 >
-                  {source.endsWith('-interest') ? 'You\u2019re on the list' : 'Demo request received'}
+                  {source.endsWith('-interest') ? 'You\u2019re on the list' : schedulingUrl ? 'Demo request received' : 'Request noted'}
                 </h2>
                 <div className="text-[15px] text-text-secondary">
                   {schedulingUrl
                     ? "Your request is in. You can schedule your PSE demonstration now."
-                    : confirmationMessage}
+                    : source.endsWith('-interest')
+                      ? confirmationMessage
+                      : "If this is a new request, our team will follow up within one business day. To prevent duplicate messages, submitting again within 24 hours will not generate another email. For assistance, contact info@payrollsynergyexperts.com."}
                 </div>
                 {schedulingUrl && (
                   <a
