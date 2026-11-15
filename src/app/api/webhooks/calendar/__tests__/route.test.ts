@@ -100,6 +100,18 @@ describe("buildSchedulingUrl", () => {
     expect(parsed.searchParams.get("metadata[leadRef]")).toMatch(/^42\.[0-9a-f]{32}$/);
   });
 
+  it("does not show an unattributed booking link without signing", () => {
+    delete process.env.LINK_SIGNING_SECRET;
+    expect(buildSchedulingUrl({ id: 42, email: "jane@acme.com" })).toBeNull();
+  });
+
+  it("rejects insecure or non-Cal.com scheduling endpoints", () => {
+    for (const candidate of ["http://cal.com/pse/discovery", "https://other.example/pse/discovery"]) {
+      process.env.CALCOM_EVENT_URL = candidate;
+      expect(buildSchedulingUrl({ id: 42, email: "jane@acme.com" })).toBeNull();
+    }
+  });
+
   it("returns null when scheduling is not configured", () => {
     delete process.env.CALCOM_EVENT_URL;
     expect(
