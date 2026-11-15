@@ -302,6 +302,15 @@ export async function applyCalendarEvent(
     }
     const from = rows[0].lead_status as LeadStatus;
     const priorBooking = rows[0].calendar_event_id as string | null;
+    // This single-booking lead model must not silently replace an already
+    // attributed meeting when a different BOOKING_CREATED arrives later.
+    // Legitimate provider reschedules use MEETING_RESCHEDULED with the
+    // authenticated previous UID; multi-booking leads need operator review.
+    if (eventType === "MEETING_BOOKED" && priorBooking !== null &&
+        priorBooking !== bookingUid && from === "MEETING_SCHEDULED") {
+      await client.sql`ROLLBACK`;
+      return { ok: false, reason: "booking_mismatch" };
+    }
     const to: LeadStatus | null =
       eventType === "MEETING_BOOKED" ? "MEETING_SCHEDULED"
       : eventType === "MEETING_CANCELLED" ? "NURTURE"
