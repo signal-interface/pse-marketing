@@ -40,12 +40,17 @@ export function buildSchedulingUrl(lead: {
   const base = process.env.CALCOM_EVENT_URL;
   if (!base) return null;
 
+  // An unsigned scheduling link cannot be safely reconciled to the lead.
+  // Do not show a booking CTA when attribution signing is unavailable.
+  const ref = signLeadRef(lead.id);
+  if (!ref) return null;
+
   const url = new URL(base);
+  if (url.protocol !== "https:" || url.hostname !== "cal.com") return null;
   const name = [lead.firstName, lead.lastName].filter(Boolean).join(" ");
   if (name) url.searchParams.set("name", name);
   url.searchParams.set("email", lead.email);
-  const ref = signLeadRef(lead.id);
-  if (ref) url.searchParams.set("metadata[leadRef]", ref);
+  url.searchParams.set("metadata[leadRef]", ref);
   return url.toString();
 }
 
