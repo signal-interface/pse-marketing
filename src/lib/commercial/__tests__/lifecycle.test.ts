@@ -167,6 +167,40 @@ describe("applyCalendarEvent atomicity and recovery", () => {
     expect(statements().some(x => x.includes("UPDATE demo_requests"))).toBe(false);
   });
 
+  it("updates a replacement booking UID atomically when its original UID matches", async () => {
+    state.selectRows = [{ lead_status: "MEETING_SCHEDULED", calendar_event_id: "bk_old" }];
+    const result = await applyCalendarEvent(
+      1, "MEETING_RESCHEDULED", "bk_new", "bk_new:2026-08-02T15:00:00Z",
+      ctx, "bk_old"
+    );
+    expect(result).toEqual({ ok: true, duplicate: false });
+    const update = state.calls.find(c => c.text.includes("SET calendar_event_id"));
+    expect(update?.values).toContain("bk_new");
+    expect(statements()).toContain("COMMIT");
+    expect(statements().some(s => s.includes("lead_status = 'NURTURE'"))).toBe(false);
+  });
+
+  it("rejects unlinked replacement UIDs without a database write", async () => {
+    state.selectRows = [{ lead_status: "MEETING_SCHEDULED", calendar_event_id: "bk_current" }];
+    expect(await applyCalendarEvent(
+      1, "MEETING_RESCHEDULED", "bk_new", "bk_new:2026-08-02T15:00:00Z",
+      ctx, "bk_other"
+    )).toEqual({ ok: false, reason: "booking_mismatch" });
+    expect(statements()).toContain("ROLLBACK");
+    expect(statements().some(s => s.includes("UPDATE demo_requests"))).toBe(false);
+  });
+
+  it("deduplicates an already-applied replacement reschedule", async () => {
+    state.selectRows = [{ lead_status: "MEETING_SCHEDULED", calendar_event_id: "bk_new" }];
+    state.duplicateCalendarEvent = true;
+    expect(await applyCalendarEvent(
+      1, "MEETING_RESCHEDULED", "bk_new", "bk_new:2026-08-02T15:00:00Z",
+      ctx, "bk_old"
+    )).toEqual({ ok: true, duplicate: true });
+    expect(statements()).toContain("ROLLBACK");
+    expect(statements().some(s => s.includes("UPDATE demo_requests"))).toBe(false);
+  });
+
   it("cancellation changes the lead and writes the event in one commit", async () => {
     state.selectRows = [{ lead_status: "MEETING_SCHEDULED", calendar_event_id: "bk_123" }];
     expect(await applyCalendarEvent(1, "MEETING_CANCELLED", "bk_123", "bk_123", ctx))
