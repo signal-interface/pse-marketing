@@ -32,7 +32,7 @@ export function chapLeadNotificationHtml(data: ChapLeadData): string {
     ["First question", data.firstQuestion ? escapeHtml(data.firstQuestion) : "—"],
     [
       "Captured",
-      new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+      `${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })} ET`,
     ],
   ];
 
@@ -67,7 +67,7 @@ export function internalNotificationHtml(data: DemoRequestData): string {
     ["Job title", data.jobTitle ? escapeHtml(data.jobTitle) : "—"],
     ["Employees", data.employees ? escapeHtml(data.employees) : "—"],
     ...(data.source ? [["Source", escapeHtml(data.source)]] : []),
-    ["Submitted", new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" })],
+    ["Submitted", `${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })} ET`],
   ];
 
   return `
